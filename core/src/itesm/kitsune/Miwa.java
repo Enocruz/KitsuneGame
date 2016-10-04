@@ -23,7 +23,7 @@ public class Miwa {
         walkFrames= new TextureRegion[8];
         for(int i=1;i<9;i++)
             walkFrames[i-1]=texturaMiwa[0][i];
-        animacion=new Animation(2f,walkFrames);
+        animacion=new Animation(0.08f,walkFrames);
         animacion.setPlayMode(Animation.PlayMode.LOOP);
         tiempo=0;
         sprite=new Sprite(texturaMiwa[0][0]);
