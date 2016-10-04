@@ -1,0 +1,287 @@
+package itesm.kitsune;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+/**
+ * Created by b-and on 05/09/2016.
+ */
+public class AcercaDe implements Screen {
+    private final MisionKitsune misionKitsune;
+    private Stage escena;
+    private Texture texturaFondo,texturaRegresar,textureEnock,textureEli,textureLes,textureSnell,textureDaph,popupEnock,
+            popupEli,popupSnell,popupDaph,popupLes,textureCerrar;
+    private final AssetManager assetManager=new AssetManager();
+    private Table tablepopup;
+    private final int ancho=1280,alto=800;
+
+    //Camara
+    private OrthographicCamera camara;
+    private Viewport vista;
+
+    public AcercaDe(MisionKitsune misionKitsune){
+        this.misionKitsune=misionKitsune;
+    }
+    @Override
+    public void show() {
+
+        //Camara
+        camara=new OrthographicCamera(ancho,alto);
+        camara.position.set(ancho/2,alto/2,0);
+        camara.update();
+        //Vista
+        vista= new StretchViewport(ancho,alto,camara);
+        cargarTexturas();
+        escena=new Stage();
+        Gdx.input.setInputProcessor(escena);
+
+        //Fondo
+        Image imgFondo= new Image(texturaFondo);
+        escena.addActor(imgFondo);
+        //Boton Regresar
+        TextureRegionDrawable trBtnRegresar=new TextureRegionDrawable(new TextureRegion(texturaRegresar));
+        ImageButton btnRegresar=new ImageButton(trBtnRegresar);
+        btnRegresar.setPosition(ancho/1.25f-btnRegresar.getWidth()/2, 0.20f*alto);
+        escena.addActor(btnRegresar);
+
+        //Tabla para los pop ups
+        tablepopup=new Table();
+        tablepopup.setPosition(ancho/2+17f,alto/2-10f);
+        tablepopup.setVisible(false);
+
+
+
+
+        //Boton Brandon
+        TextureRegionDrawable trEnock=new TextureRegionDrawable(new TextureRegion(textureEnock));
+        ImageButton btEnock=new ImageButton(trEnock);
+        btEnock.setPosition(ancho/2.8f-btEnock.getWidth()/2,0.12f*alto);
+        escena.addActor(btEnock);
+        //Boton Leslie
+        TextureRegionDrawable trLes=new TextureRegionDrawable(new TextureRegion(textureLes));
+        ImageButton btLes=new ImageButton(trLes);
+        btLes.setPosition(ancho/1.6f-btLes.getWidth()/2,0.12f*alto);
+        escena.addActor(btLes);
+        //Boton Daphne
+        TextureRegionDrawable trDaph=new TextureRegionDrawable(new TextureRegion(textureDaph));
+        ImageButton btDaph=new ImageButton(trDaph);
+        btDaph.setPosition(ancho/2f-btDaph.getWidth()/2,0.45f*alto);
+        escena.addActor(btDaph);
+        //Boton Snell
+        TextureRegionDrawable trSnell=new TextureRegionDrawable(new TextureRegion(textureSnell));
+        ImageButton btSnell=new ImageButton(trSnell);
+        btSnell.setPosition(ancho/1.36f-btSnell.getWidth()/2,0.45f*alto);
+        escena.addActor(btSnell);
+        //Boton Eli
+        TextureRegionDrawable trEli=new TextureRegionDrawable(new TextureRegion(textureEli));
+        ImageButton btEli=new ImageButton(trEli);
+        btEli.setPosition(ancho/3.8f-btEli.getWidth()/2,0.45f*alto);
+        escena.addActor(btEli);
+
+
+        //Boton de cerrar
+        TextureRegionDrawable trCerrar=new TextureRegionDrawable(new TextureRegion(textureCerrar));
+        final ImageButton btCerrar=new ImageButton(trCerrar);
+
+        //Más info (Pop Up) de Brandon
+        final Image btPopUpEnock=new Image(popupEnock);
+        final Image btPopUpDaph=new Image(popupDaph);
+        final Image btPopUpLeslie=new Image(popupLes);
+        final Image btPopUpSnell=new Image(popupSnell);
+        final Image btPopUpEli=new Image(popupEli);
+
+        /*
+        final TextureRegionDrawable trPopUpEnock=new TextureRegionDrawable(new TextureRegion(popupEnock));
+        //final ImageButton btPopUpEnock=new ImageButton(trPopUpEnock);
+        //Más info (Pop Up) de Daph
+        final TextureRegionDrawable trPopUpDaph=new TextureRegionDrawable(new TextureRegion(popupDaph));
+        final ImageButton btPopUpDaph=new ImageButton(trPopUpDaph);
+        //Más info (Pop Up) de Leslie
+        final TextureRegionDrawable trPopUpLeslie=new TextureRegionDrawable(new TextureRegion(popupLes));
+        final ImageButton btPopUpLeslie=new ImageButton(trPopUpLeslie);
+        //Más info (Pop Up) de Snell
+        final TextureRegionDrawable trPopUpSnell=new TextureRegionDrawable(new TextureRegion(popupSnell));
+        final ImageButton btPopUpSnell=new ImageButton(trPopUpSnell);
+        //Más info (Pop Up) de Eli
+        final TextureRegionDrawable trPopUpEli=new TextureRegionDrawable(new TextureRegion(popupEli));
+        final ImageButton btPopUpEli=new ImageButton(trPopUpEli);
+        */
+
+
+        //Agregando la tabla vacía a la escena
+        escena.addActor(tablepopup);
+
+        //Boton cerrar
+        btCerrar.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event,float x, float y){
+                tablepopup.setVisible(false);
+                tablepopup.clear();
+            }
+        });
+        //Boton Imagen Brandon
+        btEnock.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event,float x, float y){
+                tablepopup.add(btPopUpEnock).width(ancho/1.38f).height(alto/1.28f);
+                tablepopup.add(btCerrar).top().left();
+                tablepopup.setVisible(true);
+            }
+        });
+        //Boton Imagen Leslie
+        btLes.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event,float x, float y){
+                tablepopup.add(btPopUpLeslie).width(ancho/1.38f).height(alto/1.28f);
+                tablepopup.add(btCerrar).top().left();
+                tablepopup.setVisible(true);
+            }
+        });
+
+        //Boton Imagen Snell
+        btSnell.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event,float x, float y){
+                tablepopup.add(btPopUpSnell).width(ancho/1.38f).height(alto/1.28f);
+                tablepopup.add(btCerrar).top().left();
+                tablepopup.setVisible(true);
+            }
+        });
+
+        //Boton Imagen Eli
+        btEli.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event,float x, float y){
+                tablepopup.add(btPopUpEli).width(ancho/1.38f).height(alto/1.28f);
+                tablepopup.add(btCerrar).top().left();
+                tablepopup.setVisible(true);
+            }
+        });
+        btDaph.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event,float x, float y){
+                tablepopup.add(btPopUpDaph).width(ancho/1.38f).height(alto/1.28f);
+                tablepopup.add(btCerrar).top().left();
+                tablepopup.setVisible(true);
+
+            }
+        });
+
+
+        //Boton Regresar
+        btnRegresar.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //Regresar a la pantalla del Menu
+                misionKitsune.setScreen(new Menu(misionKitsune));
+                }
+            }
+        );
+
+    }
+
+    private void cargarTexturas() {
+        //Textura fondo
+        assetManager.load("AcercaDe.png", Texture.class);
+        //Texturas de Boton
+        assetManager.load("enock.png",Texture.class);
+        assetManager.load("leslie.png",Texture.class);
+        assetManager.load("snell.png",Texture.class);
+        assetManager.load("daff.png",Texture.class);
+        assetManager.load("eli.png",Texture.class);
+        assetManager.load("back.png",Texture.class);
+
+        //imagen pop up prueba
+        assetManager.load("enockCard.png",Texture.class);
+        assetManager.load("daffCard.png",Texture.class);
+        assetManager.load("eliCard.png",Texture.class);
+        assetManager.load("snellCard.png",Texture.class);
+        assetManager.load("leslieCard.png",Texture.class);
+        //Boton cerrar pop up
+        assetManager.load("cerrar.png",Texture.class);
+        //Se bloquea hasta cargar los recursos
+        assetManager.finishLoading();
+        //Cuando termina, leemos las texturas
+
+        //Texturas pop ups (prueba)
+        popupEnock=assetManager.get("enockCard.png");
+        popupLes=assetManager.get("leslieCard.png");
+        popupSnell=assetManager.get("snellCard.png");
+        popupDaph=assetManager.get("daffCard.png");
+        popupEli=assetManager.get("eliCard.png");
+
+        //Texturas Botones
+        textureDaph=assetManager.get("daff.png");
+        textureEli=assetManager.get("eli.png");
+        textureSnell=assetManager.get("snell.png");
+        textureEnock=assetManager.get("enock.png");
+        textureLes=assetManager.get("leslie.png");
+        texturaFondo=assetManager.get("AcercaDe.png");
+        texturaRegresar=assetManager.get("back.png");
+        textureCerrar=assetManager.get("cerrar.png");
+
+    }
+
+    @Override
+    public void render(float v) {
+        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //Dependencia de la camara
+        escena.setViewport(vista);
+        escena.draw();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        vista.update(width,height);
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+        dispose();
+    }
+
+    @Override
+    public void dispose() {
+        texturaFondo.dispose();
+        texturaRegresar.dispose();
+        textureLes.dispose();
+        textureSnell.dispose();
+        textureCerrar.dispose();
+        textureDaph.dispose();
+        textureEnock.dispose();
+        textureEli.dispose();
+        popupEnock.dispose();
+        popupDaph.dispose();
+        popupEli.dispose();
+        popupLes.dispose();
+        popupSnell.dispose();
+    }
+}
