@@ -22,6 +22,7 @@ public class Mapa{
     public void render(SpriteBatch batch, OrthographicCamera camara) {
         rendererMapa=new OrthogonalTiledMapRenderer(mapa,batch);
         rendererMapa.setView(camara);
+
         Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         rendererMapa.render();
