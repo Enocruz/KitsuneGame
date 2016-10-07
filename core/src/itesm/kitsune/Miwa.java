@@ -17,18 +17,20 @@ public class Miwa {
     private Animation animacion;
     private float tiempo;
     private Estados estados;
+    private Salto estadoSalto;
     Miwa(Texture textura){
         TextureRegion texturaCompleta = new TextureRegion(textura);
         TextureRegion[][] texturaMiwa = texturaCompleta.split(textura.getWidth()/10,textura.getHeight());
         walkFrames= new TextureRegion[8];
         for(int i=1;i<9;i++)
             walkFrames[i-1]=texturaMiwa[0][i];
-        animacion=new Animation(0.08f,walkFrames);
+        animacion=new Animation(0.09f,walkFrames);
         animacion.setPlayMode(Animation.PlayMode.LOOP);
         tiempo=0;
         sprite=new Sprite(texturaMiwa[0][0]);
         spriteSalto=new Sprite(texturaMiwa[0][9]);
         estados=Estados.QUIETO;
+        estadoSalto=Salto.ENPISO;
     }
     public void render(SpriteBatch batch){
         float x=sprite.getX();
@@ -39,14 +41,18 @@ public class Miwa {
                 //sprite.setTexture(animacion.getKeyFrame(tiempo).getTexture());
                 TextureRegion region = animacion.getKeyFrame(tiempo);
                 //sprite.setTexture(region.getTexture());
-                if (estados == Estados.DERECHA) {
+                if (estados == Estados.DERECHA&&estadoSalto==Salto.ENPISO) {
                     x += velocidad;
                     if (region.isFlipX()) {
                         region.flip(true, false);
                     }
                     if (x <= Nivel1.ANCHO - sprite.getWidth())
                         sprite.setX(x);
-                } else {
+                }
+                else if(estados==Estados.DERECHA&&estadoSalto==Salto.SALTO){
+
+                }
+                else {
                     x -= velocidad;
                     if (!region.isFlipX()) {
                         region.flip(true, false);
@@ -91,5 +97,9 @@ public class Miwa {
         IZQUIERDA,
         DERECHA,
         QUIETO
+    }
+    public enum Salto{
+        ENPISO,
+        SALTO
     }
 }
