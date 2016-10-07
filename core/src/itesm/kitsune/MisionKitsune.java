@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 
 /**
- * Created by b-and on 05/09/2016.
+ * Created by b-and, Leslie on 05/09/2016.
  */
 public class MisionKitsune extends Game{
     public static Music music;
