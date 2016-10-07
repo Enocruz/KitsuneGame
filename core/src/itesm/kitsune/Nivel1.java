@@ -33,6 +33,10 @@ public class Nivel1 implements Screen, InputProcessor {
     private final int ANCHO_MAPA=2560;
     //Personaje principal
     private Miwa miwa;
+    //Mapa del nivel
+    private Mapa mapa;
+    //Textura Fondo
+    private Fondo fondo;
 
 
 
@@ -48,8 +52,14 @@ public class Nivel1 implements Screen, InputProcessor {
         cargarTexturas();
         //Cargamos botones
         crearBotones();
+        //Creamos mapa
+        mapa=new Mapa("mapa.tmx");
         //Creamos personaje principal
         miwa=new Miwa(texturaMiwa);
+        miwa.getSprite().setPosition(256,64); //Posicion inicial de Miwa
+        //Creamos el fondo
+        fondo=new Fondo(texturaFondo);
+
         //Escena con "Listeners"
         Gdx.input.setInputProcessor(this);
         batch=new SpriteBatch();
@@ -146,10 +156,16 @@ public class Nivel1 implements Screen, InputProcessor {
 */
         /////
         actualizarCamara();
-
+        batch.begin();
+        fondo.draw(batch);
+        batch.end();
         //////
         //Camara principal
         batch.setProjectionMatrix(camara.combined);
+        batch.begin();
+        fondo.draw(batch);
+        batch.end();
+        mapa.render(batch,camara);
         batch.begin();
         miwa.render(batch);
         batch.end();
