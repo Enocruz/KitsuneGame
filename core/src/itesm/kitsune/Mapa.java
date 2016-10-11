@@ -30,4 +30,5 @@ public class Mapa{
     public TiledMap getMapa(){
         return this.mapa;
     }
+
 }

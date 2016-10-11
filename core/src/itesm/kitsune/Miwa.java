@@ -17,7 +17,6 @@ public class Miwa {
     private Animation animacion;
     private float tiempo;
     private Estados estados;
-    private Salto estadoSalto;
 
 
     Miwa(Texture textura){
@@ -32,7 +31,6 @@ public class Miwa {
         sprite=new Sprite(texturaMiwa[0][0]);
         spriteSalto=new Sprite(texturaMiwa[0][9]);
         estados=Estados.QUIETOD;
-        estadoSalto=Salto.ENPISO;
     }
     public void render(SpriteBatch batch){
         float x=sprite.getX();
@@ -47,7 +45,7 @@ public class Miwa {
                 //sprite.setTexture(animacion.getKeyFrame(tiempo).getTexture());
                 TextureRegion region = animacion.getKeyFrame(tiempo);
                 //sprite.setTexture(region.getTexture());
-                if (estados == Estados.DERECHA&&estadoSalto==Salto.ENPISO) {
+                if (estados == Estados.DERECHA) {
                     x += velocidad;
                     if (region.isFlipX()) {
                         region.flip(true, false);
@@ -73,6 +71,13 @@ public class Miwa {
                     sprite.flip(true, false);
                 }
                 sprite.draw(batch);
+                break;
+            case SALTOD:
+            case SALTOI:
+                break;
+            case SUBIENDO:
+                break;
+            case BAJANDO:
                 break;
         }
     }
@@ -104,21 +109,16 @@ public class Miwa {
     public void setEstadoMovimiento(Estados estadoMovimiento) {
         this.estados = estadoMovimiento;
     }
-    public void setEstadoSalto(Salto estadoSalto){
-        this.estadoSalto=estadoSalto;
-    }
+
     public enum Estados{
         IZQUIERDA,
         DERECHA,
         QUIETOD,
-        QUIETOI
-    }
-    public enum Salto{
-        ENPISO,
-        SALTO,
+        QUIETOI,
+        SUBIENDO,
+        BAJANDO,
         SALTOD,
         SALTOI,
-        SUBIENDO,
-        BAJANDO
     }
+
 }

@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -30,7 +29,7 @@ public class Nivel1 implements Screen, InputProcessor {
     // Objeto para dibujar en la pantalla
     private SpriteBatch batch;
     //Tamaño de pantalla
-    public static final int ANCHO=1280,ALTO=960;
+    public static final int ANCHO=1280,ALTO=800;
     public static int ANCHO_MAPA=2560, ALTO_MAPA=1920;
     //Personaje principal
     private Miwa miwa;
@@ -46,6 +45,8 @@ public class Nivel1 implements Screen, InputProcessor {
     private GemaVida gemaVida;
     //Vidas
     private int vidas=3;
+    //Texto vidas
+    private Texto texto;
 
 
     public Nivel1(MisionKitsune misionKitsune) {
@@ -75,6 +76,8 @@ public class Nivel1 implements Screen, InputProcessor {
         //Contador para vida Extra
         gemaVida=new GemaVida(texturaGema);
         gemaVida.getSprite().setPosition(texturaGema.getWidth()/2,ALTO-texturaGema.getHeight()-16);
+        //Iniciamos texto
+        texto=new Texto("DominoFont.fnt");
 
 
     }
@@ -108,7 +111,6 @@ public class Nivel1 implements Screen, InputProcessor {
         camaraHUD.position.set(ANCHO / 2, ALTO / 2, 0);
         camaraHUD.update();
     }
-
     private void cargarTexturas() {
         //Textura Miwa
         assetManager.load("miwa.png",Texture.class);
@@ -150,7 +152,6 @@ public class Nivel1 implements Screen, InputProcessor {
             camara.position.set(ANCHO_MAPA-ANCHO/2, camara.position.y, 0);
         }
         camara.update();
-
     }
 
 
@@ -159,13 +160,14 @@ public class Nivel1 implements Screen, InputProcessor {
         Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         actualizarCamara();
-        batch.begin();
-        fondo.draw(batch);
-        batch.end();
+
         //////
+
         //Camara principal
         batch.setProjectionMatrix(camara.combined);
+
         mapa.render(batch,camara);
+        //mapa.render(batch,camara);
         batch.begin();
         miwa.render(batch);
         batch.end();
@@ -179,6 +181,7 @@ public class Nivel1 implements Screen, InputProcessor {
         botonSaltar1.render(batch);
         botonSaltar2.render(batch);
         botonPausa.render(batch);
+        texto.mostrarMensaje(batch,""+vidas,126,722);
         batch.end();
     }
 
@@ -191,7 +194,6 @@ public class Nivel1 implements Screen, InputProcessor {
     public void pause() {
 
     }
-
     @Override
     public void resume() {
 
@@ -241,7 +243,7 @@ public class Nivel1 implements Screen, InputProcessor {
             miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
         }
         else if(botonSaltar1.contiene(x,y)||botonSaltar2.contiene(x,y)){
-            miwa.setEstadoSalto(Miwa.Salto.SALTO);
+
         }
         else if(botonPausa.contiene(x,y)){
             Gdx.app.log("clicked","Pausa");
@@ -261,7 +263,7 @@ public class Nivel1 implements Screen, InputProcessor {
             miwa.setEstadoMovimiento(Miwa.Estados.QUIETOD);
         }
         else if(botonSaltar1.contiene(x,y)|| botonSaltar2.contiene(x,y)){
-            miwa.setEstadoSalto(Miwa.Salto.SALTO);
+
         }
         else if(botonPausa.contiene(x,y)){
             Gdx.app.log("clicked","Pausa");
