@@ -106,23 +106,6 @@ public class AcercaDe implements Screen {
         final Image btPopUpSnell=new Image(popupSnell);
         final Image btPopUpEli=new Image(popupEli);
 
-        /*
-        final TextureRegionDrawable trPopUpEnock=new TextureRegionDrawable(new TextureRegion(popupEnock));
-        //final ImageButton btPopUpEnock=new ImageButton(trPopUpEnock);
-        //Más info (Pop Up) de Daph
-        final TextureRegionDrawable trPopUpDaph=new TextureRegionDrawable(new TextureRegion(popupDaph));
-        final ImageButton btPopUpDaph=new ImageButton(trPopUpDaph);
-        //Más info (Pop Up) de Leslie
-        final TextureRegionDrawable trPopUpLeslie=new TextureRegionDrawable(new TextureRegion(popupLes));
-        final ImageButton btPopUpLeslie=new ImageButton(trPopUpLeslie);
-        //Más info (Pop Up) de Snell
-        final TextureRegionDrawable trPopUpSnell=new TextureRegionDrawable(new TextureRegion(popupSnell));
-        final ImageButton btPopUpSnell=new ImageButton(trPopUpSnell);
-        //Más info (Pop Up) de Eli
-        final TextureRegionDrawable trPopUpEli=new TextureRegionDrawable(new TextureRegion(popupEli));
-        final ImageButton btPopUpEli=new ImageButton(trPopUpEli);
-        */
-
 
         //Agregando la tabla vacía a la escena
         escena.addActor(tablepopup);

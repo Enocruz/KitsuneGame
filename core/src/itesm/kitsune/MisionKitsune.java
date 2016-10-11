@@ -11,7 +11,6 @@ public class MisionKitsune extends Game{
     public static Music music;
     @Override
     public void create() {
-
         setScreen(new Menu(this));
     }
 }

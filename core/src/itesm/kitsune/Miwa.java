@@ -11,13 +11,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * Created by b-and on 23/09/2016.
  */
 public class Miwa {
-    private final float velocidad=2;
+    private final float velocidad=4;
     private Sprite sprite,spriteSalto;
     private TextureRegion[] walkFrames;
     private Animation animacion;
     private float tiempo;
     private Estados estados;
     private Salto estadoSalto;
+
+
     Miwa(Texture textura){
         TextureRegion texturaCompleta = new TextureRegion(textura);
         TextureRegion[][] texturaMiwa = texturaCompleta.split(textura.getWidth()/10,textura.getHeight());
@@ -29,11 +31,15 @@ public class Miwa {
         tiempo=0;
         sprite=new Sprite(texturaMiwa[0][0]);
         spriteSalto=new Sprite(texturaMiwa[0][9]);
-        estados=Estados.QUIETO;
+        estados=Estados.QUIETOD;
         estadoSalto=Salto.ENPISO;
     }
     public void render(SpriteBatch batch){
         float x=sprite.getX();
+        miwaMovimiento(x,batch);
+
+    }
+    public void miwaMovimiento(float x,SpriteBatch batch){
         switch (estados) {
             case DERECHA:
             case IZQUIERDA:
@@ -46,11 +52,8 @@ public class Miwa {
                     if (region.isFlipX()) {
                         region.flip(true, false);
                     }
-                    if (x <= Nivel1.ANCHO - sprite.getWidth())
+                    if (x <= Nivel1.ANCHO_MAPA - sprite.getWidth())
                         sprite.setX(x);
-                }
-                else if(estados==Estados.DERECHA&&estadoSalto==Salto.SALTO){
-
                 }
                 else {
                     x -= velocidad;
@@ -62,7 +65,13 @@ public class Miwa {
                 }
                 batch.draw(region, sprite.getX(), sprite.getY());
                 break;
-            case QUIETO:
+            case QUIETOD:
+                sprite.draw(batch);
+                break;
+            case QUIETOI:
+                if (!sprite.isFlipX()) {
+                    sprite.flip(true, false);
+                }
                 sprite.draw(batch);
                 break;
         }
@@ -84,6 +93,8 @@ public class Miwa {
         sprite.setPosition(x,y);
     }
 
+
+
     // Accesor del estadoMovimiento
     public Estados getEstadoMovimiento() {
         return estados;
@@ -93,13 +104,21 @@ public class Miwa {
     public void setEstadoMovimiento(Estados estadoMovimiento) {
         this.estados = estadoMovimiento;
     }
+    public void setEstadoSalto(Salto estadoSalto){
+        this.estadoSalto=estadoSalto;
+    }
     public enum Estados{
         IZQUIERDA,
         DERECHA,
-        QUIETO
+        QUIETOD,
+        QUIETOI
     }
     public enum Salto{
         ENPISO,
-        SALTO
+        SALTO,
+        SALTOD,
+        SALTOI,
+        SUBIENDO,
+        BAJANDO
     }
 }
