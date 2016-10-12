@@ -64,12 +64,13 @@ public class Miwa {
                 batch.draw(region, sprite.getX(), sprite.getY());
                 break;
             case QUIETOD:
+                if(sprite.isFlipX())
+                    sprite.flip(true,false);
                 sprite.draw(batch);
                 break;
             case QUIETOI:
-                if (!sprite.isFlipX()) {
+                if (!sprite.isFlipX())
                     sprite.flip(true, false);
-                }
                 sprite.draw(batch);
                 break;
             case SALTOD:

@@ -56,7 +56,7 @@ public class Instrucciones implements Screen {
 
         TextureRegionDrawable trBtnRegresar=new TextureRegionDrawable(new TextureRegion(texturaRegresar));
         ImageButton btnRegresar=new ImageButton(trBtnRegresar);
-        btnRegresar.setPosition(ancho/1.3f-btnRegresar.getWidth()/2, 0.18f*alto);
+        btnRegresar.setPosition(ancho/1.15f-btnRegresar.getWidth()/2, 0.75f*alto);
         escena.addActor(btnRegresar);
 
         btnRegresar.addListener(new ClickListener(){
@@ -74,12 +74,12 @@ public class Instrucciones implements Screen {
         //Textura fondo
         assetManager.load("Instrucciones.png", Texture.class);
         //Texturas de Boton
-        assetManager.load("back.png",Texture.class);
+        assetManager.load("cerrar.png",Texture.class);
         //Se bloquea hasta cargar los recursos
         assetManager.finishLoading();
         //Cuando termina, leemos las texturas
         texturaFondo=assetManager.get("Instrucciones.png");
-        texturaRegresar=assetManager.get("back.png");
+        texturaRegresar=assetManager.get("cerrar.png");
 
     }
 

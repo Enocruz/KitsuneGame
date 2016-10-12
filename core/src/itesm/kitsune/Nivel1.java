@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class Nivel1 implements Screen, InputProcessor {
     private MisionKitsune misionKitsune;
     //Texturas Pantalla
-    private Texture texturaVida,texturaFondo,texturaDer,texturaIzq,texturaSaltar,texturaPausa,texturaMiwa, texturaGema;
+    private Texture texturaVida,texturaDer,texturaIzq,texturaSaltar,texturaPausa,texturaMiwa, texturaGema;
     //Botones pantalla
     private Boton botonIzq,botonDer,botonSaltar1,botonSaltar2,botonPausa;
     //AssetManager (Cargar texturas)
@@ -35,8 +35,6 @@ public class Nivel1 implements Screen, InputProcessor {
     private Miwa miwa;
     //Mapa del nivel
     private Mapa mapa;
-    //Textura Fondo
-    private Fondo fondo;
     //Tamaño celdas TileMap
     public static final int TAM_CELDA = 32;
     //Estados Juego
@@ -65,9 +63,7 @@ public class Nivel1 implements Screen, InputProcessor {
         mapa=new Mapa("MapaN1.tmx");
         //Creamos personaje principal
         miwa=new Miwa(texturaMiwa);
-        miwa.getSprite().setPosition(128,256); //Posicion inicial de Miwa
-        //Creamos el fondo
-        fondo=new Fondo(texturaFondo);
+        miwa.getSprite().setPosition(ANCHO/5,ALTO/5.333f); //Posicion inicial de Miwa
         //Escena con "Listeners"
         Gdx.input.setInputProcessor(this);
         batch=new SpriteBatch();
@@ -75,7 +71,7 @@ public class Nivel1 implements Screen, InputProcessor {
         estadosJuego=EstadosJuego.JUGANDO;
         //Contador para vida Extra
         gemaVida=new GemaVida(texturaGema);
-        gemaVida.getSprite().setPosition(texturaGema.getWidth()/2,ALTO-texturaGema.getHeight()-16);
+        gemaVida.getSprite().setPosition(texturaGema.getWidth()/2,ALTO-texturaGema.getHeight()-ANCHO/80);
         //Iniciamos texto
         texto=new Texto("DominoFont.fnt");
 
@@ -90,7 +86,7 @@ public class Nivel1 implements Screen, InputProcessor {
         botonDer.setPosicion(ANCHO/1.1f,ALTO/3f);
         botonDer.setAlfa(0.6f);
         botonPausa=new Boton(texturaPausa);
-        botonPausa.setPosicion(ANCHO-texturaPausa.getWidth()-20,ALTO-texturaPausa.getHeight()-20);
+        botonPausa.setPosicion(ANCHO-texturaPausa.getWidth()-ANCHO/64,ALTO-texturaPausa.getHeight()-ANCHO/64);
         botonPausa.setAlfa(0.8f);
         botonSaltar1=new Boton(texturaSaltar);
         botonSaltar1.setPosicion(botonSaltar1.getX(),ALTO/2f);
@@ -117,8 +113,6 @@ public class Nivel1 implements Screen, InputProcessor {
         //Textura Vida
         assetManager.load("Vida.png",Texture.class);
         assetManager.load("GemaContador.png",Texture.class);
-        //Textura fondo
-        assetManager.load("fondo.png", Texture.class);
         //Texturas de Boton
         assetManager.load("pausa.png",Texture.class);
         assetManager.load("izquierda.png",Texture.class);
@@ -129,8 +123,6 @@ public class Nivel1 implements Screen, InputProcessor {
         //Textura Vida
         texturaVida=assetManager.get("Vida.png");
         texturaGema=assetManager.get("GemaContador.png");
-        //Cuando termina, leemos las texturas
-        texturaFondo=assetManager.get("fondo.png");
         //Texturas botones
         texturaPausa=assetManager.get("pausa.png");
         texturaDer=assetManager.get("derecha.png");
@@ -157,10 +149,11 @@ public class Nivel1 implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1,1,1,1);
+        Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        actualizarCamara();
 
+
+        actualizarCamara();
         //////
 
         //Camara principal
@@ -168,9 +161,7 @@ public class Nivel1 implements Screen, InputProcessor {
 
         mapa.render(batch,camara);
         //mapa.render(batch,camara);
-        batch.begin();
-        miwa.render(batch);
-        batch.end();
+
         //Dependencia de la camara con todos los botones
         batch.setProjectionMatrix(camaraHUD.combined);
         batch.begin();
@@ -182,6 +173,10 @@ public class Nivel1 implements Screen, InputProcessor {
         botonSaltar2.render(batch);
         botonPausa.render(batch);
         texto.mostrarMensaje(batch,""+vidas,126,722);
+        batch.end();
+        batch.setProjectionMatrix(camara.combined);
+        batch.begin();
+        miwa.render(batch);
         batch.end();
     }
 
@@ -211,7 +206,6 @@ public class Nivel1 implements Screen, InputProcessor {
         texturaDer.dispose();
         texturaPausa.dispose();
         texturaSaltar.dispose();
-        texturaFondo.dispose();
     }
 
     @Override

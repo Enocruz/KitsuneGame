@@ -55,9 +55,9 @@ public class AcercaDe implements Screen {
         Image imgFondo= new Image(texturaFondo);
         escena.addActor(imgFondo);
         //Boton Regresar
-        TextureRegionDrawable trBtnRegresar=new TextureRegionDrawable(new TextureRegion(texturaRegresar));
+        TextureRegionDrawable trBtnRegresar=new TextureRegionDrawable(new TextureRegion(textureCerrar));
         ImageButton btnRegresar=new ImageButton(trBtnRegresar);
-        btnRegresar.setPosition(ancho/1.25f-btnRegresar.getWidth()/2, 0.20f*alto);
+        btnRegresar.setPosition(ancho/1.15f-btnRegresar.getWidth()/2, 0.75f*alto);
         escena.addActor(btnRegresar);
 
         //Tabla para los pop ups
