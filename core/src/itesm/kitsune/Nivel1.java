@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -64,6 +66,7 @@ public class Nivel1 implements Screen, InputProcessor {
         //Creamos personaje principal
         miwa=new Miwa(texturaMiwa);
         miwa.getSprite().setPosition(ANCHO/5,ALTO/5.333f); //Posicion inicial de Miwa
+        //miwa.getSprite().setPosition(ANCHO/5,1390);
         //Escena con "Listeners"
         Gdx.input.setInputProcessor(this);
         batch=new SpriteBatch();
@@ -104,7 +107,7 @@ public class Nivel1 implements Screen, InputProcessor {
         vista=new StretchViewport(ANCHO,ALTO,camara);
         //Creamos la camara con los botones
         camaraHUD = new OrthographicCamera(ANCHO,ALTO);
-        camaraHUD.position.set(ANCHO / 2, ALTO / 2, 0);
+        camaraHUD.position.set(ANCHO/2, ALTO/2, 0);
         camaraHUD.update();
     }
     private void cargarTexturas() {
@@ -139,10 +142,20 @@ public class Nivel1 implements Screen, InputProcessor {
         if (posX>=ANCHO/2 && posX<=ANCHO_MAPA-ANCHO/2) {
             // El personaje define el centro de la cámara
             camara.position.set((int)posX, camara.position.y, 0);
+            if(posY>=ALTO/2 &&posY<=ALTO_MAPA-ALTO/2){
+                camara.position.set(camara.position.x,(int)posY,0);
+            }
         } else if (posX>=ANCHO_MAPA-ANCHO/2) {    // Si está en la última mitad
             // La cámara se queda a media pantalla antes del fin del mundo  :)
             camara.position.set(ANCHO_MAPA-ANCHO/2, camara.position.y, 0);
-        }
+            if(posY>=ALTO/2 &&posY<=ALTO_MAPA-ALTO/2){
+                camara.position.set(camara.position.x,(int)posY,0);
+            }
+        }else if(posY>=ALTO/2 &&posY<=ALTO_MAPA-ALTO/2)
+            camara.position.set(camara.position.x,(int)posY,0);
+
+
+
         camara.update();
     }
 
@@ -158,9 +171,8 @@ public class Nivel1 implements Screen, InputProcessor {
 
         //Camara principal
         batch.setProjectionMatrix(camara.combined);
-
         mapa.render(batch,camara);
-        //mapa.render(batch,camara);
+
 
         //Dependencia de la camara con todos los botones
         batch.setProjectionMatrix(camaraHUD.combined);
@@ -178,6 +190,23 @@ public class Nivel1 implements Screen, InputProcessor {
         batch.begin();
         miwa.render(batch);
         batch.end();
+        int celdaX = (int)(miwa.getX()/ TAM_CELDA);
+        int celdaY = (int)((miwa.getY()+miwa.VELOCIDAD_Y)/ TAM_CELDA);
+        TiledMapTileLayer capa = (TiledMapTileLayer)mapa.getMapa().getLayers().get(1);
+        TiledMapTileLayer.Cell celda = capa.getCell(celdaX, celdaY);
+        Object propiedad = celda.getTile().getProperties().get("tipo");
+        if (celda==null) {
+            // Celda vacía, entonces el personaje puede avanzar
+            Gdx.app.log("clicked","YOLOSAFAFOFO");
+            miwa.caer();
+        }
+        TiledMapTileLayer capaGemas=(TiledMapTileLayer)mapa.getMapa().getLayers().get(3);
+        TiledMapTileLayer.Cell celdaGema=capaGemas.getCell(celdaX,celdaY);
+        if(celdaGema!=null){
+            //gemaVida.setGemas(3);
+            celdaGema.setTile(null);
+        }
+
     }
 
     @Override
@@ -235,6 +264,7 @@ public class Nivel1 implements Screen, InputProcessor {
         }
         else if(botonDer.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+
         }
         else if(botonSaltar1.contiene(x,y)||botonSaltar2.contiene(x,y)){
 
@@ -252,15 +282,18 @@ public class Nivel1 implements Screen, InputProcessor {
         float x=v.x,y=v.y;
         if(botonIzq.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.QUIETOI);
+
         }
         else if(botonDer.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.QUIETOD);
+
         }
         else if(botonSaltar1.contiene(x,y)|| botonSaltar2.contiene(x,y)){
-
+            miwa.getSprite().setPosition(miwa.getX(),miwa.getY()+100);
         }
         else if(botonPausa.contiene(x,y)){
             Gdx.app.log("clicked","Pausa");
+            miwa.getSprite().setPosition(miwa.getX(),miwa.getY()-100);
         }
         return true;
     }
