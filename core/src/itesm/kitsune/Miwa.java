@@ -17,6 +17,7 @@ public class Miwa {
     private Animation animacion;
     private float tiempo;
     private Estados estados;
+    public static float VELOCIDAD_Y=-4f;
 
 
     Miwa(Texture textura){
@@ -97,6 +98,9 @@ public class Miwa {
 
     public void setPosicion(float x, int y) {
         sprite.setPosition(x,y);
+    }
+    public void caer(){
+        sprite.setY(sprite.getY()+VELOCIDAD_Y);
     }
 
 
