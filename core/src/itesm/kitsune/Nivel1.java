@@ -197,7 +197,7 @@ public class Nivel1 implements Screen, InputProcessor {
         Object propiedad = celda.getTile().getProperties().get("tipo");
         if (celda==null) {
             // Celda vacía, entonces el personaje puede avanzar
-            Gdx.app.log("clicked","YOLOSAFAFOFO");
+            Gdx.app.log("clicked","YOLOSAFAFOFOkofokofokofo");
             miwa.caer();
         }
         TiledMapTileLayer capaGemas=(TiledMapTileLayer)mapa.getMapa().getLayers().get(3);
