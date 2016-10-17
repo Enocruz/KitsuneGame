@@ -256,7 +256,7 @@
   <image source="MapaN1_Nave.png" width="512" height="384"/>
  </tileset>
  <tileset firstgid="505" name="Fondo" tilewidth="32" tileheight="32" tilecount="4800" columns="80">
-  <image source="Fondo.png" width="2560" height="1920"/>
+  <image source="fondo.png" width="2560" height="1920"/>
  </tileset>
  <tileset firstgid="5305" name="GemaTiles" tilewidth="32" tileheight="32" tilecount="2" columns="2">
   <image source="../GemaTiles.png" width="64" height="32"/>
