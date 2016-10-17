@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -48,6 +47,8 @@ public class Nivel1 implements Screen, InputProcessor {
     private int vidas=3;
     //Texto vidas
     private Texto texto;
+    //Contador gemas para vida extra
+    private int contadorGemas=0;
 
 
     public Nivel1(MisionKitsune misionKitsune) {
@@ -177,7 +178,10 @@ public class Nivel1 implements Screen, InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        if(contadorGemas>4)
+            contadorGemas=0;
+        if(vidas<=0)
+            estadosJuego=EstadosJuego.PERDIO;
 
         actualizarCamara();
         consultarEstado();
@@ -209,24 +213,62 @@ public class Nivel1 implements Screen, InputProcessor {
         batch.begin();
         if (estadosJuego==EstadosJuego.JUGANDO){ miwa.render(batch);}
         batch.end();
-        int celdaX = (int)(miwa.getX()/ TAM_CELDA);
-        int celdaY = (int)((miwa.getY()+miwa.VELOCIDAD_Y)/ TAM_CELDA);
+        int celdaX = (int)((miwa.getX()+miwa.getSprite().getWidth()/2)/ TAM_CELDA);
+        int celdaY = (int)((miwa.getY())/ TAM_CELDA);
         TiledMapTileLayer capa = (TiledMapTileLayer)mapa.getMapa().getLayers().get(1);
-        TiledMapTileLayer.Cell celda = capa.getCell(celdaX, celdaY);
-        //Object propiedad = celda.getTile().getProperties().get("tipo");
-        if (celda==null) {
-            // Celda vacía, entonces el personaje puede avanzar
-            Gdx.app.log("clicked","YOLOSAFAFOFOkofokofokofo");
+        TiledMapTileLayer.Cell celda=capa.getCell(celdaX,celdaY);
+        if(esPiso(celda)){
+            miwa.setVelocidadX(7);
+        }
+        else if(esHielo(celda)){
+            miwa.setVelocidadX(13);
+        }
+        else if(esPegajoso(celda)){
+            miwa.setVelocidadX(3);
+        }
+        else if(celda==null){
             miwa.caer();
-            miwa.setLibre(true);
-        }else{miwa.setLibre(false);}
-        TiledMapTileLayer capaGemas=(TiledMapTileLayer)mapa.getMapa().getLayers().get(3);
-        TiledMapTileLayer.Cell celdaGema=capaGemas.getCell(celdaX,celdaY);
-        if(celdaGema!=null){
-            //gemaVida.setGemas(3);
-            celdaGema.setTile(null);
         }
 
+        TiledMapTileLayer capaGemas=(TiledMapTileLayer)mapa.getMapa().getLayers().get(3);
+        TiledMapTileLayer.Cell celdaGema=capaGemas.getCell(celdaX,(int)(miwa.getY()+miwa.getSprite().getHeight()/2)/TAM_CELDA);
+        if(celdaGema!=null){
+            celdaGema.setTile(null);
+        }
+        TiledMapTileLayer capaPicos=(TiledMapTileLayer)mapa.getMapa().getLayers().get(2);
+        TiledMapTileLayer.Cell celdaPicos=capaPicos.getCell(celdaX,(int)(miwa.getY()+miwa.getSprite().getHeight()/2)/TAM_CELDA);
+        if(esPico(celdaPicos)){
+
+        }
+
+    }
+    private boolean esPiso(TiledMapTileLayer.Cell celda) {
+        if (celda==null) {
+            return false;
+        }
+        Object propiedad = celda.getTile().getProperties().get("tipo");
+        return "piso".equals(propiedad);
+    }
+    private boolean esPegajoso(TiledMapTileLayer.Cell celda) {
+        if (celda==null) {
+            return false;
+        }
+        Object propiedad = celda.getTile().getProperties().get("tipo");
+        return "pegajoso".equals(propiedad);
+    }
+    private boolean esHielo(TiledMapTileLayer.Cell celda) {
+        if (celda==null) {
+            return false;
+        }
+        Object propiedad = celda.getTile().getProperties().get("tipo");
+        return "hielo".equals(propiedad);
+    }
+    private boolean esPico(TiledMapTileLayer.Cell celda){
+        if (celda==null) {
+            return false;
+        }
+        Object propiedad = celda.getTile().getProperties().get("tipo");
+        return "pico".equals(propiedad);
     }
 
     private void consultarEstado() {
@@ -311,7 +353,8 @@ public class Nivel1 implements Screen, InputProcessor {
 
         }
         else if(botonSaltar1.contiene(x,y)||botonSaltar2.contiene(x,y)){
-
+            if(miwa.getEstados()!=Miwa.Estados.SUBIENDO)
+                miwa.setEstadoMovimiento(Miwa.Estados.SUBIENDO);
         }
         else if(botonPausa.contiene(x,y)){
             Gdx.app.log("clicked","Pausa");
@@ -333,7 +376,9 @@ public class Nivel1 implements Screen, InputProcessor {
 
         }
         else if(botonSaltar1.contiene(x,y)||botonSaltar2.contiene(x,y)){
-            miwa.setEstadoMovimiento(Miwa.Estados.SUBIENDO);
+
+            if(miwa.getEstados()!=Miwa.Estados.SUBIENDO)
+                miwa.setEstadoMovimiento(Miwa.Estados.SUBIENDO);
         }
         else if(botonPausa.contiene(x,y)){
             this.estadosJuego = EstadosJuego.PAUSADO;

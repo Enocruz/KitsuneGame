@@ -11,13 +11,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * Created by b-and on 23/09/2016.
  */
 public class Miwa {
-    private final float velocidad=4;
+
     private Sprite sprite,spriteSalto;
     private TextureRegion[] walkFrames;
     private Animation animacion;
     private float tiempo;
     private Estados estados;
-    public static float VELOCIDAD_Y=-4f;
+    public static float VELOCIDAD_Y=-4f,VELOCIDAD_X;
     private TextureRegion salto,inicio;
     private float velSalto = 30f;
     private boolean libre =false;
@@ -53,7 +53,7 @@ public class Miwa {
                 TextureRegion region = animacion.getKeyFrame(tiempo);
                 //sprite.setTexture(region.getTexture());
                 if (estados == Estados.DERECHA) {
-                    x += velocidad;
+                    x += VELOCIDAD_X;
                     if (region.isFlipX()) {
                         region.flip(true, false);
                     }
@@ -61,7 +61,7 @@ public class Miwa {
                         sprite.setX(x);
                 }
                 else {
-                    x -= velocidad;
+                    x -= VELOCIDAD_X;
                     if (!region.isFlipX()) {
                         region.flip(true, false);
                     }
@@ -127,20 +127,17 @@ public class Miwa {
         return sprite.getY();
     }
 
-    public void setPosicion(float x, int y) {
-        sprite.setPosition(x,y);
+
+    public void setVelocidadX(float x){
+        VELOCIDAD_X=x;
     }
     public void caer(){
         sprite.setRegion(salto);
         sprite.setY(sprite.getY()+VELOCIDAD_Y);
     }
-
-
-    // Accesor del estadoMovimiento
-    public Estados getEstadoMovimiento() {
-        return estados;
+    public Estados getEstados(){
+        return this.estados;
     }
-
     // Modificador del estadoMovimiento
     public void setEstadoMovimiento(Estados estadoMovimiento) {
         this.estados = estadoMovimiento;
