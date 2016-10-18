@@ -151,8 +151,6 @@ public class Menu implements Screen {
 		texturaBtnAcercade.dispose();
 		texturaBtnInstrucciones.dispose();
 		texturaBtnJugar.dispose();
-
-		//musicboton.dispose();
 	}
 
 	@Override

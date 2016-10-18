@@ -28,7 +28,7 @@ public class AcercaDe implements Screen {
     private Texture texturaFondo,texturaRegresar,textureEnock,textureEli,textureLes,textureSnell,textureDaph,popupEnock,
             popupEli,popupSnell,popupDaph,popupLes,textureCerrar;
     private final AssetManager assetManager=new AssetManager();
-    private Table tablepopup;
+    private Table tablepopup,tabla;
     private final int ancho=1280,alto=800;
 
     //Camara
@@ -57,10 +57,13 @@ public class AcercaDe implements Screen {
         //Boton Regresar
         TextureRegionDrawable trBtnRegresar=new TextureRegionDrawable(new TextureRegion(textureCerrar));
         ImageButton btnRegresar=new ImageButton(trBtnRegresar);
-        btnRegresar.setPosition(ancho/1.15f-btnRegresar.getWidth()/2, 0.75f*alto);
-        escena.addActor(btnRegresar);
+
 
         //Tabla para los pop ups
+        tabla=new Table();
+        tabla.setPosition(ancho/1.10f-btnRegresar.getWidth()/2, 0.8f*alto);
+        tabla.add(btnRegresar);
+        escena.addActor(tabla);
         tablepopup=new Table();
         tablepopup.setPosition(ancho/2+17f,alto/2-10f);
         tablepopup.setVisible(false);
@@ -114,6 +117,7 @@ public class AcercaDe implements Screen {
         btCerrar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
+                tabla.setVisible(true);
                 tablepopup.setVisible(false);
                 tablepopup.clear();
             }
@@ -122,6 +126,7 @@ public class AcercaDe implements Screen {
         btEnock.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
+                tabla.setVisible(false);
                 tablepopup.add(btPopUpEnock).width(ancho/1.38f).height(alto/1.28f);
                 tablepopup.add(btCerrar).top().left();
                 tablepopup.setVisible(true);
@@ -131,6 +136,7 @@ public class AcercaDe implements Screen {
         btLes.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
+                tabla.setVisible(false);
                 tablepopup.add(btPopUpLeslie).width(ancho/1.38f).height(alto/1.28f);
                 tablepopup.add(btCerrar).top().left();
                 tablepopup.setVisible(true);
@@ -141,6 +147,7 @@ public class AcercaDe implements Screen {
         btSnell.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
+                tabla.setVisible(false);
                 tablepopup.add(btPopUpSnell).width(ancho/1.38f).height(alto/1.28f);
                 tablepopup.add(btCerrar).top().left();
                 tablepopup.setVisible(true);
@@ -151,6 +158,7 @@ public class AcercaDe implements Screen {
         btEli.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
+                tabla.setVisible(false);
                 tablepopup.add(btPopUpEli).width(ancho/1.38f).height(alto/1.28f);
                 tablepopup.add(btCerrar).top().left();
                 tablepopup.setVisible(true);
@@ -159,6 +167,7 @@ public class AcercaDe implements Screen {
         btDaph.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
+                tabla.setVisible(false);
                 tablepopup.add(btPopUpDaph).width(ancho/1.38f).height(alto/1.28f);
                 tablepopup.add(btCerrar).top().left();
                 tablepopup.setVisible(true);

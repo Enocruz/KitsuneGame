@@ -49,9 +49,7 @@ public class Miwa {
             case DERECHA:
             case IZQUIERDA:
                 tiempo += Gdx.graphics.getDeltaTime();
-                //sprite.setTexture(animacion.getKeyFrame(tiempo).getTexture());
                 TextureRegion region = animacion.getKeyFrame(tiempo);
-                //sprite.setTexture(region.getTexture());
                 if (estados == Estados.DERECHA) {
                     x += VELOCIDAD_X;
                     if (region.isFlipX()) {

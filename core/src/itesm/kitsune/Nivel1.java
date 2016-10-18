@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -257,8 +256,8 @@ public class Nivel1 implements Screen, InputProcessor {
                 vidas--;
 
             }
-        }
-        /*if(miwa.getEstados()==Miwa.Estados.SUBIENDO||miwa.getEstados()==Miwa.Estados.BAJANDO){
+        }/*
+        if(miwa.getEstados()==Miwa.Estados.SUBIENDO||miwa.getEstados()==Miwa.Estados.BAJANDO){
             botonSaltar1.setDisabled(true);
             botonSaltar2.setDisabled(true);
         }
