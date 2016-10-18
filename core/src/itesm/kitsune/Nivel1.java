@@ -181,6 +181,7 @@ public class Nivel1 implements Screen, InputProcessor {
         if(vidas<=0) {
             estadosJuego = EstadosJuego.PERDIO;
             vidas=0;
+            gemaVida.setGemas(1);
         }
         if(estadosJuego==EstadosJuego.INVENCIBLE){
             tiempoInvencible-=Gdx.graphics.getDeltaTime();
