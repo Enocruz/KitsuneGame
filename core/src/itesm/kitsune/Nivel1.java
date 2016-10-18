@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -49,6 +50,7 @@ public class Nivel1 implements Screen, InputProcessor {
     private Texto texto;
     //Contador gemas para vida extra
     private int contadorGemas=0;
+    private float tiempoInvencible=3;
 
 
     public Nivel1(MisionKitsune misionKitsune) {
@@ -167,9 +169,6 @@ public class Nivel1 implements Screen, InputProcessor {
             }
         }else if(posY>=ALTO/2 &&posY<=ALTO_MAPA-ALTO/2)
             camara.position.set(camara.position.x,(int)posY,0);
-
-
-
         camara.update();
     }
 
@@ -180,9 +179,17 @@ public class Nivel1 implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if(contadorGemas>4)
             contadorGemas=0;
-        if(vidas<=0)
-            estadosJuego=EstadosJuego.PERDIO;
-
+        if(vidas<=0) {
+            estadosJuego = EstadosJuego.PERDIO;
+            vidas=0;
+        }
+        if(estadosJuego==EstadosJuego.INVENCIBLE){
+            tiempoInvencible-=Gdx.graphics.getDeltaTime();
+            if(tiempoInvencible<=0){
+                estadosJuego=EstadosJuego.JUGANDO;
+                tiempoInvencible=4;
+            }
+        }
         actualizarCamara();
         consultarEstado();
         //////
@@ -200,6 +207,7 @@ public class Nivel1 implements Screen, InputProcessor {
             botonReanudar.render(batch);
             botonMenuInicial.render(batch);
         }
+
         gemaVida.render(batch);
         botonDer.render(batch);
         botonIzq.render(batch);
@@ -211,7 +219,11 @@ public class Nivel1 implements Screen, InputProcessor {
         batch.end();
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
-        if (estadosJuego==EstadosJuego.JUGANDO){ miwa.render(batch);}
+
+        Gdx.app.log("Estado"," "+estadosJuego);
+        if (estadosJuego==EstadosJuego.JUGANDO||estadosJuego==EstadosJuego.INVENCIBLE){
+            miwa.render(batch);
+        }
         batch.end();
         int celdaX = (int)((miwa.getX()+miwa.getSprite().getWidth()/2)/ TAM_CELDA);
         int celdaY = (int)((miwa.getY())/ TAM_CELDA);
@@ -228,18 +240,32 @@ public class Nivel1 implements Screen, InputProcessor {
         }
         else if(celda==null){
             miwa.caer();
+            miwa.setVelocidadX(7);
         }
 
-        TiledMapTileLayer capaGemas=(TiledMapTileLayer)mapa.getMapa().getLayers().get(3);
-        TiledMapTileLayer.Cell celdaGema=capaGemas.getCell(celdaX,(int)(miwa.getY()+miwa.getSprite().getHeight()/2)/TAM_CELDA);
-        if(celdaGema!=null){
+        TiledMapTileLayer capaGemas = (TiledMapTileLayer) mapa.getMapa().getLayers().get(3);
+        TiledMapTileLayer.Cell celdaGema = capaGemas.getCell(celdaX, (int) (miwa.getY() + miwa.getSprite().getHeight() / 2) / TAM_CELDA);
+        if (celdaGema != null) {
             celdaGema.setTile(null);
-        }
-        TiledMapTileLayer capaPicos=(TiledMapTileLayer)mapa.getMapa().getLayers().get(2);
-        TiledMapTileLayer.Cell celdaPicos=capaPicos.getCell(celdaX,(int)(miwa.getY()+miwa.getSprite().getHeight()/2)/TAM_CELDA);
-        if(esPico(celdaPicos)){
 
         }
+        if(estadosJuego!=EstadosJuego.INVENCIBLE){
+            TiledMapTileLayer capaPicos = (TiledMapTileLayer) mapa.getMapa().getLayers().get(2);
+            TiledMapTileLayer.Cell celdaPicos = capaPicos.getCell(celdaX, (int) (miwa.getY() + miwa.getSprite().getHeight() / 2) / TAM_CELDA);
+            if (esPico(celdaPicos)) {
+                estadosJuego=EstadosJuego.INVENCIBLE;
+                vidas--;
+
+            }
+        }
+        /*if(miwa.getEstados()==Miwa.Estados.SUBIENDO||miwa.getEstados()==Miwa.Estados.BAJANDO){
+            botonSaltar1.setDisabled(true);
+            botonSaltar2.setDisabled(true);
+        }
+        else{
+            botonSaltar1.setDisabled(false);
+            botonSaltar2.setDisabled(false);
+        }*/
 
     }
     private boolean esPiso(TiledMapTileLayer.Cell celda) {
@@ -343,6 +369,7 @@ public class Nivel1 implements Screen, InputProcessor {
         Vector3 v=new Vector3(screenX,screenY,0);
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
+
         if(botonIzq.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
 
@@ -353,8 +380,8 @@ public class Nivel1 implements Screen, InputProcessor {
 
         }
         else if(botonSaltar1.contiene(x,y)||botonSaltar2.contiene(x,y)){
-            if(miwa.getEstados()!=Miwa.Estados.SUBIENDO)
-                miwa.setEstadoMovimiento(Miwa.Estados.SUBIENDO);
+
+
         }
         else if(botonPausa.contiene(x,y)){
             Gdx.app.log("clicked","Pausa");
@@ -389,7 +416,7 @@ public class Nivel1 implements Screen, InputProcessor {
         }
         else if (botonMenuInicial.contiene(x,y)){
             misionKitsune.setScreen(new Menu(misionKitsune));
-        }
+    }
         return true;
     }
 
@@ -411,6 +438,7 @@ public class Nivel1 implements Screen, InputProcessor {
         GANO,
         JUGANDO,
         PAUSADO,
-        PERDIO
+        PERDIO,
+        INVENCIBLE
     }
 }

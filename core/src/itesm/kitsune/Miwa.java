@@ -115,10 +115,7 @@ public class Miwa {
     public Sprite getSprite() {
         return sprite;
     }
-    public void setLibre(boolean libre){
-        this.libre=libre;
-    }
-    // Accesores para la posición
+
     public float getX() {
         return sprite.getX();
     }

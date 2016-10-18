@@ -77,7 +77,7 @@ public class Menu implements Screen {
 
 				//cambiar a la pantalla Instrucciones
 				//musicboton.play();
-				misionKitsune.setScreen(new Nivel1(misionKitsune));
+				misionKitsune.setScreen(new MenuMapas(misionKitsune));
 				}
 			}
 		);

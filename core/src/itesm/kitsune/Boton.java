@@ -34,9 +34,7 @@ public class Boton implements Disableable{
         sprite.draw(batch);
     }
 
-    public float getY() {
-        return sprite.getY();
-    }
+
 
     public float getX() {
         return sprite.getX();

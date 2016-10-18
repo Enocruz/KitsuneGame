@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Music;
  */
 public class MisionKitsune extends Game{
     public static Music music;
+    public static int nivel=1;
     @Override
     public void create() {
         setScreen(new Menu(this));
