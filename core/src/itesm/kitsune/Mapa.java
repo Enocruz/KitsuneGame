@@ -31,6 +31,39 @@ public class Mapa{
     public TiledMap getMapa(){
         return this.mapa;
     }
+    static class Mapa1 extends Mapa{
+        Mapa1(String nombre) {
+            super(nombre);
+        }
+        public boolean esPiso(TiledMapTileLayer.Cell celda) {
+            if (celda==null) {
+                return false;
+            }
+            Object propiedad = celda.getTile().getProperties().get("tipo");
+            return "piso".equals(propiedad);
+        }
+        public boolean esPegajoso(TiledMapTileLayer.Cell celda) {
+            if (celda==null) {
+                return false;
+            }
+            Object propiedad = celda.getTile().getProperties().get("tipo");
+            return "pegajoso".equals(propiedad);
+        }
+        public boolean esHielo(TiledMapTileLayer.Cell celda) {
+            if (celda==null) {
+                return false;
+            }
+            Object propiedad = celda.getTile().getProperties().get("tipo");
+            return "hielo".equals(propiedad);
+        }
+        public boolean esPico(TiledMapTileLayer.Cell celda){
+            if (celda==null) {
+                return false;
+            }
+            Object propiedad = celda.getTile().getProperties().get("tipo");
+            return "pico".equals(propiedad);
+        }
+    }
 
 
 

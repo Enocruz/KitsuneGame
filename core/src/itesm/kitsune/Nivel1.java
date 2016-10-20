@@ -20,7 +20,8 @@ public class Nivel1 implements Screen, InputProcessor {
     private MisionKitsune misionKitsune;
     //Texturas Pantalla
     private Texture texturaVida,texturaDer,texturaIzq,texturaSaltar,texturaPausa,
-            texturaMiwa, texturaGema,texturaBotonReanudar, texturaBotonMenuInicial,texturaMenuPausa;
+            texturaMiwa, texturaGema,texturaBotonReanudar, texturaBotonMenuInicial,texturaMenuPausa,
+            texturaPerdio;
     //Botones pantalla
     private Boton botonIzq,botonDer,botonSaltar1,botonSaltar2,botonPausa,botonReanudar,botonMenuInicial;
     //AssetManager (Cargar texturas)
@@ -36,7 +37,7 @@ public class Nivel1 implements Screen, InputProcessor {
     //Personaje principal
     private Miwa miwa;
     //Mapa del nivel
-    private Mapa mapa;
+    private Mapa.Mapa1 mapa;
     //Tamaño celdas TileMap
     public static final int TAM_CELDA = 32;
     //Estados Juego
@@ -65,11 +66,10 @@ public class Nivel1 implements Screen, InputProcessor {
         //Cargamos botones
         crearBotones();
         //Creamos mapa
-        mapa=new Mapa("MapaN1.tmx");
+        mapa=new Mapa.Mapa1("MapaN1.tmx");
         //Creamos personaje principal
         miwa=new Miwa(texturaMiwa);
         miwa.getSprite().setPosition(ANCHO/5,ALTO/5.333f); //Posicion inicial de Miwa
-        //miwa.getSprite().setPosition(ANCHO/5,1390);
         //Escena con "Listeners"
         Gdx.input.setInputProcessor(this);
         batch=new SpriteBatch();
@@ -132,6 +132,7 @@ public class Nivel1 implements Screen, InputProcessor {
         assetManager.load("Pantalla_Pausa.png", Texture.class);
         assetManager.load("Menu_Inicial.png", Texture.class);
         assetManager.load("Reanudar.png", Texture.class);
+        assetManager.load("Pantalla_Perder.png",Texture.class);
         //Se bloquea hasta cargar los recursos
         assetManager.finishLoading();
         //Textura Vida
@@ -148,6 +149,7 @@ public class Nivel1 implements Screen, InputProcessor {
         texturaMenuPausa = assetManager.get("Pantalla_Pausa.png");
         texturaBotonReanudar = assetManager.get("Reanudar.png");
         texturaBotonMenuInicial = assetManager.get("Menu_Inicial.png");
+        texturaPerdio=assetManager.get("Pantalla_Perder.png");
     }
 
     private void actualizarCamara() {
@@ -178,16 +180,12 @@ public class Nivel1 implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if(contadorGemas>4)
             contadorGemas=0;
-        if(vidas<=0) {
-            estadosJuego = EstadosJuego.PERDIO;
-            vidas=0;
-            gemaVida.setGemas(1);
-        }
+
         if(estadosJuego==EstadosJuego.INVENCIBLE){
             tiempoInvencible-=Gdx.graphics.getDeltaTime();
             if(tiempoInvencible<=0){
                 estadosJuego=EstadosJuego.JUGANDO;
-                tiempoInvencible=4;
+                tiempoInvencible=3;
             }
         }
         actualizarCamara();
@@ -207,57 +205,60 @@ public class Nivel1 implements Screen, InputProcessor {
             botonReanudar.render(batch);
             botonMenuInicial.render(batch);
         }
-
-        gemaVida.render(batch);
-        botonDer.render(batch);
-        botonIzq.render(batch);
-        batch.draw(texturaVida,texturaVida.getWidth()/8,ALTO-texturaVida.getHeight()-16);
-        botonSaltar1.render(batch);
-        botonSaltar2.render(batch);
-        botonPausa.render(batch);
-        texto.mostrarMensaje(batch,""+vidas,126,722);
-        batch.end();
-        batch.setProjectionMatrix(camara.combined);
-        batch.begin();
-
-        Gdx.app.log("Estado"," "+estadosJuego);
-        if (estadosJuego==EstadosJuego.JUGANDO||estadosJuego==EstadosJuego.INVENCIBLE){
-            miwa.render(batch);
-        }
-        batch.end();
-        int celdaX = (int)((miwa.getX()+miwa.getSprite().getWidth()/2)/ TAM_CELDA);
-        int celdaY = (int)((miwa.getY())/ TAM_CELDA);
-        TiledMapTileLayer capa = (TiledMapTileLayer)mapa.getMapa().getLayers().get(1);
-        TiledMapTileLayer.Cell celda=capa.getCell(celdaX,celdaY);
-        if(esPiso(celda)){
-            miwa.setVelocidadX(7);
-        }
-        else if(esHielo(celda)){
-            miwa.setVelocidadX(13);
-        }
-        else if(esPegajoso(celda)){
-            miwa.setVelocidadX(3);
-        }
-        else if(celda==null){
-            miwa.caer();
-            miwa.setVelocidadX(7);
+        if(vidas<=0) {
+            estadosJuego = EstadosJuego.PERDIO;
+            vidas=3;
+            misionKitsune.setScreen(new FinJuego(misionKitsune,new Texture("fondoNivel1.png")));
         }
 
-        TiledMapTileLayer capaGemas = (TiledMapTileLayer) mapa.getMapa().getLayers().get(3);
-        TiledMapTileLayer.Cell celdaGema = capaGemas.getCell(celdaX, (int) (miwa.getY() + miwa.getSprite().getHeight() / 2) / TAM_CELDA);
-        if (celdaGema != null) {
-            celdaGema.setTile(null);
+            gemaVida.render(batch);
+            botonDer.render(batch);
+            botonIzq.render(batch);
+            batch.draw(texturaVida, texturaVida.getWidth() / 8, ALTO - texturaVida.getHeight() - 16);
+            botonSaltar1.render(batch);
+            botonSaltar2.render(batch);
+            botonPausa.render(batch);
+            texto.mostrarMensaje(batch, "" + vidas, 126, 722);
+            batch.end();
+            batch.setProjectionMatrix(camara.combined);
+            batch.begin();
 
-        }
-        if(estadosJuego!=EstadosJuego.INVENCIBLE){
-            TiledMapTileLayer capaPicos = (TiledMapTileLayer) mapa.getMapa().getLayers().get(2);
-            TiledMapTileLayer.Cell celdaPicos = capaPicos.getCell(celdaX, (int) (miwa.getY() + miwa.getSprite().getHeight() / 2) / TAM_CELDA);
-            if (esPico(celdaPicos)) {
-                estadosJuego=EstadosJuego.INVENCIBLE;
-                vidas--;
+            Gdx.app.log("Estado", " " + estadosJuego);
+            if (estadosJuego == EstadosJuego.JUGANDO || estadosJuego == EstadosJuego.INVENCIBLE) {
+                miwa.render(batch);
+            }
+            batch.end();
+            int celdaX = (int) ((miwa.getX() + miwa.getSprite().getWidth() / 2) / TAM_CELDA);
+            int celdaY = (int) ((miwa.getY()) / TAM_CELDA);
+            TiledMapTileLayer capa = (TiledMapTileLayer) mapa.getMapa().getLayers().get(1);
+            TiledMapTileLayer.Cell celda = capa.getCell(celdaX, celdaY);
+            if (mapa.esPiso(celda)) {
+                miwa.setVelocidadX(7);
+            } else if (mapa.esHielo(celda)) {
+                miwa.setVelocidadX(13);
+            } else if (mapa.esPegajoso(celda)) {
+                miwa.setVelocidadX(3);
+            } else if (celda == null) {
+                miwa.caer();
+                miwa.setVelocidadX(7);
+            }
+
+            TiledMapTileLayer capaGemas = (TiledMapTileLayer) mapa.getMapa().getLayers().get(3);
+            TiledMapTileLayer.Cell celdaGema = capaGemas.getCell(celdaX, (int) (miwa.getY() + miwa.getSprite().getHeight() / 2) / TAM_CELDA);
+            if (celdaGema != null) {
+                celdaGema.setTile(null);
+                gemaVida.setGemas(contadorGemas++);
 
             }
-        }/*
+            if (estadosJuego != EstadosJuego.INVENCIBLE) {
+                TiledMapTileLayer capaPicos = (TiledMapTileLayer) mapa.getMapa().getLayers().get(2);
+                TiledMapTileLayer.Cell celdaPicos = capaPicos.getCell(celdaX, (int) (miwa.getY() + miwa.getSprite().getHeight() / 2) / TAM_CELDA);
+                if (mapa.esPico(celdaPicos)) {
+                    estadosJuego = EstadosJuego.INVENCIBLE;
+                    vidas--;
+
+                }
+            }/*
         if(miwa.getEstados()==Miwa.Estados.SUBIENDO||miwa.getEstados()==Miwa.Estados.BAJANDO){
             botonSaltar1.setDisabled(true);
             botonSaltar2.setDisabled(true);
@@ -267,34 +268,7 @@ public class Nivel1 implements Screen, InputProcessor {
             botonSaltar2.setDisabled(false);
         }*/
 
-    }
-    private boolean esPiso(TiledMapTileLayer.Cell celda) {
-        if (celda==null) {
-            return false;
-        }
-        Object propiedad = celda.getTile().getProperties().get("tipo");
-        return "piso".equals(propiedad);
-    }
-    private boolean esPegajoso(TiledMapTileLayer.Cell celda) {
-        if (celda==null) {
-            return false;
-        }
-        Object propiedad = celda.getTile().getProperties().get("tipo");
-        return "pegajoso".equals(propiedad);
-    }
-    private boolean esHielo(TiledMapTileLayer.Cell celda) {
-        if (celda==null) {
-            return false;
-        }
-        Object propiedad = celda.getTile().getProperties().get("tipo");
-        return "hielo".equals(propiedad);
-    }
-    private boolean esPico(TiledMapTileLayer.Cell celda){
-        if (celda==null) {
-            return false;
-        }
-        Object propiedad = celda.getTile().getProperties().get("tipo");
-        return "pico".equals(propiedad);
+
     }
 
     private void consultarEstado() {
@@ -409,10 +383,11 @@ public class Nivel1 implements Screen, InputProcessor {
         }
         else if(botonPausa.contiene(x,y)){
             this.estadosJuego = EstadosJuego.PAUSADO;
-            //Gdx.app.log("clicked","Pausa");
+            //
         }
         else if (botonReanudar.contiene(x,y)){
             estadosJuego= EstadosJuego.JUGANDO;
+            Gdx.app.log("clicked","Click reintentar");
         }
         else if (botonMenuInicial.contiene(x,y)){
             misionKitsune.setScreen(new Menu(misionKitsune));
