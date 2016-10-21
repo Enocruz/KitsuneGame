@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * Created by b-and on 08/09/2016.
  */
-public class Nivel1 implements Screen, InputProcessor {
+public class NivelBusqueda implements Screen, InputProcessor {
     private MisionKitsune misionKitsune;
     //Texturas Pantalla
     private Texture texturaVida,texturaDer,texturaIzq,texturaSaltar,texturaPausa,
@@ -44,8 +44,6 @@ public class Nivel1 implements Screen, InputProcessor {
     private EstadosJuego estadosJuego;
     //Contador para vidas
     private GemaVida gemaVida;
-    //Vidas
-    private int vidas=3;
     //Texto vidas
     private Texto texto;
     //Contador gemas para vida extra
@@ -53,7 +51,8 @@ public class Nivel1 implements Screen, InputProcessor {
     private float tiempoInvencible=3;
 
 
-    public Nivel1(MisionKitsune misionKitsune) {
+
+    public NivelBusqueda(MisionKitsune misionKitsune) {
         this.misionKitsune = misionKitsune;
     }
 
@@ -178,9 +177,12 @@ public class Nivel1 implements Screen, InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if(contadorGemas>4)
-            contadorGemas=0;
 
+        if(contadorGemas>=3){
+            miwa.setVidas(miwa.getVidas()+1);
+            contadorGemas=0;
+            gemaVida.setGemas(contadorGemas);
+        }
         if(estadosJuego==EstadosJuego.INVENCIBLE){
             tiempoInvencible-=Gdx.graphics.getDeltaTime();
             if(tiempoInvencible<=0){
@@ -190,8 +192,12 @@ public class Nivel1 implements Screen, InputProcessor {
         }
         actualizarCamara();
         consultarEstado();
-        //////
 
+        if(miwa.getY()+texturaMiwa.getHeight()<=0){
+            miwa.getSprite().setPosition(ANCHO/5,ALTO/5.333f);
+            camara.position.set(ANCHO/2, ALTO/2, 0);
+            miwa.setVidas(miwa.getVidas()-1);
+        }
         //Camara principal
         batch.setProjectionMatrix(camara.combined);
         mapa.render(batch,camara);
@@ -205,9 +211,8 @@ public class Nivel1 implements Screen, InputProcessor {
             botonReanudar.render(batch);
             botonMenuInicial.render(batch);
         }
-        if(vidas<=0) {
+        if(miwa.getVidas()<=0) {
             estadosJuego = EstadosJuego.PERDIO;
-            vidas=3;
             misionKitsune.setScreen(new FinJuego(misionKitsune,new Texture("fondoNivel1.png")));
         }
 
@@ -218,18 +223,16 @@ public class Nivel1 implements Screen, InputProcessor {
             botonSaltar1.render(batch);
             botonSaltar2.render(batch);
             botonPausa.render(batch);
-            texto.mostrarMensaje(batch, "" + vidas, 126, 722);
+            texto.mostrarMensaje(batch, "" + miwa.getVidas(), 126, 722);
             batch.end();
             batch.setProjectionMatrix(camara.combined);
             batch.begin();
-
-            Gdx.app.log("Estado", " " + estadosJuego);
             if (estadosJuego == EstadosJuego.JUGANDO || estadosJuego == EstadosJuego.INVENCIBLE) {
                 miwa.render(batch);
             }
             batch.end();
             int celdaX = (int) ((miwa.getX() + miwa.getSprite().getWidth() / 2) / TAM_CELDA);
-            int celdaY = (int) ((miwa.getY()) / TAM_CELDA);
+            int celdaY = (int) ((miwa.getY())/ TAM_CELDA);
             TiledMapTileLayer capa = (TiledMapTileLayer) mapa.getMapa().getLayers().get(1);
             TiledMapTileLayer.Cell celda = capa.getCell(celdaX, celdaY);
             if (mapa.esPiso(celda)) {
@@ -246,8 +249,10 @@ public class Nivel1 implements Screen, InputProcessor {
             TiledMapTileLayer capaGemas = (TiledMapTileLayer) mapa.getMapa().getLayers().get(3);
             TiledMapTileLayer.Cell celdaGema = capaGemas.getCell(celdaX, (int) (miwa.getY() + miwa.getSprite().getHeight() / 2) / TAM_CELDA);
             if (celdaGema != null) {
-                celdaGema.setTile(null);
-                gemaVida.setGemas(contadorGemas++);
+                contadorGemas+=1;
+                gemaVida.setGemas(contadorGemas);
+                capaGemas.setCell(celdaX,(int) (miwa.getY() + miwa.getSprite().getHeight() / 2) / TAM_CELDA,null);
+
 
             }
             if (estadosJuego != EstadosJuego.INVENCIBLE) {
@@ -255,20 +260,18 @@ public class Nivel1 implements Screen, InputProcessor {
                 TiledMapTileLayer.Cell celdaPicos = capaPicos.getCell(celdaX, (int) (miwa.getY() + miwa.getSprite().getHeight() / 2) / TAM_CELDA);
                 if (mapa.esPico(celdaPicos)) {
                     estadosJuego = EstadosJuego.INVENCIBLE;
-                    vidas--;
-
+                    miwa.setVidas(miwa.getVidas()-1);
                 }
             }/*
-        if(miwa.getEstados()==Miwa.Estados.SUBIENDO||miwa.getEstados()==Miwa.Estados.BAJANDO){
-            botonSaltar1.setDisabled(true);
-            botonSaltar2.setDisabled(true);
-        }
-        else{
-            botonSaltar1.setDisabled(false);
-            botonSaltar2.setDisabled(false);
-        }*/
-
-
+            Gdx.app.log("Estados",""+miwa.getEstados());
+            if(miwa.getEstados()==Miwa.Estados.SUBIENDO||miwa.getEstados()==Miwa.Estados.BAJANDO){
+                botonSaltar1.setDisabled(true);
+                botonSaltar2.setDisabled(true);
+            }
+            else {
+                botonSaltar1.setDisabled(false);
+                botonSaltar2.setDisabled(false);
+            }*/
     }
 
     private void consultarEstado() {
@@ -346,19 +349,14 @@ public class Nivel1 implements Screen, InputProcessor {
 
         if(botonIzq.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
-
-
         }
         else if(botonDer.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
-
         }
         else if(botonSaltar1.contiene(x,y)||botonSaltar2.contiene(x,y)){
-
-
+            miwa.setEstadoMovimiento(Miwa.Estados.SUBIENDO);
         }
         else if(botonPausa.contiene(x,y)){
-            Gdx.app.log("clicked","Pausa");
         }
         return true;
     }
@@ -378,8 +376,7 @@ public class Nivel1 implements Screen, InputProcessor {
         }
         else if(botonSaltar1.contiene(x,y)||botonSaltar2.contiene(x,y)){
 
-            if(miwa.getEstados()!=Miwa.Estados.SUBIENDO)
-                miwa.setEstadoMovimiento(Miwa.Estados.SUBIENDO);
+
         }
         else if(botonPausa.contiene(x,y)){
             this.estadosJuego = EstadosJuego.PAUSADO;
@@ -387,7 +384,6 @@ public class Nivel1 implements Screen, InputProcessor {
         }
         else if (botonReanudar.contiene(x,y)){
             estadosJuego= EstadosJuego.JUGANDO;
-            Gdx.app.log("clicked","Click reintentar");
         }
         else if (botonMenuInicial.contiene(x,y)){
             misionKitsune.setScreen(new Menu(misionKitsune));

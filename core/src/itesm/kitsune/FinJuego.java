@@ -130,7 +130,7 @@ public class FinJuego implements Screen, InputProcessor {
         }
         if(BtnReintentar.contiene(x,y)){
             if(MisionKitsune.nivel==1)
-                misionKitsune.setScreen(new Nivel1(misionKitsune));
+                misionKitsune.setScreen(new NivelBusqueda(misionKitsune));
 
         }
         return true;

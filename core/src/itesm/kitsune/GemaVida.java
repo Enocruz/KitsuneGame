@@ -24,13 +24,10 @@ public class GemaVida {
     public void render(SpriteBatch batch){
         if(getGemas()==1)
             gemasContador=1;
-            //this.getSprite().setTexture(gemaVidas[1].getTexture());
         else if(this.getGemas()==2)
             gemasContador=2;
-            //spriteGemas.setTexture(gemaVidas[2].getTexture());
         else if(this.getGemas()==3)
             gemasContador=3;
-            //spriteGemas.setTexture(gemaVidas[3].getTexture());
         else
             gemasContador=0;
         batch.draw(gemaVidas[gemasContador],spriteGemas.getX(),spriteGemas.getY());
@@ -55,7 +52,4 @@ public class GemaVida {
         return spriteGemas.getY();
     }
 
-    public void setPosicion(float x, int y) {
-        spriteGemas.setPosition(x,y);
-    }
 }

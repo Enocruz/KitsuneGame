@@ -11,8 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * Created by b-and on 23/09/2016.
  */
 public class Miwa {
-
-    private Sprite sprite,spriteSalto;
+    private Sprite sprite;
     private TextureRegion[] walkFrames;
     private Animation animacion;
     private float tiempo;
@@ -20,7 +19,8 @@ public class Miwa {
     public static float VELOCIDAD_Y=-4f,VELOCIDAD_X;
     private TextureRegion salto,inicio;
     private float velSalto = 30f;
-    private boolean libre =false;
+    private int vidas=3;
+
 
 
     Miwa(Texture textura){
@@ -35,16 +35,16 @@ public class Miwa {
         animacion.setPlayMode(Animation.PlayMode.LOOP);
         tiempo=0;
         sprite=new Sprite(texturaMiwa[0][0]);
-        spriteSalto=new Sprite(texturaMiwa[0][9]);
         estados=Estados.QUIETOD;
     }
     public void render(SpriteBatch batch){
         float x=sprite.getX();
         float y = sprite.getY();
-
         miwaMovimiento(x,y,batch);
+
     }
     public void miwaMovimiento(float x,float y,SpriteBatch batch){
+        float yinicial=y;
         switch (estados) {
             case DERECHA:
             case IZQUIERDA:
@@ -55,7 +55,7 @@ public class Miwa {
                     if (region.isFlipX()) {
                         region.flip(true, false);
                     }
-                    if (x <= Nivel1.ANCHO_MAPA - sprite.getWidth())
+                    if (x <= NivelBusqueda.ANCHO_MAPA - sprite.getWidth())
                         sprite.setX(x);
                 }
                 else {
@@ -77,24 +77,18 @@ public class Miwa {
             case QUIETOI:
                 sprite.setRegion(inicio);
                 if (!sprite.isFlipX())
-                    sprite.flip(true, false);
+                    sprite.flip(false, false);
                 sprite.draw(batch);
                 break;
-            case SALTOD:
-            case SALTOI:
-                break;
             case SUBIENDO:
-                if (sprite.isFlipX())
-                    sprite.flip(true, false);
                 sprite.setRegion(salto);
                 y += velSalto;
                 sprite.setY(y);
                 velSalto+=VELOCIDAD_Y;
-                System.out.println(velSalto);
                 sprite.draw(batch);
                 if (velSalto<=0){
                     estados=Estados.BAJANDO;
-                }libre=true;
+                }
                 break;
             case BAJANDO:
                 velSalto=30;
@@ -102,13 +96,19 @@ public class Miwa {
                 y += VELOCIDAD_Y;
                 sprite.setY(y);
                 sprite.draw(batch);
-                if (libre ==false){
-                    if(!sprite.isFlipX()){estados=Estados.QUIETOD;}
-                    else{estados=Estados.QUIETOI;}
-                }libre = true;
+                if(y<=yinicial) {
+                    sprite.setY(yinicial);
+                    estados=Estados.QUIETOD;
+                }
 
                 break;
         }
+    }
+    public void setVidas(int vidas){
+        this.vidas=vidas;
+    }
+    public int getVidas(){
+        return this.vidas;
     }
     public Sprite getSprite() {
         return sprite;
@@ -127,7 +127,7 @@ public class Miwa {
         VELOCIDAD_X=x;
     }
     public void caer(){
-        sprite.setRegion(salto);
+        sprite.setTexture(salto.getTexture());
         sprite.setY(sprite.getY()+VELOCIDAD_Y);
     }
     public Estados getEstados(){
@@ -138,6 +138,7 @@ public class Miwa {
         this.estados = estadoMovimiento;
     }
 
+
     public enum Estados{
         IZQUIERDA,
         DERECHA,
@@ -145,8 +146,7 @@ public class Miwa {
         QUIETOI,
         SUBIENDO,
         BAJANDO,
-        SALTOD,
-        SALTOI,
     }
+
 
 }
