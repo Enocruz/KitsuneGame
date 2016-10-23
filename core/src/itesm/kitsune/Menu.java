@@ -25,10 +25,12 @@ public class Menu implements Screen {
 	private final AssetManager assetManager=new AssetManager();
 	private Stage escena;
 	private Texture texturaFondo,texturaBtnJugar,texturaBtnInstrucciones,texturaBtnAcercade;
-	private Music sonidoBotones;
+
 	private final int ancho=1280,alto=800;
 	private OrthographicCamera camara;
 	private Viewport vista;
+	public static Music sonidoBotones;
+
 
 	public Menu(MisionKitsune misionKitsune) {
 		this.misionKitsune=misionKitsune;
@@ -36,7 +38,6 @@ public class Menu implements Screen {
 
 	@Override
 	public void show() {
-		//sonidoBotones=Gdx.audio.newMusic(Gdx.files.internal("data/menubotones.wav"));
 		camara=new OrthographicCamera(ancho,alto);
 		camara.position.set(ancho/2,alto/2,0);
 		camara.update();
@@ -71,7 +72,7 @@ public class Menu implements Screen {
 		btnJugar.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				//sonidoBotones.play();
+				sonidoBotones.play();
 				misionKitsune.setScreen(new MenuMapas(misionKitsune));
 				}
 			}
@@ -80,7 +81,7 @@ public class Menu implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				//sonidoBotones.play();
+				sonidoBotones.play();
 				misionKitsune.setScreen(new Instrucciones(misionKitsune));
 
 				}
@@ -90,7 +91,7 @@ public class Menu implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				//sonidoBotones.play();
+				sonidoBotones.play();
 				misionKitsune.setScreen(new AcercaDe(misionKitsune));
 
 				}
@@ -105,7 +106,7 @@ public class Menu implements Screen {
 		assetManager.load("BtnJugar.png",Texture.class);
 		assetManager.load("BtnInstrucciones.png",Texture.class);
 		assetManager.load("BtnAcercaDe.png",Texture.class);
-		//assetManager.load("menubotones.wav",Music.class);
+		assetManager.load("ClickBotonesMenu.ogg",Music.class);
 		//Se bloquea hasta cargar los recursos
 		assetManager.finishLoading();
 		//Cuando termina, leemos las texturas
@@ -113,7 +114,8 @@ public class Menu implements Screen {
 		texturaBtnJugar=assetManager.get("BtnJugar.png");
 		texturaBtnInstrucciones=assetManager.get("BtnInstrucciones.png");
 		texturaBtnAcercade=assetManager.get("BtnAcercaDe.png");
-		//sonidoBotones=assetManager.get("menubotones.wav",Music.class);
+		sonidoBotones=assetManager.get("ClickBotonesMenu.ogg");
+
 	}
 
 	@Override
@@ -121,6 +123,7 @@ public class Menu implements Screen {
 		Gdx.gl.glClearColor(0,0,0,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//Dependencia de la camara
+		//musicaFondo.play();
 		escena.setViewport(vista);
 		escena.draw();
 	}

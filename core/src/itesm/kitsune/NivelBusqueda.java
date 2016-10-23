@@ -51,7 +51,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
     //Contador gemas para vida extra
     private int contadorGemas=0,conPre=0,conDial=0;
     private float tiempoInvencible=3,tiempoGemas=2,tiempoDialogo=1;
-    private Music SonidoGemas,SonidoPicos;
+    private Music SonidoGemas,SonidoPicos,SonidoPre,SonidoDial;
 
 
 
@@ -136,7 +136,9 @@ public class NivelBusqueda implements Screen, InputProcessor {
         assetManager.load("Dialogo_PreNivel1_8.png",Texture.class);
         //Musica
         assetManager.load("SonidoGemas.ogg",Music.class);
-
+        assetManager.load("SonidoPicos.ogg",Music.class);
+        assetManager.load("MusicaDialogoInicioNivel1.ogg",Music.class);
+        assetManager.load("MusicaDialogoFinalNivel1.ogg",Music.class);
         //Textura Miwa
         assetManager.load("miwa.png",Texture.class);
         //Textura Vida
@@ -180,8 +182,12 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Predial7=assetManager.get("Dialogo_PreNivel1_7.png");
         Predial8=assetManager.get("Dialogo_PreNivel1_8.png");
         //Musica
-
+        SonidoPicos=assetManager.get("SonidoPicos.ogg");
         SonidoGemas=assetManager.get("SonidoGemas.ogg");
+        SonidoPre=assetManager.get("MusicaDialogoInicioNivel1.ogg");
+        SonidoDial=assetManager.get("MusicaDialogoFinalNivel1.ogg");
+        SonidoDial.setLooping(true);
+        SonidoPre.setLooping(true);
     }
 
     private void actualizarCamara() {
@@ -214,6 +220,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         consultarEstado();
         if (estadosJuego == EstadosJuego.INTRO) {
             if(conPre<8) {
+                SonidoPre.play();
                 batch.setProjectionMatrix(camara.combined);
                 batch.begin();
                 batch.draw(Predialogos[conPre], 0, 0);
@@ -222,12 +229,14 @@ public class NivelBusqueda implements Screen, InputProcessor {
             else{
                 tiempoDialogo-=Gdx.graphics.getDeltaTime();
                 if(tiempoDialogo<=0){
+                    SonidoPre.stop();
                     estadosJuego=EstadosJuego.JUGANDO;
                     tiempoDialogo=1;
                 }
             }
         } else if (estadosJuego == EstadosJuego.GANO) {
             if(conDial<2) {
+                SonidoDial.play();
                 batch.begin();
                 batch.draw(texturaMiwa,0,0);
                 batch.end();
@@ -235,9 +244,11 @@ public class NivelBusqueda implements Screen, InputProcessor {
             else{
                 tiempoDialogo-=Gdx.graphics.getDeltaTime();
                 if(tiempoDialogo<=0){
+                    SonidoDial.stop();
                     MisionKitsune.nivel=2;
                     misionKitsune.setScreen(new MenuMapas(misionKitsune));
                     tiempoDialogo=1;
+                    MisionKitsune.musicaFondo.play();
                 }
             }
 
@@ -334,6 +345,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 if (mapa.esPico(celdaPicos)) {
                     estadosJuego = EstadosJuego.INVENCIBLE;
                     miwa.setVidas(miwa.getVidas() - 1);
+                    SonidoPicos.play();
                 }
                 if (mapa.esMiniPico(celdaMini)) {
                     estadosJuego = EstadosJuego.INVENCIBLE;
@@ -428,11 +440,15 @@ public class NivelBusqueda implements Screen, InputProcessor {
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
         if(estadosJuego==EstadosJuego.INTRO)
-            if(x>ANCHO/1.1f&&x<ANCHO&&y>0&&y<ALTO/6)
+            if(x>0&&x<ANCHO&&y>0&&y<ALTO) {
                 conPre++;
+                Menu.sonidoBotones.play();
+            }
         if(estadosJuego==EstadosJuego.GANO)
-            if(x>ANCHO/1.1f&&x<ANCHO&&y>0&&y<ALTO/6)
+            if(x>0&&x<ANCHO&&y>0&&y<ALTO) {
                 conDial++;
+                Menu.sonidoBotones.play();
+            }
         if (botonIzq.contiene(x, y)) {
             miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
         } else if (botonDer.contiene(x, y)) {
@@ -463,13 +479,16 @@ public class NivelBusqueda implements Screen, InputProcessor {
 
         }
         else if(botonPausa.contiene(x,y)){
+            Menu.sonidoBotones.play();
             this.estadosJuego = EstadosJuego.PAUSADO;
-            //
         }
         else if (botonReanudar.contiene(x,y)){
+            Menu.sonidoBotones.play();
             estadosJuego= EstadosJuego.JUGANDO;
         }
         else if (botonMenuInicial.contiene(x,y)){
+            MisionKitsune.musicaFondo.play();
+            Menu.sonidoBotones.play();
             misionKitsune.setScreen(new Menu(misionKitsune));
     }
         return true;

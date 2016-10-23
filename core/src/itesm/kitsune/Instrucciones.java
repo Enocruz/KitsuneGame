@@ -63,6 +63,7 @@ public class Instrucciones implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 //Regresar a la pantalla del Menu
                 misionKitsune.setScreen(new Menu(misionKitsune));
+                Menu.sonidoBotones.play();
                 }
             }
         );
