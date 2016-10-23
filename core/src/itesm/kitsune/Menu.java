@@ -25,7 +25,7 @@ public class Menu implements Screen {
 	private final AssetManager assetManager=new AssetManager();
 	private Stage escena;
 	private Texture texturaFondo,texturaBtnJugar,texturaBtnInstrucciones,texturaBtnAcercade;
-
+	private Music sonidoBotones;
 	private final int ancho=1280,alto=800;
 	private OrthographicCamera camara;
 	private Viewport vista;
@@ -36,10 +36,7 @@ public class Menu implements Screen {
 
 	@Override
 	public void show() {
-		//MisionKitsune.music= Gdx.audio.newMusic(Gdx.files.internal("toyship.wav"));
-		//MisionKitsune.music.setLooping(true);
-		//MisionKitsune.music.play();
-		//Camara
+		//sonidoBotones=Gdx.audio.newMusic(Gdx.files.internal("data/menubotones.wav"));
 		camara=new OrthographicCamera(ancho,alto);
 		camara.position.set(ancho/2,alto/2,0);
 		camara.update();
@@ -74,9 +71,7 @@ public class Menu implements Screen {
 		btnJugar.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-
-				//cambiar a la pantalla Instrucciones
-				//musicboton.play();
+				//sonidoBotones.play();
 				misionKitsune.setScreen(new MenuMapas(misionKitsune));
 				}
 			}
@@ -85,8 +80,7 @@ public class Menu implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				//cambiar a la pantalla Instrucciones
-				//musicboton.play();
+				//sonidoBotones.play();
 				misionKitsune.setScreen(new Instrucciones(misionKitsune));
 
 				}
@@ -96,8 +90,7 @@ public class Menu implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				//cambiar a la pantalla AcercaDe
-				//musicboton.play();
+				//sonidoBotones.play();
 				misionKitsune.setScreen(new AcercaDe(misionKitsune));
 
 				}
@@ -112,6 +105,7 @@ public class Menu implements Screen {
 		assetManager.load("BtnJugar.png",Texture.class);
 		assetManager.load("BtnInstrucciones.png",Texture.class);
 		assetManager.load("BtnAcercaDe.png",Texture.class);
+		//assetManager.load("menubotones.wav",Music.class);
 		//Se bloquea hasta cargar los recursos
 		assetManager.finishLoading();
 		//Cuando termina, leemos las texturas
@@ -119,6 +113,7 @@ public class Menu implements Screen {
 		texturaBtnJugar=assetManager.get("BtnJugar.png");
 		texturaBtnInstrucciones=assetManager.get("BtnInstrucciones.png");
 		texturaBtnAcercade=assetManager.get("BtnAcercaDe.png");
+		//sonidoBotones=assetManager.get("menubotones.wav",Music.class);
 	}
 
 	@Override

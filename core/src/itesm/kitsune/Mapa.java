@@ -63,6 +63,13 @@ public class Mapa{
             Object propiedad = celda.getTile().getProperties().get("tipo");
             return "pico".equals(propiedad);
         }
+        public boolean esMiniPico(TiledMapTileLayer.Cell celda){
+            if (celda==null) {
+                return false;
+            }
+            Object propiedad = celda.getTile().getProperties().get("tipo");
+            return "minipicos".equals(propiedad);
+        }
     }
 
 
