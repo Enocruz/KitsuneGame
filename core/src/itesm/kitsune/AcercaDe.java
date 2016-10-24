@@ -27,7 +27,7 @@ public class AcercaDe implements Screen {
     private Stage escena;
     private Texture texturaFondo,texturaRegresar,textureEnock,textureEli,textureLes,textureSnell,textureDaph,popupEnock,
             popupEli,popupSnell,popupDaph,popupLes,textureCerrar;
-    private final AssetManager assetManager=new AssetManager();
+    private AssetManager assetManager;
     private Table tablepopup,tabla;
     private final int ancho=1280,alto=800;
 
@@ -40,7 +40,7 @@ public class AcercaDe implements Screen {
     }
     @Override
     public void show() {
-
+        assetManager=new AssetManager();
         //Camara
         camara=new OrthographicCamera(ancho,alto);
         camara.position.set(ancho/2,alto/2,0);

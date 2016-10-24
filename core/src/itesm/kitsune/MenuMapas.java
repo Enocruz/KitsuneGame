@@ -22,8 +22,7 @@ public class MenuMapas implements Screen , InputProcessor{
     private final int ancho=1280,alto=800;
     private OrthographicCamera camara;
     private Viewport vista;
-    private final AssetManager assetManager=new AssetManager();
-    private Fondo fondo;
+    private AssetManager assetManager;
     private Boton boton1,boton2,boton3,botonCerrar;
     private SpriteBatch batch;
 
@@ -34,15 +33,15 @@ public class MenuMapas implements Screen , InputProcessor{
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
-
+        assetManager=new AssetManager();
         cargarCamara();
         cargarTexturas();
         batch=new SpriteBatch();
         //Fondo
-        fondo=new Fondo(texturaFondo);
+
         cargarBotones();
     }
-    public void cargarBotones(){
+    private void cargarBotones(){
         //Nivel 1
         boton1=new Boton(texturaNivel1);
         boton1.setPosicion(ancho/4.2f-texturaNivel1.getWidth()/2, alto/2.9f);
@@ -105,7 +104,7 @@ public class MenuMapas implements Screen , InputProcessor{
         }
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
-        fondo.draw(batch);
+        batch.draw(texturaFondo,0,0);
         boton1.render(batch);
         boton2.render(batch);
         boton3.render(batch);

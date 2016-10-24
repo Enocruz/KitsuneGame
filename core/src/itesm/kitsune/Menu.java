@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class Menu implements Screen {
 
 	private final MisionKitsune misionKitsune;
-	private final AssetManager assetManager=new AssetManager();
+	private AssetManager assetManager;
 	private Stage escena;
 	private Texture texturaFondo,texturaBtnJugar,texturaBtnInstrucciones,texturaBtnAcercade,texturaGuion,texturaWhite;
 	private final int ancho=1280,alto=800;
@@ -38,7 +38,7 @@ public class Menu implements Screen {
 
 	@Override
 	public void show() {
-
+		assetManager=new AssetManager();
 		camara=new OrthographicCamera(ancho,alto);
 		camara.position.set(ancho/2,alto/2,0);
 		camara.update();

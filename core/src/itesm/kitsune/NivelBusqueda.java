@@ -84,8 +84,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texto=new Texto("DominoFont.fnt");
         Predialogos=new Texture[]{Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8};
         Dialogos=new Texture[]{Dial1,Dial2};
-        //SonidoGemas=Gdx.audio.newMusic(Gdx.files.internal("SonidoGemas.ogg"));
-        //SonidoPicos=Gdx.audio.newMusic(Gdx.files.internal("SonidoPicos.aiff"));
+
 
     }
     //Crear los botones del menú principal
@@ -217,29 +216,16 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
         consultarEstado();
-        if (estadosJuego == EstadosJuego.INTRO) {
-            if(conPre<8) {
-                SonidoPre.play();
-                batch.setProjectionMatrix(camara.combined);
-                batch.begin();
-                batch.draw(Predialogos[conPre], 0, 0);
-                batch.end();
-            }
-            else{
-                tiempoDialogo-=Gdx.graphics.getDeltaTime();
-                if(tiempoDialogo<=0){
-                    SonidoPre.stop();
-                    estadosJuego=EstadosJuego.JUGANDO;
-                    tiempoDialogo=1;
-                }
-            }
-        } else if (estadosJuego == EstadosJuego.GANO) {
+        if (estadosJuego == EstadosJuego.GANO) {
             if(conDial<2) {
-                SonidoDial.play();
+                Gdx.app.log("NOOO","No dibuja");
                 batch.begin();
-                batch.draw(texturaMiwa,0,0);
+                batch.draw(Dialogos[conDial],0,0);
                 batch.end();
+                //batch.setProjectionMatrix(camara.combined);
+                SonidoDial.play();
             }
             else{
                 tiempoDialogo-=Gdx.graphics.getDeltaTime();
@@ -252,7 +238,26 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 }
             }
 
-        } else {
+        }
+        else if (estadosJuego == EstadosJuego.INTRO) {
+            if(conPre<8) {
+                SonidoPre.play();
+                batch.setProjectionMatrix(camara.combined);
+                batch.begin();
+
+                batch.draw(Predialogos[conPre], 0, 0);
+
+                batch.end();
+            }
+            else{
+                tiempoDialogo-=Gdx.graphics.getDeltaTime();
+                if(tiempoDialogo<=0){
+                    SonidoPre.stop();
+                    estadosJuego=EstadosJuego.JUGANDO;
+                    tiempoDialogo=1;
+                }
+            }
+        }  else {
             if (contadorGemas >= 3) {
                 tiempoGemas -= Gdx.graphics.getDeltaTime();
                 if (tiempoGemas <= 0) {
@@ -417,6 +422,21 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texturaDer.dispose();
         texturaPausa.dispose();
         texturaSaltar.dispose();
+        texturaBotonReanudar.dispose();
+        texturaMiwa.dispose();
+        texturaGema.dispose();
+        texturaBotonMenuInicial.dispose();
+        texturaMenuPausa.dispose();
+        Predial1.dispose();
+        Predial5.dispose();
+        Predial3.dispose();
+        Predial2.dispose();
+        Predial4.dispose();
+        Predial6.dispose();
+        Predial7.dispose();
+        Predial8.dispose();
+        Dial2.dispose();
+        Dial1.dispose();
     }
 
     @Override

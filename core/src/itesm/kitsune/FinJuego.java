@@ -41,7 +41,7 @@ public class FinJuego implements Screen, InputProcessor {
 
 
     }
-    public void cargarTexturas(){
+    private void cargarTexturas(){
         assetManager.load("Pantalla_Perder.png",Texture.class);
         //assetManager.load("fondoNivel1.png",Texture.class);
         assetManager.load("BtnReintentar.png",Texture.class);
@@ -53,14 +53,14 @@ public class FinJuego implements Screen, InputProcessor {
         texturaReintentar=assetManager.get("BtnReintentar.png");
 
     }
-    public void cargarCamara(){
+    private void cargarCamara(){
         camara=new OrthographicCamera(ancho,alto);
         camara.position.set(ancho/2,alto/2,0);
         camara.update();
         //Vista
         vista= new StretchViewport(ancho,alto,camara);
     }
-    public void cargarBotones(){
+    private void cargarBotones(){
         BtnReintentar=new Boton(texturaReintentar);
         BtnReintentar.setPosicion(ancho/2-texturaReintentar.getWidth()/2,alto/4);
         BtnMenu=new Boton(texturaMenu);
