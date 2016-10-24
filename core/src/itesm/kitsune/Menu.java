@@ -1,6 +1,6 @@
 package itesm.kitsune;
 
-import com.badlogic.gdx.ApplicationAdapter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,13 +24,13 @@ public class Menu implements Screen {
 	private final MisionKitsune misionKitsune;
 	private final AssetManager assetManager=new AssetManager();
 	private Stage escena;
-	private Texture texturaFondo,texturaBtnJugar,texturaBtnInstrucciones,texturaBtnAcercade;
-
+	private Texture texturaFondo,texturaBtnJugar,texturaBtnInstrucciones,texturaBtnAcercade,texturaGuion,texturaWhite;
 	private final int ancho=1280,alto=800;
 	private OrthographicCamera camara;
 	private Viewport vista;
 	public static Music sonidoBotones;
-
+	private Animation guion;
+	private float tiempo=0;
 
 	public Menu(MisionKitsune misionKitsune) {
 		this.misionKitsune=misionKitsune;
@@ -38,6 +38,7 @@ public class Menu implements Screen {
 
 	@Override
 	public void show() {
+
 		camara=new OrthographicCamera(ancho,alto);
 		camara.position.set(ancho/2,alto/2,0);
 		camara.update();
@@ -47,7 +48,8 @@ public class Menu implements Screen {
 		escena=new Stage();
 		//Habilitar logs
 		Gdx.input.setInputProcessor(escena);
-
+		guion=new Animation(0.5f,new TextureRegion(texturaGuion),new TextureRegion(texturaWhite));
+		guion.setPlayMode(Animation.PlayMode.LOOP);
 		//Fondo
 		Image imgFondo= new Image(texturaFondo);
 		escena.addActor(imgFondo);
@@ -56,17 +58,17 @@ public class Menu implements Screen {
 		//Jugar
 		TextureRegionDrawable trBtnJugar=new TextureRegionDrawable(new TextureRegion(texturaBtnJugar));
 		ImageButton btnJugar=new ImageButton(trBtnJugar);
-		btnJugar.setPosition(ancho/2-btnJugar.getWidth()/2, 0.3f*alto);
+		btnJugar.setPosition(ancho/2-btnJugar.getWidth()/2, 0.34f*alto);
 		escena.addActor(btnJugar);
 		//Opciones
 		TextureRegionDrawable trBtnInstrucciones=new TextureRegionDrawable(new TextureRegion(texturaBtnInstrucciones));
 		ImageButton btnInstrucciones=new ImageButton(trBtnInstrucciones);
-		btnInstrucciones.setPosition(ancho/2-btnInstrucciones.getWidth()/2, 0.22f*alto);
+		btnInstrucciones.setPosition(ancho/2-btnInstrucciones.getWidth()/2, 0.21f*alto);
 		escena.addActor(btnInstrucciones);
 		//Acerca de
 		TextureRegionDrawable trBtnAcercade=new TextureRegionDrawable(new TextureRegion(texturaBtnAcercade));
 		ImageButton btnAcercade=new ImageButton(trBtnAcercade);
-		btnAcercade.setPosition(ancho/2-btnAcercade.getWidth()/2, 0.14f*alto);
+		btnAcercade.setPosition(ancho/2-btnAcercade.getWidth()/2, 0.09f*alto);
 		escena.addActor(btnAcercade);
 
 		btnJugar.addListener(new ClickListener(){
@@ -107,6 +109,8 @@ public class Menu implements Screen {
 		assetManager.load("BtnInstrucciones.png",Texture.class);
 		assetManager.load("BtnAcercaDe.png",Texture.class);
 		assetManager.load("ClickBotonesMenu.ogg",Music.class);
+		assetManager.load("Guion.png",Texture.class);
+		assetManager.load("white.png",Texture.class);
 		//Se bloquea hasta cargar los recursos
 		assetManager.finishLoading();
 		//Cuando termina, leemos las texturas
@@ -115,7 +119,8 @@ public class Menu implements Screen {
 		texturaBtnInstrucciones=assetManager.get("BtnInstrucciones.png");
 		texturaBtnAcercade=assetManager.get("BtnAcercaDe.png");
 		sonidoBotones=assetManager.get("ClickBotonesMenu.ogg");
-
+		texturaGuion=assetManager.get("Guion.png");
+		texturaWhite=assetManager.get("white.png");
 	}
 
 	@Override
@@ -123,9 +128,13 @@ public class Menu implements Screen {
 		Gdx.gl.glClearColor(0,0,0,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//Dependencia de la camara
-		//musicaFondo.play();
+		tiempo+=Gdx.graphics.getDeltaTime();
+
 		escena.setViewport(vista);
 		escena.draw();
+		escena.getBatch().begin();
+		escena.getBatch().draw(guion.getKeyFrame(tiempo),ancho/1.47f,alto/1.8f);
+		escena.getBatch().end();
 	}
 
 	@Override
