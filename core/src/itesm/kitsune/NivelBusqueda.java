@@ -184,12 +184,15 @@ public class NivelBusqueda implements Screen, InputProcessor {
         //Musica
         SonidoPicos=assetManager.get("SonidoPicos.ogg");
         SonidoGemas=assetManager.get("SonidoGemas.ogg");
+        SonidoGemas.setVolume(1);
         SonidoPre=assetManager.get("MusicaDialogoInicioNivel1.ogg");
+        SonidoPre.setVolume(0.6f);
         SonidoDial=assetManager.get("MusicaDialogoFinalNivel1.ogg");
         SonidoJuego = assetManager.get("MusicaJuegoN1.ogg");
         SonidoDial.setLooping(true);
         SonidoPre.setLooping(true);
         SonidoJuego.setLooping(true);
+        SonidoJuego.setVolume(0.5f);
     }
 
     private void actualizarCamara() {
@@ -226,7 +229,16 @@ public class NivelBusqueda implements Screen, InputProcessor {
     private void consultarEstado() {
         switch (estadosJuego) {
             case JUGANDO:
+            case INVENCIBLE:
+            case PAUSADO:
                 SonidoJuego.play();
+                if (estadosJuego == EstadosJuego.INVENCIBLE) {
+                    tiempoInvencible -= Gdx.graphics.getDeltaTime();
+                    if (tiempoInvencible <= 0) {
+                        estadosJuego = EstadosJuego.JUGANDO;
+                        tiempoInvencible = 3;
+                    }
+                }
                 if (miwa.getY() + texturaMiwa.getHeight() <= 0) {
                     miwa.getSprite().setPosition(ANCHO / 5, ALTO / 5.333f);
                     camara.position.set(ANCHO / 2, ALTO / 2, 0);
@@ -244,6 +256,23 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     batch.draw(texturaMenuPausa, ANCHO / 2 - texturaMenuPausa.getWidth() / 2, ALTO / 2 - texturaMenuPausa.getHeight() / 2);
                     botonReanudar.render(batch);
                     botonMenuInicial.render(batch);
+                        //Desactiva los botones para que no puedan ser usados mientras está en pausa
+                    botonIzq.setDisabled(true);
+                    botonDer.setDisabled(true);
+                    botonPausa.setDisabled(true);
+                    botonSaltar1.setDisabled(true);
+                    botonSaltar2.setDisabled(true);
+                    botonReanudar.setDisabled(false);
+                    botonMenuInicial.setDisabled(false);
+                }
+                else{
+                    botonIzq.setDisabled(false);
+                    botonDer.setDisabled(false);
+                    botonPausa.setDisabled(false);
+                    botonSaltar1.setDisabled(false);
+                    botonSaltar2.setDisabled(false);
+                    botonReanudar.setDisabled(true);
+                    botonMenuInicial.setDisabled(true);
                 }
                 if (miwa.getVidas() <= 0) {
                     SonidoJuego.pause();
@@ -278,9 +307,10 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 } else if (mapa.esPegajoso(celda)) {
                     miwa.setVelocidadX(3);
                 } else {
+                    miwa.setVelocidadX(7);
                     miwa.setEstadoSalto(Miwa.EstadosSalto.CAIDA_LIBRE);
                 }
-                miwa.setVelocidadX(7);
+
                 TiledMapTileLayer capaGanar = (TiledMapTileLayer) mapa.getMapa().getLayers().get(5);
                 TiledMapTileLayer.Cell celdaGanar = capaGanar.getCell(celdaX, celdaY);
                 if (celdaGanar != null) {
@@ -327,39 +357,20 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     }
                 }
                 //Activa los botones para que puedan ser usados
-                botonIzq.setDisabled(false);
-                botonDer.setDisabled(false);
-                botonPausa.setDisabled(false);
-                botonSaltar1.setDisabled(false);
-                botonSaltar2.setDisabled(false);
-                botonReanudar.setDisabled(true);
-                botonMenuInicial.setDisabled(true);
-                break;
-            case PAUSADO:
-                //Desactiva los botones para que no puedan ser usados mientras está en pausa
-                botonIzq.setDisabled(true);
-                botonDer.setDisabled(true);
-                botonPausa.setDisabled(true);
-                botonSaltar1.setDisabled(true);
-                botonSaltar2.setDisabled(true);
-                botonReanudar.setDisabled(false);
-                botonMenuInicial.setDisabled(false);
+
                 break;
             case INTRO:
                 if (conPre < 8) {
                     batch.setProjectionMatrix(camara.combined);
                     batch.begin();
-
                     batch.draw(Predialogos[conPre], 0, 0);
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                    }
                     batch.end();
                     SonidoPre.play();
-                    conPre += 1;
-                }else{SonidoPre.pause();
-                    estadosJuego=EstadosJuego.JUGANDO;}
+                }
+                else{
+                    SonidoPre.pause();
+                    estadosJuego=EstadosJuego.JUGANDO;
+                }
                 botonIzq.setDisabled(true);
                 botonDer.setDisabled(true);
                 botonPausa.setDisabled(true);
@@ -371,15 +382,17 @@ public class NivelBusqueda implements Screen, InputProcessor {
             case GANO:
                 camara.setToOrtho(false,ANCHO,ALTO);
                 if (conDial < 2) {
+                    SonidoDial.play();
                     batch.setProjectionMatrix(camara.combined);
                     batch.begin();
                     batch.draw(Dialogos[conDial], 0, 0);
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {}
                     batch.end();
-                    SonidoDial.play();
-                    conDial+=1;
+                }
+                else{
+                    SonidoDial.stop();
+                    MisionKitsune.nivel=2;
+                    misionKitsune.setScreen(new MenuMapas(misionKitsune));
+                    MisionKitsune.musicaFondo.play();
                 }
                 botonIzq.setDisabled(true);
                 botonDer.setDisabled(true);
@@ -455,7 +468,16 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Vector3 v=new Vector3(screenX,screenY,0);
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
-
+        if(estadosJuego==EstadosJuego.INTRO)
+            if(x>0&&x<ANCHO&&y>0&&y<ALTO) {
+                conPre++;
+                Menu.sonidoBotones.play();
+            }
+        if(estadosJuego==EstadosJuego.GANO)
+            if(x>0&&x<ANCHO&&y>0&&y<ALTO) {
+                conDial++;
+                Menu.sonidoBotones.play();
+            }
         if(botonIzq.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
         }
@@ -495,6 +517,9 @@ public class NivelBusqueda implements Screen, InputProcessor {
             estadosJuego= EstadosJuego.JUGANDO;
         }
         else if (botonMenuInicial.contiene(x,y)){
+            SonidoJuego.stop();
+            MisionKitsune.musicaFondo.play();
+            Menu.sonidoBotones.play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }
         return true;

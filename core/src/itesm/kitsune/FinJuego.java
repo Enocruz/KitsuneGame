@@ -127,6 +127,7 @@ public class FinJuego implements Screen, InputProcessor {
         float x=v.x,y=v.y;
         if(BtnMenu.contiene(x,y)){
             Menu.sonidoBotones.play();
+            MisionKitsune.musicaFondo.play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }
         if(BtnReintentar.contiene(x,y)){

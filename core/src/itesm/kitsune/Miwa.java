@@ -17,9 +17,9 @@ public class Miwa {
     private float tiempo, tiempoSalto, tiempoVuelo;
     private Estados estados;
     private EstadosSalto estadoSalto= EstadosSalto.EN_PISO;
-    public static float VELOCIDAD_Y = -4f, VELOCIDAD_X;
+    public static float VELOCIDAD_Y = -3f, VELOCIDAD_X=7;
     private TextureRegion salto, inicio;
-    private float velSalto = 128f;
+    private float velSalto = 192f;
     private int vidas = 3;
     private boolean libre = false;
     private float yInicial;
@@ -101,7 +101,7 @@ public class Miwa {
                 sprite.setRegion(salto);
                 y += velSalto*.75;
                 sprite.setY(y);
-                velSalto+=VELOCIDAD_Y;
+                velSalto+=VELOCIDAD_Y*0.75f;
                 sprite.draw(batch);
                 if (velSalto<=0){
                     estadoSalto=EstadosSalto.BAJANDO;
@@ -115,12 +115,12 @@ public class Miwa {
                     estadoSalto = EstadosSalto.BAJANDO;*/
                 break;
             case BAJANDO:
-                velSalto=128f;
+                velSalto=192f;
                 sprite.setRegion(salto);
                 sprite.setY(sprite.getY()+VELOCIDAD_Y);
                 break;
             case CAIDA_LIBRE:
-                velSalto=128f;
+                velSalto=192f;
                 sprite.setRegion(salto);
                 sprite.setY(sprite.getY()+VELOCIDAD_Y);
                 break;
@@ -147,22 +147,13 @@ public class Miwa {
         return sprite.getY();
     }
 
-    public void setLibre(boolean libre) {
-        this.libre = libre;
-    }
+
 
     public void setVelocidadX(float x) {
         VELOCIDAD_X = x;
     }
 
-    public void caer() {
-        sprite.setRegion(salto);
-        sprite.setY(sprite.getY() + VELOCIDAD_Y);
-    }
 
-    public Estados getEstados() {
-        return this.estados;
-    }
     public EstadosSalto getEstadosSalto(){ return this.estadoSalto;}
 
     // Modificador del estadoMovimiento
