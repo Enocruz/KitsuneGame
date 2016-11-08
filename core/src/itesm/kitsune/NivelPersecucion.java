@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -13,8 +14,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Random;
-
-import javax.print.attribute.standard.MediaSize;
 
 
 /**
@@ -29,15 +28,16 @@ public class NivelPersecucion implements Screen,InputProcessor{
     public static final int ANCHO=1280, ALTO=800;
     private SpriteBatch batch;
     private Texture texturaFondo,texturaNaveEnemiga,texturaMiwaCentro,texturaMiwaDerecha,texturaMiwaIzquierda,
-            texturaPausa,texturaNaveEnemigaD,texturaNaveEnemigaI,texNebAzul,texNebRoja,texturaMenuInicial,texturaReanudar,texturaPiedra;
+            texturaPausa,texturaNaveEnemigaD,texturaNaveEnemigaI,texNebAzul,texNebRoja,texturaMenuInicial,texturaReanudar,texturaPiedra, texturaPiedrita;
     private AssetManager assetManager;
     private int y=0;
-    private Piedra piedra;
-    private Array<Piedra> piedras;
+    private Piedra piedra,piedrita;
+    private Array<Piedra> piedras,piedritas;
     private  float accelX;
     public static EstadosPersecucion estadosJuego;
     private Boton botonPausa,botonMenu,botonReanudar;
     private Random rnd;
+
     NivelPersecucion(MisionKitsune misionKitsune){
         this.misionKitsune=misionKitsune;
     }
@@ -58,9 +58,14 @@ public class NivelPersecucion implements Screen,InputProcessor{
         //naveMiwa.getSprite().setPosition(ANCHO/2-texturaMiwaCentro.getWidth()/2,-texturaMiwaCentro.getHeight());
         naveMiwa.getSprite().setPosition(ANCHO/2,0);
         piedras=new Array<Piedra>(3);
+        piedritas=new Array<Piedra>(2);
         for(int i=0;i<3;i++) {
-            piedra=new Piedra(texturaPiedra,(350*(i+1))-texturaPiedra.getWidth()/2,ALTO-texturaPiedra.getHeight());
+            piedra=new Piedra(texturaPiedra,(350*(i+1))-texturaPiedra.getWidth()/2,ALTO+texturaPiedrita.getHeight());
             piedras.add(piedra);
+        }
+        for(int i=0;i<2;i++){
+            piedrita=new Piedra(texturaPiedrita,400*(i+1),ALTO+texturaPiedrita.getHeight());
+            piedritas.add(piedrita);
         }
     }
     private void inicializarBotones(){
@@ -76,38 +81,41 @@ public class NivelPersecucion implements Screen,InputProcessor{
     }
 
     private void cargarTexturas() {
-        batch=new SpriteBatch();
+        batch = new SpriteBatch();
         //Texturas Dialogos
-        assetManager.load("Reanudar.png",Texture.class);
-        assetManager.load("Menu_Inicial.png",Texture.class);
-        assetManager.load("pausa.png",Texture.class);
-        assetManager.load("FondoEstrellas.png",Texture.class);
-        assetManager.load("NaveEnemiga.png",Texture.class);
-        assetManager.load("NaveMiwaCentro.png",Texture.class);
-        assetManager.load("NaveMiwaDerecha.png",Texture.class);
-        assetManager.load("NaveMiwaIzquierda.png",Texture.class);
-        assetManager.load("NaveEnemigaIzquierda.png",Texture.class);
-        assetManager.load("NaveEnemigaDerecha.png",Texture.class);
-        assetManager.load("FondoNebulosaAzul.png",Texture.class);
-        assetManager.load("FondoNebulosaRoja.png",Texture.class);
-        assetManager.load("Pantalla_Pausa.png",Texture.class);
-        assetManager.load("Piedra.png",Texture.class);
+        assetManager.load("Reanudar.png", Texture.class);
+        assetManager.load("Menu_Inicial.png", Texture.class);
+        assetManager.load("pausa.png", Texture.class);
+        assetManager.load("FondoEstrellas.png", Texture.class);
+        assetManager.load("NaveEnemiga.png", Texture.class);
+        assetManager.load("NaveMiwaCentro.png", Texture.class);
+        assetManager.load("NaveMiwaDerecha.png", Texture.class);
+        assetManager.load("NaveMiwaIzquierda.png", Texture.class);
+        assetManager.load("NaveEnemigaIzquierda.png", Texture.class);
+        assetManager.load("NaveEnemigaDerecha.png", Texture.class);
+        assetManager.load("FondoNebulosaAzul.png", Texture.class);
+        assetManager.load("FondoNebulosaRoja.png", Texture.class);
+        assetManager.load("Pantalla_Pausa.png", Texture.class);
+        assetManager.load("Piedra.png", Texture.class);
+        assetManager.load("Piedritas.png", Texture.class);
         assetManager.finishLoading();
         //Textura Vida
         texturaReanudar = assetManager.get("Reanudar.png");
         texturaMenuInicial = assetManager.get("Menu_Inicial.png");
-        texturaFondo=assetManager.get("FondoEstrellas.png");
-        texturaPausa=assetManager.get("Pantalla_Pausa.png");
-        texturaNaveEnemiga=assetManager.get("NaveEnemiga.png");
-        texturaMiwaCentro=assetManager.get("NaveMiwaCentro.png");
-        texturaMiwaDerecha=assetManager.get("NaveMiwaDerecha.png");
-        texturaMiwaIzquierda=assetManager.get("NaveMiwaIzquierda.png");
-        texturaPausa=assetManager.get("pausa.png");
-        texturaNaveEnemigaD=assetManager.get("NaveEnemigaDerecha.png");
-        texturaNaveEnemigaI=assetManager.get("NaveEnemigaIzquierda.png");
-        texNebAzul=assetManager.get("FondoNebulosaAzul.png");
-        texNebRoja=assetManager.get("FondoNebulosaRoja.png");
-        texturaPiedra=assetManager.get("Piedra.png");
+        texturaFondo = assetManager.get("FondoEstrellas.png");
+        texturaPausa = assetManager.get("Pantalla_Pausa.png");
+        texturaNaveEnemiga = assetManager.get("NaveEnemiga.png");
+        texturaMiwaCentro = assetManager.get("NaveMiwaCentro.png");
+        texturaMiwaDerecha = assetManager.get("NaveMiwaDerecha.png");
+        texturaMiwaIzquierda = assetManager.get("NaveMiwaIzquierda.png");
+        texturaPausa = assetManager.get("pausa.png");
+        texturaNaveEnemigaD = assetManager.get("NaveEnemigaDerecha.png");
+        texturaNaveEnemigaI = assetManager.get("NaveEnemigaIzquierda.png");
+        texNebAzul = assetManager.get("FondoNebulosaAzul.png");
+        texNebRoja = assetManager.get("FondoNebulosaRoja.png");
+        texturaPiedra = assetManager.get("Piedra.png");
+        texturaPiedrita=assetManager.get("Piedritas.png");
+
     }
 
 
@@ -143,17 +151,28 @@ public class NivelPersecucion implements Screen,InputProcessor{
             botonMenu.render(batch);
             botonReanudar.render(batch);
             batch.end();
+
         }
         else{
+            for(Piedra p:piedritas)
+                if(p.getEstadosPiedra()== Piedra.EstadosPiedra.NUEVA) {
+                    if(rnd.nextInt(10)>=5)
+                        p.getSprite().setX(naveMiwa.getX());
+
+                }
+            //}System.out.println(naveEnemiga.getX()+" "+piedrita.getY());
             botonMenu.setDisabled(true);
             botonReanudar.setDisabled(true);
+            botonPausa.setDisabled(false);
             batch.setProjectionMatrix(camaraHUD.combined);
             batch.begin();
             naveEnemiga.render(batch);
             naveMiwa.render(batch);
             botonPausa.render(batch);
             for(Piedra x: piedras)
-                x.render(batch,10,4);
+                x.render(batch,7,1);
+            for(Piedra x: piedritas)
+                x.render(batch,3,0);
             batch.end();
             accelX = Gdx.input.getAccelerometerX();
             if (accelX < -0.5f) {
@@ -167,6 +186,12 @@ public class NivelPersecucion implements Screen,InputProcessor{
                 naveMiwa.setMovimiento(Nave.MOVIMIENTO.QUIETO);
             }
             y -= 1;
+            for(Piedra p:piedras)
+                if(naveMiwa.getRectangle().overlaps(p.getRectangle()))
+                    p.setEstado(Piedra.EstadosPiedra.DESAPARECER);
+            for(Piedra p:piedritas)
+                if(naveMiwa.getRectangle().overlaps(p.getRectangle()))
+                    p.setEstado(Piedra.EstadosPiedra.DESAPARECER);
 
         }
     }

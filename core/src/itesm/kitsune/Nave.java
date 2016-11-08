@@ -74,9 +74,8 @@ public class Nave {
     public float getY() {
         return sprite.getY();
     }
-    public boolean contiene(float x, float y) {
-        return rectColision.contains(x, y);
-    }
+
+    public Rectangle getRectangle(){return rectColision;}
 
     public enum MOVIMIENTO{
         DERECHA,

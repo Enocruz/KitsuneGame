@@ -16,7 +16,6 @@ public class Piedra {
     private Sprite sprite;
     private EstadosPiedra estadosPiedra;
     private Rectangle rectColision;
-    private Random rnd=new Random();
     private float yinicial;
     private float tiempoOculto;
 
@@ -24,7 +23,7 @@ public class Piedra {
         sprite=new Sprite(textura);
         rectColision = new Rectangle(sprite.getX(), sprite.getY(),
                 sprite.getWidth(), sprite.getHeight());
-        estadosPiedra=EstadosPiedra.NUEVA;
+        estadosPiedra=EstadosPiedra.INICIADO;
     }
     Piedra (Texture textura,float x,float y){
         this(textura);
@@ -40,11 +39,9 @@ public class Piedra {
         float y=sprite.getY();
         rectColision.setPosition(x,y);
         switch(estadosPiedra) {
-            case OCULTO:
-
-                break;
+            case INICIADO:
             case NUEVA:
-                tiempoOculto=(float)(Math.random()*5+4);
+                tiempoOculto=(float)(Math.random()*5+3);
                 estadosPiedra=EstadosPiedra.BAJANDO;
                 break;
             case BAJANDO:
@@ -75,16 +72,19 @@ public class Piedra {
     public float getY() {
         return sprite.getY();
     }
-    public boolean contiene(float x, float y) {
-        return rectColision.contains(x, y);
-    }
+
+    public Rectangle getRectangle(){return rectColision;}
 
     public void setEstado(EstadosPiedra estado) {
         this.estadosPiedra = estado;
     }
 
+    public Object getEstadosPiedra() {
+        return estadosPiedra;
+    }
+
     public enum EstadosPiedra{
-        NUEVA,BAJANDO,DESAPARECER,OCULTO
+        NUEVA,BAJANDO,DESAPARECER,INICIADO
     }
 
 }
