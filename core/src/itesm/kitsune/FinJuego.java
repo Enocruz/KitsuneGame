@@ -25,7 +25,9 @@ public class FinJuego implements Screen, InputProcessor {
     private Viewport vista;
     private final int ancho=1280,alto=800;
     private SpriteBatch batch;
-    public FinJuego(MisionKitsune misionKitsune,Texture texturaFondo){
+    private int nivel;
+    public FinJuego(MisionKitsune misionKitsune,Texture texturaFondo,int nivel){
+        this.nivel=nivel;
         this.misionKitsune=misionKitsune;
         this.texturaFondo=texturaFondo;
     }
@@ -37,9 +39,6 @@ public class FinJuego implements Screen, InputProcessor {
         cargarCamara();
         cargarTexturas();
         cargarBotones();
-
-
-
     }
     private void cargarTexturas(){
         assetManager.load("Pantalla_Perder.png",Texture.class);
@@ -132,9 +131,10 @@ public class FinJuego implements Screen, InputProcessor {
         }
         else if(BtnReintentar.contiene(x,y)){
             Menu.sonidoBotones.play();
-            if(MisionKitsune.nivel==3)
-                misionKitsune.setScreen(new NivelBusqueda(misionKitsune));
-
+            if(nivel==1)
+                misionKitsune.setScreen(new NivelBusqueda(misionKitsune, NivelBusqueda.EstadosJuego.JUGANDO));
+            else if(nivel==2)
+                misionKitsune.setScreen(new NivelPersecucion(misionKitsune));
         }
         return true;
     }

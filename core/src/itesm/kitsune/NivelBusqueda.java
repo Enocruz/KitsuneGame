@@ -56,7 +56,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
 
 
 
-    public NivelBusqueda(MisionKitsune misionKitsune) {
+    public NivelBusqueda(MisionKitsune misionKitsune, EstadosJuego estado) {
+        this.estadosJuego=estado;
         this.misionKitsune = misionKitsune;
     }
 
@@ -76,8 +77,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
         //Escena con "Listeners"
         Gdx.input.setInputProcessor(this);
         batch=new SpriteBatch();
-        //Estado Juego
-        estadosJuego=EstadosJuego.INTRO;
         //Contador para vida Extra
         gemaVida=new GemaVida(texturaGema);
         gemaVida.getSprite().setPosition(texturaGema.getWidth()/2,ALTO-texturaGema.getHeight()-ANCHO/80);
@@ -139,10 +138,10 @@ public class NivelBusqueda implements Screen, InputProcessor {
         assetManager.load("Dialogo_PreNivel1_8.png",Texture.class);
         //Musica
         assetManager.load("MusicaJuegoN1.ogg",Music.class);
-        assetManager.load("SonidoGemas.ogg",Music.class);
-        assetManager.load("SonidoPicos.ogg",Music.class);
-        assetManager.load("MusicaDialogoInicioNivel1.ogg",Music.class);
-        assetManager.load("MusicaDialogoFinalNivel1.ogg",Music.class);
+        assetManager.load("SonidoGemas.mp3",Music.class);
+        assetManager.load("SonidoPicos.mp3",Music.class);
+        assetManager.load("MusicaDialogoInicioNivel1.mp3",Music.class);
+        assetManager.load("MusicaDialogoFinalNivel1.mp3",Music.class);
         //Textura Miwa
         assetManager.load("miwa.png",Texture.class);
         //Textura Vida
@@ -283,7 +282,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 if (miwa.getVidas() <= 0) {
                     SonidoJuego.pause();
                     estadosJuego = EstadosJuego.PERDIO;
-                    misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("fondoNivel1.png")));
+                    misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("fondoNivel1.png"),1));
                 }
 
                 gemaVida.render(batch);

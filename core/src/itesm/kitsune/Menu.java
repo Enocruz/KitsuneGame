@@ -112,7 +112,7 @@ public class Menu implements Screen {
 		assetManager.load("BtnJugar.png",Texture.class);
 		assetManager.load("BtnInstrucciones.png",Texture.class);
 		assetManager.load("BtnAcercaDe.png",Texture.class);
-		assetManager.load("ClickBotonesMenu.ogg",Music.class);
+		assetManager.load("ClickBotonesMenu.mp3",Music.class);
 		assetManager.load("Guion.png",Texture.class);
 		assetManager.load("white.png",Texture.class);
 		//Se bloquea hasta cargar los recursos

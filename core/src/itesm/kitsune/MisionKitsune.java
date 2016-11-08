@@ -13,9 +13,8 @@ public class MisionKitsune extends Game{
 
     @Override
     public void create() {
-        musicaFondo=Gdx.audio.newMusic(Gdx.files.internal("MusicaMenu.ogg"));
+        musicaFondo=Gdx.audio.newMusic(Gdx.files.internal("MusicaMenu.mp3"));
         musicaFondo.setLooping(true);
-        musicaFondo.setVolume(1);
         musicaFondo.play();
         setScreen(new Menu(this));
     }
