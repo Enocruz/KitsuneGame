@@ -9,7 +9,8 @@ import com.badlogic.gdx.audio.Music;
  */
 public class MisionKitsune extends Game{
     public static Music musicaFondo;
-    public static int nivel=1;
+    public static int nivel=2;
+
     @Override
     public void create() {
         musicaFondo=Gdx.audio.newMusic(Gdx.files.internal("MusicaMenu.ogg"));

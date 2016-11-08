@@ -1,6 +1,7 @@
 package itesm.kitsune;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -22,10 +23,10 @@ public class NivelBusqueda implements Screen, InputProcessor {
     //Texturas Pantalla
     private Texture texturaVida,texturaDer,texturaIzq,texturaSaltar,texturaPausa,
             texturaMiwa, texturaGema,texturaBotonReanudar, texturaBotonMenuInicial,texturaMenuPausa, Dial1,Dial2,
-            Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8;
+            Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8,texturaSkip;
     private Texture[] Dialogos,Predialogos;
     //Botones pantalla
-    private Boton botonIzq,botonDer,botonSaltar1,botonSaltar2,botonPausa,botonReanudar,botonMenuInicial;
+    private Boton botonIzq,botonDer,botonSaltar1,botonSaltar2,botonPausa,botonReanudar,botonMenuInicial,botonSkip;
     //AssetManager (Cargar texturas)
     private final AssetManager assetManager=new AssetManager();
     // La cámara principal, la vista y la camara de botones
@@ -39,18 +40,18 @@ public class NivelBusqueda implements Screen, InputProcessor {
     //Personaje principal
     private Miwa miwa;
     //Mapa del nivel
-    private Mapa.Mapa1 mapa;
+    private Mapa.MapaBusqueda mapa;
     //Tamaño celdas TileMap
     public static final int TAM_CELDA = 32;
     //Estados Juego
-    private EstadosJuego estadosJuego;
+    public static EstadosJuego estadosJuego;
     //Contador para vidas
     private GemaVida gemaVida;
     //Texto vidas
     private Texto texto;
     //Contador gemas para vida extra
     private int contadorGemas=0,conPre=0,conDial=0;
-    private float tiempoInvencible=3,tiempoGemas=2,tiempoDialogo=1;
+    private float tiempoInvencible=3,tiempoGemas=2;
     private Music SonidoGemas,SonidoPicos,SonidoPre,SonidoDial,SonidoJuego;
 
 
@@ -68,7 +69,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         //Cargamos botones
         crearBotones();
         //Creamos mapa
-        mapa=new Mapa.Mapa1("MapaN1.tmx");
+        mapa=new Mapa.MapaBusqueda("MapaN1.tmx");
         //Creamos personaje principal
         miwa=new Miwa(texturaMiwa);
         miwa.getSprite().setPosition(ANCHO/5,ALTO/5.333f); //Posicion inicial de Miwa
@@ -108,6 +109,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
         botonReanudar.setPosicion(ANCHO/2-texturaBotonReanudar.getWidth()/2,ALTO/2+texturaBotonReanudar.getHeight()/2);
         botonMenuInicial=new Boton(texturaBotonMenuInicial);
         botonMenuInicial.setPosicion(ANCHO/2-texturaBotonMenuInicial.getWidth()/2,ALTO/4+texturaBotonMenuInicial.getHeight()/2);
+        botonSkip=new Boton(texturaSkip);
+        botonSkip.setPosicion(ANCHO-texturaSkip.getWidth()*1.5f,ALTO-texturaSkip.getHeight()*1.5f);
     }
     private void inicializarCamara() {
         //Creamos la camara principal del nivel
@@ -123,6 +126,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
     }
     private void cargarTexturas() {
         //Texturas Dialogos
+        assetManager.load("Skip.png",Texture.class);
         assetManager.load("Dialogo_Nivel1_1.png",Texture.class);
         assetManager.load("Dialogo_Nivel1_2.png",Texture.class);
         assetManager.load("Dialogo_PreNivel1_1.png",Texture.class);
@@ -170,6 +174,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texturaMenuPausa = assetManager.get("Pantalla_Pausa.png");
         texturaBotonReanudar = assetManager.get("Reanudar.png");
         texturaBotonMenuInicial = assetManager.get("Menu_Inicial.png");
+        texturaSkip=assetManager.get("Skip.png");
         //Texturas Dialogos
         Dial1=assetManager.get("Dialogo_Nivel1_1.png");
         Dial2=assetManager.get("Dialogo_Nivel1_2.png");
@@ -243,6 +248,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     miwa.getSprite().setPosition(ANCHO / 5, ALTO / 5.333f);
                     camara.position.set(ANCHO / 2, ALTO / 2, 0);
                     miwa.setVidas(miwa.getVidas() - 1);
+                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETOD);
                 }
                 //Camara principal
                 batch.setProjectionMatrix(camara.combined);
@@ -308,7 +314,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     miwa.setVelocidadX(3);
                 } else {
                     miwa.setVelocidadX(7);
-                    miwa.setEstadoSalto(Miwa.EstadosSalto.CAIDA_LIBRE);
+                    miwa.setEstadoSalto(Miwa.EstadosSalto.BAJANDO);
                 }
 
                 TiledMapTileLayer capaGanar = (TiledMapTileLayer) mapa.getMapa().getLayers().get(5);
@@ -360,10 +366,14 @@ public class NivelBusqueda implements Screen, InputProcessor {
 
                 break;
             case INTRO:
+
                 if (conPre < 8) {
                     batch.setProjectionMatrix(camara.combined);
                     batch.begin();
                     batch.draw(Predialogos[conPre], 0, 0);
+                    if(MisionKitsune.nivel!=1){
+                        botonSkip.render(batch);
+                    }
                     batch.end();
                     SonidoPre.play();
                 }
@@ -403,6 +413,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 botonMenuInicial.setDisabled(true);
                 break;
         }
+
+
     }
 
     @Override
@@ -450,7 +462,9 @@ public class NivelBusqueda implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+
+
+            return false;
     }
 
     @Override
@@ -489,8 +503,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     miwa.getEstadosSalto()!= Miwa.EstadosSalto.CAIDA_LIBRE)
             miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO) ;
         }
-        else if(botonPausa.contiene(x,y)){
-        }
         return true;
     }
     @Override
@@ -501,14 +513,12 @@ public class NivelBusqueda implements Screen, InputProcessor {
         if(botonIzq.contiene(x,y)){
             if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO||
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.CAIDA_LIBRE )
-                miwa.setEstadoMovimiento(Miwa.Estados.QUIETOI);
+                miwa.setEstadoMovimiento(Miwa.Estados.QUIETOD);
         }
         else if(botonDer.contiene(x,y)){
             if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO||
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.CAIDA_LIBRE )
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETOD);
-        }
-        else if(botonSaltar1.contiene(x,y)||botonSaltar2.contiene(x,y)){
         }
         else if(botonPausa.contiene(x,y)){
             this.estadosJuego = EstadosJuego.PAUSADO;
@@ -521,6 +531,11 @@ public class NivelBusqueda implements Screen, InputProcessor {
             MisionKitsune.musicaFondo.play();
             Menu.sonidoBotones.play();
             misionKitsune.setScreen(new Menu(misionKitsune));
+        }
+        else if(botonSkip.contiene(x,y)){
+            SonidoPre.stop();
+            estadosJuego=EstadosJuego.JUGANDO;
+
         }
         return true;
     }

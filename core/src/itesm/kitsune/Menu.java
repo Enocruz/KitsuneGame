@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,12 +33,14 @@ public class Menu implements Screen {
 	private Animation guion;
 	private float tiempo=0;
 
+
 	public Menu(MisionKitsune misionKitsune) {
 		this.misionKitsune=misionKitsune;
 	}
 
 	@Override
 	public void show() {
+
 		assetManager=new AssetManager();
 		camara=new OrthographicCamera(ancho,alto);
 		camara.position.set(ancho/2,alto/2,0);
@@ -76,6 +79,7 @@ public class Menu implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				sonidoBotones.play();
 				misionKitsune.setScreen(new MenuMapas(misionKitsune));
+
 				}
 			}
 		);
@@ -129,7 +133,6 @@ public class Menu implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//Dependencia de la camara
 		tiempo+=Gdx.graphics.getDeltaTime();
-
 		escena.setViewport(vista);
 		escena.draw();
 		escena.getBatch().begin();

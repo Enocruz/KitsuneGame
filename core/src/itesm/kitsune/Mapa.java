@@ -31,8 +31,8 @@ public class Mapa{
     public TiledMap getMapa(){
         return this.mapa;
     }
-    static class Mapa1 extends Mapa{
-        Mapa1(String nombre) {
+    static class MapaBusqueda extends Mapa{
+        MapaBusqueda(String nombre) {
             super(nombre);
         }
         public boolean esPiso(TiledMapTileLayer.Cell celda) {
@@ -71,7 +71,11 @@ public class Mapa{
             return "minipicos".equals(propiedad);
         }
     }
-
+    static class MapaPersecucion extends Mapa{
+        MapaPersecucion(String nombre){
+            super(nombre);
+        }
+    }
 
 
 

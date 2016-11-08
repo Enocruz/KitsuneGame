@@ -48,7 +48,8 @@ public class Boton implements Disableable{
         if (disabled == false) {
             return rectColision.contains(x, y);
         }
-        return false;    }
+        return false;
+    }
 
     @Override
     public void setDisabled(boolean isDisabled) {
