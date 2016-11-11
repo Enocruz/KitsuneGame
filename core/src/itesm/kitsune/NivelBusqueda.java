@@ -232,6 +232,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
             case JUGANDO:
             case INVENCIBLE:
             case PAUSADO:
+                if(contadorGemas<=0)
+                    contadorGemas=0;
                 SonidoJuego.play();
                 if (estadosJuego == EstadosJuego.INVENCIBLE) {
                     tiempoInvencible -= Gdx.graphics.getDeltaTime();

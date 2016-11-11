@@ -1,5 +1,6 @@
 package itesm.kitsune;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -42,7 +43,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
     private Gemas gemas;
     private Texto texto;
     private int contadorGemas;
-    private float tiempoInvencible,tiempoNivel,tiempoFinal,tiempoGemas;
+    private float tiempoInvencible,tiempoNivel,tiempoFinal,tiempoGemas,tiempoInvencibleG;
 
     NivelPersecucion(MisionKitsune misionKitsune){
         this.misionKitsune=misionKitsune;
@@ -84,6 +85,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
         yNave=ALTO/2-texturaBarra.getHeight()/2-texturaMiniNave.getHeight()/2;
         tiempoNivel=1;
         tiempoFinal=0;
+        tiempoInvencibleG=0.5f;
     }
     private void inicializarBotones(){
         botonPausa=new Boton(texturaPausa);
@@ -161,6 +163,8 @@ public class NivelPersecucion implements Screen,InputProcessor{
     }
     @Override
     public void render(float delta) {
+        if(contadorGemas<=0)
+            contadorGemas=0;
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         texturaFondo.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -195,6 +199,13 @@ public class NivelPersecucion implements Screen,InputProcessor{
                 if (tiempoInvencible <= 0) {
                     estadosJuego = EstadosPersecucion.JUGANDO;
                     tiempoInvencible = 3;
+                }
+            }
+            if(estadosJuego==EstadosPersecucion.INVENCIBLEG){
+                tiempoInvencibleG-=Gdx.graphics.getDeltaTime();
+                if(tiempoInvencibleG<=0){
+                    estadosJuego=estadosJuego.JUGANDO;
+                    tiempoInvencibleG=0.5f;
                 }
             }
             if(naveMiwa.getVidas()<=0){
@@ -236,12 +247,23 @@ public class NivelPersecucion implements Screen,InputProcessor{
             } else {
                 naveMiwa.setMovimiento(Nave.MOVIMIENTO.QUIETO);
             }
-            if(naveMiwa.getRectangle().overlaps(gemas.getRectangle())){
-                gemas.setEstadoGema(Gemas.EstadoGema.DESAPARECER);
-                contadorGemas+=1;
-                gemaVida.setGemas(contadorGemas);
+            //Movimiento con teclas
+            if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
+                naveMiwa.setMovimiento(Nave.MOVIMIENTO.IZQUIERDA);
+            if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
+                naveMiwa.setMovimiento(Nave.MOVIMIENTO.DERECHA);
+            //Movimiento con teclas
+
+            if(estadosJuego!=EstadosPersecucion.INVENCIBLEG) {
+                if (naveMiwa.getRectangle().overlaps(gemas.getRectangle())) {
+                    gemas.setEstadoGema(Gemas.EstadoGema.DESAPARECER);
+                    contadorGemas += 1;
+                    gemaVida.setGemas(contadorGemas);
+                    estadosJuego=EstadosPersecucion.INVENCIBLEG;
+                }
             }
             y -= 1;
+            System.out.println(contadorGemas);
             if(estadosJuego!=EstadosPersecucion.INVENCIBLE) {
                 for (Piedra p : piedras)
                     if (naveMiwa.getRectangle().overlaps(p.getRectangle())) {
@@ -250,8 +272,12 @@ public class NivelPersecucion implements Screen,InputProcessor{
                         estadosJuego=EstadosPersecucion.INVENCIBLE;
                     }
                 for (Piedra p : piedritas)
-                    if (naveMiwa.getRectangle().overlaps(p.getRectangle()))
+                    if (naveMiwa.getRectangle().overlaps(p.getRectangle())) {
                         p.setEstado(Piedra.EstadosPiedra.DESAPARECER);
+                        contadorGemas-=1;
+                        gemaVida.setGemas(contadorGemas);
+                        estadosJuego=EstadosPersecucion.INVENCIBLE;
+                    }
             }
             if (contadorGemas >= 3) {
                 tiempoGemas -= Gdx.graphics.getDeltaTime();
@@ -351,7 +377,8 @@ public class NivelPersecucion implements Screen,InputProcessor{
         PERDIO,
         GANO,
         INTRO,
-        INVENCIBLE
+        INVENCIBLE,
+        INVENCIBLEG
     }
 
 }
