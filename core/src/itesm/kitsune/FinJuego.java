@@ -41,7 +41,7 @@ public class FinJuego implements Screen, InputProcessor {
         cargarBotones();
     }
     private void cargarTexturas(){
-        if(nivel!=2) {
+        if(nivel==2) {
             assetManager.load("Pantalla_Perder.png", Texture.class);
             //assetManager.load("fondoNivel1.png",Texture.class);
             assetManager.load("BtnReintentar.png", Texture.class);
@@ -53,7 +53,15 @@ public class FinJuego implements Screen, InputProcessor {
             texturaReintentar = assetManager.get("BtnReintentar.png");
         }
         else{
-
+            assetManager.load("Pantalla_Perder.png", Texture.class);
+            //assetManager.load("fondoNivel1.png",Texture.class);
+            assetManager.load("N2Reintentar.png", Texture.class);
+            assetManager.load("N2MenuInicialFin.png", Texture.class);
+            assetManager.finishLoading();
+            texturaFin = assetManager.get("Pantalla_Perder.png");
+            //texturaFondo=assetManager.get("fondoNivel1.png");
+            texturaMenu = assetManager.get("N2MenuInicialFin.png");
+            texturaReintentar = assetManager.get("N2Reintentar.png");
         }
     }
     private void cargarCamara(){
