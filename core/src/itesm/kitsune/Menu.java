@@ -122,7 +122,7 @@ public class Menu implements Screen {
 		texturaBtnJugar=assetManager.get("BtnJugar.png");
 		texturaBtnInstrucciones=assetManager.get("BtnInstrucciones.png");
 		texturaBtnAcercade=assetManager.get("BtnAcercaDe.png");
-		sonidoBotones=assetManager.get("ClickBotonesMenu.ogg");
+		sonidoBotones=assetManager.get("ClickBotonesMenu.mp3");
 		texturaGuion=assetManager.get("Guion.png");
 		texturaWhite=assetManager.get("white.png");
 	}

@@ -1,7 +1,6 @@
 package itesm.kitsune;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -53,8 +52,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
     private int contadorGemas=0,conPre=0,conDial=0;
     private float tiempoInvencible=3,tiempoGemas=2;
     private Music SonidoGemas,SonidoPicos,SonidoPre,SonidoDial,SonidoJuego;
-
-
 
     public NivelBusqueda(MisionKitsune misionKitsune, EstadosJuego estado) {
         this.estadosJuego=estado;
@@ -137,7 +134,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         assetManager.load("Dialogo_PreNivel1_7.png",Texture.class);
         assetManager.load("Dialogo_PreNivel1_8.png",Texture.class);
         //Musica
-        assetManager.load("MusicaJuegoN1.ogg",Music.class);
+        assetManager.load("MusicaJuegoN1.mp3",Music.class);
         assetManager.load("SonidoGemas.mp3",Music.class);
         assetManager.load("SonidoPicos.mp3",Music.class);
         assetManager.load("MusicaDialogoInicioNivel1.mp3",Music.class);
@@ -186,13 +183,13 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Predial7=assetManager.get("Dialogo_PreNivel1_7.png");
         Predial8=assetManager.get("Dialogo_PreNivel1_8.png");
         //Musica
-        SonidoPicos=assetManager.get("SonidoPicos.ogg");
-        SonidoGemas=assetManager.get("SonidoGemas.ogg");
+        SonidoPicos=assetManager.get("SonidoPicos.mp3");
+        SonidoGemas=assetManager.get("SonidoGemas.mp3");
         SonidoGemas.setVolume(1);
-        SonidoPre=assetManager.get("MusicaDialogoInicioNivel1.ogg");
+        SonidoPre=assetManager.get("MusicaDialogoInicioNivel1.mp3");
         SonidoPre.setVolume(0.6f);
-        SonidoDial=assetManager.get("MusicaDialogoFinalNivel1.ogg");
-        SonidoJuego = assetManager.get("MusicaJuegoN1.ogg");
+        SonidoDial=assetManager.get("MusicaDialogoFinalNivel1.mp3");
+        SonidoJuego = assetManager.get("MusicaJuegoN1.mp3");
         SonidoDial.setLooping(true);
         SonidoPre.setLooping(true);
         SonidoJuego.setLooping(true);
@@ -238,6 +235,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 SonidoJuego.play();
                 if (estadosJuego == EstadosJuego.INVENCIBLE) {
                     tiempoInvencible -= Gdx.graphics.getDeltaTime();
+                    //miwa.getSprite().setAlpha(0.7f);
                     if (tiempoInvencible <= 0) {
                         estadosJuego = EstadosJuego.JUGANDO;
                         tiempoInvencible = 3;

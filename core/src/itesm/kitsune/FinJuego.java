@@ -41,23 +41,36 @@ public class FinJuego implements Screen, InputProcessor {
         cargarBotones();
     }
     private void cargarTexturas(){
-        assetManager.load("Pantalla_Perder.png",Texture.class);
-        //assetManager.load("fondoNivel1.png",Texture.class);
-        assetManager.load("BtnReintentar.png",Texture.class);
-        assetManager.load("BtnFinal_Menu.png",Texture.class);
-        assetManager.finishLoading();
-        texturaFin=assetManager.get("Pantalla_Perder.png");
-        //texturaFondo=assetManager.get("fondoNivel1.png");
-        texturaMenu=assetManager.get("BtnFinal_Menu.png");
-        texturaReintentar=assetManager.get("BtnReintentar.png");
+        if(nivel!=2) {
+            assetManager.load("Pantalla_Perder.png", Texture.class);
+            //assetManager.load("fondoNivel1.png",Texture.class);
+            assetManager.load("BtnReintentar.png", Texture.class);
+            assetManager.load("BtnFinal_Menu.png", Texture.class);
+            assetManager.finishLoading();
+            texturaFin = assetManager.get("Pantalla_Perder.png");
+            //texturaFondo=assetManager.get("fondoNivel1.png");
+            texturaMenu = assetManager.get("BtnFinal_Menu.png");
+            texturaReintentar = assetManager.get("BtnReintentar.png");
+        }
+        else{
 
+        }
     }
     private void cargarCamara(){
-        camara=new OrthographicCamera(ancho,alto);
-        camara.position.set(ancho/2,alto/2,0);
-        camara.update();
-        //Vista
-        vista= new StretchViewport(ancho,alto,camara);
+        if(nivel!=2) {
+            camara = new OrthographicCamera(ancho, alto);
+            camara.position.set(ancho / 2, alto / 2, 0);
+            camara.update();
+            vista= new StretchViewport(ancho,alto,camara);
+        }
+        else{
+            camara = new OrthographicCamera(alto, ancho);
+            camara.position.set(ancho / 2, alto / 2, 0);
+            camara.rotate(90);
+            camara.update();
+            vista= new StretchViewport(alto,ancho,camara);
+        }
+
     }
     private void cargarBotones(){
         BtnReintentar=new Boton(texturaReintentar);

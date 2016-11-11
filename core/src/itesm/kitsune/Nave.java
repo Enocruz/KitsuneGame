@@ -28,33 +28,59 @@ public class Nave {
     public void setVidas(int vidas) {
         this.vidas = vidas;
     }
-    public void render(SpriteBatch batch) {
-        float x=sprite.getX();
-        float y=sprite.getY();
-        rectColision.setPosition(x,y);
-        switch (movimiento) {
-            case DERECHA:
-            case IZQUIERDA:
-                if(movimiento==MOVIMIENTO.DERECHA) {
-                    x += 10;
-                    if (x <= NivelPersecucion.ANCHO-sprite.getWidth())
-                        sprite.setX(x);
-                    sprite.setTexture(texturaDerecha);
-                }
-                 else if(movimiento==MOVIMIENTO.IZQUIERDA){
-                    x -= 10;
-                    if (x >=0)
-                        sprite.setX(x);
-                    sprite.setTexture(texturaIzquierda);
-                }
-                batch.draw(sprite, sprite.getX(), sprite.getY());
-                break;
-            case QUIETO:
-                sprite.setTexture(texturaCentro);
-                batch.draw(sprite,sprite.getX(),sprite.getY());
+    static class NaveEnemiga extends Nave{
+        NaveEnemiga(Texture texturaC,Texture texturaD,Texture texturaI){
+            super(texturaC,texturaD,texturaI);
         }
+        public void render(SpriteBatch batch) {
+            float x=super.getSprite().getX();
+            float y=super.getSprite().getY();
+            super.getRectangle().setPosition(x,y);
+            switch (super.movimiento) {
+                case DERECHA:
+                case IZQUIERDA:
+                    batch.draw(super.sprite, super.sprite.getX(), super.sprite.getY());
+                    break;
+                case QUIETO:
+                    //sprite.setTexture(texturaCentro);
+                    batch.draw(super.sprite,super.sprite.getX(),super.sprite.getY());
+            }
 
+        }
     }
+
+    static class NaveMiwa extends Nave{
+        NaveMiwa(Texture texturaC,Texture texturaD,Texture texturaI){
+            super(texturaC,texturaD,texturaI);
+        }
+        public void render(SpriteBatch batch) {
+            float x=super.getSprite().getX();
+            float y=super.getSprite().getY();
+            super.getRectangle().setPosition(x,y);
+            switch (super.movimiento) {
+                case DERECHA:
+                case IZQUIERDA:
+                    if(super.movimiento==MOVIMIENTO.DERECHA) {
+                        x += 10;
+                        if (x <= NivelPersecucion.ANCHO-super.sprite.getWidth())
+                            super.sprite.setX(x);
+                        super.sprite.setTexture(super.texturaDerecha);
+                    }
+                    else if(super.movimiento==MOVIMIENTO.IZQUIERDA){
+                        x -= 10;
+                        if (x >=0)
+                            super.sprite.setX(x);
+                        super.sprite.setTexture(super.texturaIzquierda);
+                    }
+                    batch.draw(super.sprite, super.sprite.getX(), super.sprite.getY());
+                    break;
+                case QUIETO:
+                    super.sprite.setTexture(super.texturaCentro);
+                    batch.draw(super.sprite,super.sprite.getX(),super.sprite.getY());
+            }
+        }
+    }
+
     public void setMovimiento(MOVIMIENTO movimiento){
         this.movimiento=movimiento;
     }
