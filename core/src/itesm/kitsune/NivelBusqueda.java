@@ -27,7 +27,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
     //Botones pantalla
     private Boton botonIzq,botonDer,botonSaltar1,botonSaltar2,botonPausa,botonReanudar,botonMenuInicial,botonSkip;
     //AssetManager (Cargar texturas)
-    private final AssetManager assetManager=new AssetManager();
+    private  AssetManager assetManager;
     // La cámara principal, la vista y la camara de botones
     private OrthographicCamera camara,camaraHUD;
     private Viewport vista;
@@ -49,13 +49,14 @@ public class NivelBusqueda implements Screen, InputProcessor {
     //Texto vidas
     private Texto texto;
     //Contador gemas para vida extra
-    private int contadorGemas=0,conPre=0,conDial=0;
+    private int contadorGemas=0,conPre=0,conDial=0,nivel;
     private float tiempoInvencible=3,tiempoGemas=2;
     private Music SonidoGemas,SonidoPicos,SonidoPre,SonidoDial,SonidoJuego;
 
-    public NivelBusqueda(MisionKitsune misionKitsune, EstadosJuego estado) {
+    public NivelBusqueda(MisionKitsune misionKitsune, EstadosJuego estado,int nivel) {
         this.estadosJuego=estado;
         this.misionKitsune = misionKitsune;
+        this.nivel=nivel;
     }
 
     @Override
@@ -77,7 +78,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         //Contador para vida Extra
         gemaVida=new GemaVida(texturaGema);
         gemaVida.getSprite().setPosition(texturaGema.getWidth()/2,ALTO-texturaGema.getHeight()-ANCHO/80);
-        //Iniciamos texto
+        //Iniciamos texto3
         texto=new Texto("DominoFont.fnt");
         Predialogos=new Texture[]{Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8};
         Dialogos=new Texture[]{Dial1,Dial2};
@@ -121,6 +122,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
         camaraHUD.update();
     }
     private void cargarTexturas() {
+        assetManager=misionKitsune.getAssetManager();
+        /*
         //Texturas Dialogos
         assetManager.load("Skip.png",Texture.class);
         assetManager.load("Dialogo_Nivel1_1.png",Texture.class);
@@ -156,6 +159,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         assetManager.load("Pantalla_Perder.png",Texture.class);
         //Se bloquea hasta cargar los recursos
         assetManager.finishLoading();
+        */
         //Textura Vida
         texturaVida=assetManager.get("Vida.png");
         texturaGema=assetManager.get("GemaContador.png");
@@ -370,7 +374,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     batch.setProjectionMatrix(camara.combined);
                     batch.begin();
                     batch.draw(Predialogos[conPre], 0, 0);
-                    if(MisionKitsune.nivel!=1){
+                    if(misionKitsune.getNivel()!=1){
                         botonSkip.render(batch);
                     }
                     batch.end();
@@ -399,9 +403,9 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 }
                 else{
                     SonidoDial.stop();
-                    MisionKitsune.nivel=2;
+                    misionKitsune.setNivel(2);
                     misionKitsune.setScreen(new MenuMapas(misionKitsune));
-                    MisionKitsune.musicaFondo.play();
+                    misionKitsune.getMusicaFondo().play();
                 }
                 botonIzq.setDisabled(true);
                 botonDer.setDisabled(true);
@@ -447,6 +451,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texturaGema.dispose();
         texturaBotonMenuInicial.dispose();
         texturaMenuPausa.dispose();
+        texturaSkip.dispose();
         Predial1.dispose();
         Predial5.dispose();
         Predial3.dispose();
@@ -457,6 +462,10 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Predial8.dispose();
         Dial2.dispose();
         Dial1.dispose();
+        SonidoPicos.dispose();
+        SonidoPre.dispose();
+        SonidoDial.dispose();
+        SonidoJuego.dispose();
     }
 
     @Override
@@ -527,7 +536,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         }
         else if (botonMenuInicial.contiene(x,y)){
             SonidoJuego.stop();
-            MisionKitsune.musicaFondo.play();
+            misionKitsune.getMusicaFondo().play();
             Menu.sonidoBotones.play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }

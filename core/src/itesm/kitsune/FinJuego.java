@@ -41,7 +41,7 @@ public class FinJuego implements Screen, InputProcessor {
         cargarBotones();
     }
     private void cargarTexturas(){
-        if(nivel==2) {
+        if(nivel!=2) {
             assetManager.load("Pantalla_Perder.png", Texture.class);
             //assetManager.load("fondoNivel1.png",Texture.class);
             assetManager.load("BtnReintentar.png", Texture.class);
@@ -53,12 +53,12 @@ public class FinJuego implements Screen, InputProcessor {
             texturaReintentar = assetManager.get("BtnReintentar.png");
         }
         else{
-            assetManager.load("Pantalla_Perder.png", Texture.class);
+            assetManager.load("N2Fin.png", Texture.class);
             //assetManager.load("fondoNivel1.png",Texture.class);
             assetManager.load("N2Reintentar.png", Texture.class);
             assetManager.load("N2MenuInicialFin.png", Texture.class);
             assetManager.finishLoading();
-            texturaFin = assetManager.get("Pantalla_Perder.png");
+            texturaFin = assetManager.get("N2Fin.png");
             //texturaFondo=assetManager.get("fondoNivel1.png");
             texturaMenu = assetManager.get("N2MenuInicialFin.png");
             texturaReintentar = assetManager.get("N2Reintentar.png");
@@ -147,13 +147,13 @@ public class FinJuego implements Screen, InputProcessor {
         float x=v.x,y=v.y;
         if(BtnMenu.contiene(x,y)){
             Menu.sonidoBotones.play();
-            MisionKitsune.musicaFondo.play();
+            misionKitsune.getMusicaFondo().play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }
         else if(BtnReintentar.contiene(x,y)){
             Menu.sonidoBotones.play();
             if(nivel==1)
-                misionKitsune.setScreen(new NivelBusqueda(misionKitsune, NivelBusqueda.EstadosJuego.JUGANDO));
+                misionKitsune.setScreen(new NivelBusqueda(misionKitsune, NivelBusqueda.EstadosJuego.JUGANDO,1));
             else if(nivel==2)
                 misionKitsune.setScreen(new NivelPersecucion(misionKitsune));
         }

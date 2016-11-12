@@ -83,7 +83,7 @@ public class Miwa {
             case QUIETOI:
                 if (estadosSalto==EstadosSalto.EN_PISO){
                     sprite.setRegion(inicio);}
-                if (!sprite.isFlipX())
+                if (sprite.isFlipX())
                     sprite.flip(true, false);
 
                 batch.draw(sprite , sprite.getX(), sprite.getY());

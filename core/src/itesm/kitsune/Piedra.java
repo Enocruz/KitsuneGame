@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-import java.util.Random;
-
 /**
  * Created by b-and on 07/11/2016.
  */
@@ -30,11 +28,11 @@ public class Piedra {
         sprite.setPosition(x,y);
         yinicial=sprite.getY();
     }
-    public void render(SpriteBatch batch, int vel, int rot) {
+    public void render(SpriteBatch batch, int vel) {
         sprite.draw(batch);
-        actualizar(vel,rot);
+        actualizar(vel);
     }
-    private void actualizar(int vel, int rot){
+    private void actualizar(int vel){
         float x=sprite.getX();
         float y=sprite.getY();
         rectColision.setPosition(x,y);
@@ -50,7 +48,6 @@ public class Piedra {
                     if (y >= -sprite.getHeight()) {
                         y -= vel;
                         sprite.setY(y);
-                        sprite.setRotation(sprite.getRotation() + rot);
                     } else
                         estadosPiedra = EstadosPiedra.DESAPARECER;
                 }

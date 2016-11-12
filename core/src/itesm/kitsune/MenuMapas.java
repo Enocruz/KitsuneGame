@@ -92,11 +92,11 @@ public class MenuMapas implements Screen , InputProcessor{
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //Dependencia de la camara
-        if(MisionKitsune.nivel==2){
+        if(misionKitsune.getNivel()==2){
             boton2.setAlfa(1);
             boton2.setDisabled(false);
         }
-        else if(MisionKitsune.nivel>=3){
+        else if(misionKitsune.getNivel()>=3){
             boton2.setAlfa(1);
             boton2.setDisabled(false);
             boton3.setAlfa(1);
@@ -163,17 +163,17 @@ public class MenuMapas implements Screen , InputProcessor{
         camara.unproject(v);
         float x=v.x,y=v.y;
         if(boton1.contiene(x,y)){
-            MisionKitsune.musicaFondo.stop();
+            misionKitsune.getMusicaFondo().stop();
             Menu.sonidoBotones.play();
-            dispose();
-            misionKitsune.setScreen(new NivelBusqueda(misionKitsune, NivelBusqueda.EstadosJuego.INTRO));
-
+            misionKitsune.setScreen(new Cargando.CargandoBusqueda(misionKitsune));
+            //misionKitsune.setScreen(new NivelBusqueda(misionKitsune, NivelBusqueda.EstadosJuego.INTRO,1));
         }
         if(boton2.contiene(x,y)){
-            MisionKitsune.musicaFondo.stop();
+            misionKitsune.getMusicaFondo().stop();
             Menu.sonidoBotones.play();
             dispose();
-            misionKitsune.setScreen(new NivelPersecucion(misionKitsune));
+            //misionKitsune.setScreen(new NivelPersecucion(misionKitsune));
+            misionKitsune.setScreen(new Cargando.CargandoPersecucion(misionKitsune));
         }
         if(botonCerrar.contiene(x,y)){
             Menu.sonidoBotones.play();
