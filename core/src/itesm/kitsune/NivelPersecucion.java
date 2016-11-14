@@ -127,7 +127,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
         //Textura Vida
         texturaHoyo=assetManager.get("N2HoyoNegro.png");
         texturaReanudar = assetManager.get("N2Reanudar.png");
-        texturaMenuInicial = assetManager.get("N2MenuInicial.png");
+        texturaMenuInicial = assetManager.get("N2MenuInicialPausa.png");
         texturaFondo = assetManager.get("FondoEstrellas.png");
         texturaNaveEnemiga = assetManager.get("N2NaveEnemiga.png");
         texturaMiwaCentro = assetManager.get("N2NaveMiwa.png");

@@ -4,11 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -23,6 +24,12 @@ public class Cargando implements Screen {
     private SpriteBatch batch;
     private final int ancho=1280,alto=800;
     private AssetManager assetManager;
+    private Texture texturaCargando;
+    private TextureRegion[] textureRegion;
+    private Animation animation;
+    private Texto texto;
+    private float tiempo;
+
     Cargando(MisionKitsune misionKitsune){
         this.misionKitsune=misionKitsune;
     }
@@ -74,10 +81,13 @@ public class Cargando implements Screen {
         }
         @Override
         public void render(float delta) {
+
             // Actualizar carga
             actualizar();
             // Dibujar
-            super.borrarPantalla();
+            super.render(delta);
+            //super.borrarPantalla();
+
 
         }
         private void actualizar() {
@@ -107,7 +117,7 @@ public class Cargando implements Screen {
             super.assetManager.load("N2HoyoNegro.png",Texture.class);
             super.assetManager.load("N2Vida.png",Texture.class);
             super.assetManager.load("N2Reanudar.png", Texture.class);
-            super.assetManager.load("N2MenuInicial.png", Texture.class);
+            super.assetManager.load("N2MenuInicialPausa.png", Texture.class);
             super.assetManager.load("N2Pausa.png", Texture.class);
             super.assetManager.load("FondoEstrellas.png", Texture.class);
             super.assetManager.load("N2NaveEnemiga.png", Texture.class);
@@ -132,9 +142,12 @@ public class Cargando implements Screen {
         @Override
         public void render(float delta) {
             // Actualizar carga
+
             actualizar();
             // Dibujar
-            super.borrarPantalla();
+            super.render(delta);
+           // super.borrarPantalla();
+
         }
         private void actualizar() {
 
@@ -150,15 +163,24 @@ public class Cargando implements Screen {
 
     }
 
-    private void borrarPantalla() {
-        Gdx.gl.glClearColor(0.42f, 0.55f, 1, 1);    // r, g, b, alpha
+    /*private void borrarPantalla() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);    // r, g, b, alpha
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    }
+    }*/
     @Override
     public void show() {
         batch=new SpriteBatch();
         cargarCamara();
         assetManager=misionKitsune.getAssetManager();
+        assetManager.load("Espera.png",Texture.class);
+        assetManager.finishLoading();
+        texturaCargando=assetManager.get("Espera.png");
+        TextureRegion tmp=new TextureRegion(texturaCargando);
+        TextureRegion[][] text =tmp.split(texturaCargando.getWidth()/2,texturaCargando.getHeight());
+        animation=new Animation(0.25f,text[0][0],text[0][1]);
+        animation.setPlayMode(Animation.PlayMode.LOOP);
+        tiempo=0;
+        texto=new Texto("DominoFont.fnt");
     }
     private void cargarCamara() {
         //Camara
@@ -170,7 +192,14 @@ public class Cargando implements Screen {
     }
     @Override
     public void render(float delta) {
-
+        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.setProjectionMatrix(camara.combined);
+        tiempo+=Gdx.graphics.getDeltaTime();
+        batch.begin();
+        texto.mostrarMensaje(batch,"Cargando...",ancho/1.6f,alto/8);
+        batch.draw(animation.getKeyFrame(tiempo),ancho-texturaCargando.getWidth()/2,0);
+        batch.end();
     }
 
     @Override
