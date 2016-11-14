@@ -123,43 +123,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
     }
     private void cargarTexturas() {
         assetManager=misionKitsune.getAssetManager();
-        /*
-        //Texturas Dialogos
-        assetManager.load("Skip.png",Texture.class);
-        assetManager.load("Dialogo_Nivel1_1.png",Texture.class);
-        assetManager.load("Dialogo_Nivel1_2.png",Texture.class);
-        assetManager.load("Dialogo_PreNivel1_1.png",Texture.class);
-        assetManager.load("Dialogo_PreNivel1_2.png",Texture.class);
-        assetManager.load("Dialogo_PreNivel1_3.png",Texture.class);
-        assetManager.load("Dialogo_PreNivel1_4.png",Texture.class);
-        assetManager.load("Dialogo_PreNivel1_5.png",Texture.class);
-        assetManager.load("Dialogo_PreNivel1_6.png",Texture.class);
-        assetManager.load("Dialogo_PreNivel1_7.png",Texture.class);
-        assetManager.load("Dialogo_PreNivel1_8.png",Texture.class);
-        //Musica
-        assetManager.load("MusicaJuegoN1.mp3",Music.class);
-        assetManager.load("SonidoGemas.mp3",Music.class);
-        assetManager.load("SonidoPicos.mp3",Music.class);
-        assetManager.load("MusicaDialogoInicioNivel1.mp3",Music.class);
-        assetManager.load("MusicaDialogoFinalNivel1.mp3",Music.class);
-        //Textura Miwa
-        assetManager.load("miwa.png",Texture.class);
-        //Textura Vida
-        assetManager.load("Vida.png",Texture.class);
-        assetManager.load("GemaContador.png",Texture.class);
-        //Texturas de Boton
-        assetManager.load("pausa.png",Texture.class);
-        assetManager.load("izquierda.png",Texture.class);
-        assetManager.load("derecha.png",Texture.class);
-        assetManager.load("salto.png",Texture.class);
-        //Texturas Menu Pausa
-        assetManager.load("Pantalla_Pausa.png", Texture.class);
-        assetManager.load("Menu_Inicial.png", Texture.class);
-        assetManager.load("Reanudar.png", Texture.class);
-        assetManager.load("Pantalla_Perder.png",Texture.class);
-        //Se bloquea hasta cargar los recursos
-        assetManager.finishLoading();
-        */
+
         //Textura Vida
         texturaVida=assetManager.get("Vida.png");
         texturaGema=assetManager.get("GemaContador.png");

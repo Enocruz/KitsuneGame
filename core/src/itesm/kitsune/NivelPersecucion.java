@@ -102,29 +102,6 @@ public class NivelPersecucion implements Screen,InputProcessor{
     private void cargarTexturas() {
         batch = new SpriteBatch();
         //Texturas Dialogos
-        /*assetManager.load("N2HoyoNegro.png",Texture.class);
-        assetManager.load("N2Vida.png",Texture.class);
-        assetManager.load("N2Reanudar.png", Texture.class);
-        assetManager.load("N2MenuInicial.png", Texture.class);
-        assetManager.load("N2Pausa.png", Texture.class);
-        assetManager.load("FondoEstrellas.png", Texture.class);
-        assetManager.load("N2NaveEnemiga.png", Texture.class);
-        assetManager.load("N2NaveMiwa.png", Texture.class);
-        assetManager.load("N2NaveMiwaDerecha.png", Texture.class);
-        assetManager.load("N2NaveMiwaIzquierda.png", Texture.class);
-        assetManager.load("N2NaveEnemigaIzquierda.png", Texture.class);
-        assetManager.load("N2NaveEnemigaDerecha.png", Texture.class);
-        assetManager.load("FondoNebulosaAzul.png", Texture.class);
-        assetManager.load("FondoNebulosaRoja.png", Texture.class);
-        //assetManager.load("Pantalla_Pausa.png", Texture.class);
-        assetManager.load("N2Piedra.png", Texture.class);
-        assetManager.load("N2Piedritas.png", Texture.class);
-        assetManager.load("Barra.png",Texture.class);
-        assetManager.load("N2IconoNave.png",Texture.class);
-        assetManager.load("N2ContadorGemas.png",Texture.class);
-        assetManager.load("N2Gema.png",Texture.class);
-        assetManager.finishLoading();*/
-        //Textura Vida
         texturaHoyo=assetManager.get("N2HoyoNegro.png");
         texturaReanudar = assetManager.get("N2Reanudar.png");
         texturaMenuInicial = assetManager.get("N2MenuInicialPausa.png");
