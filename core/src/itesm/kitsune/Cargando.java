@@ -114,6 +114,7 @@ public class Cargando implements Screen {
         }
         private void cargarElementos(){
             Gdx.app.log("cargarRecursos","Iniciando...");
+            super.assetManager.load("Skip.png",Texture.class);
             super.assetManager.load("Dialogo_PreNivel2_1.jpg",Texture.class);
             super.assetManager.load("Dialogo_PreNivel2_2.jpg",Texture.class);
             super.assetManager.load("Dialogo_PreNivel2_3.jpg",Texture.class);
@@ -123,6 +124,8 @@ public class Cargando implements Screen {
             super.assetManager.load("Dialogo_Nivel2_3.jpg",Texture.class);
             super.assetManager.load("Dialogo_Nivel2_4.jpg",Texture.class);
             super.assetManager.load("Dialogo_Nivel2_5.jpg",Texture.class);
+
+
             super.assetManager.load("N2HoyoNegro.png",Texture.class);
             super.assetManager.load("N2Vida.png",Texture.class);
             super.assetManager.load("N2Reanudar.png", Texture.class);
@@ -162,7 +165,7 @@ public class Cargando implements Screen {
 
             if (super.assetManager.update()) {
                 // Terminó la carga, cambiar de pantalla
-                super.misionKitsune.setScreen(new NivelPersecucion(super.misionKitsune));
+                super.misionKitsune.setScreen(new NivelPersecucion(super.misionKitsune,NivelPersecucion.EstadosPersecucion.INTRO,2));
             } else {
                 // Aún no termina la carga de assets, leer el avance
                 float avance = super.assetManager.getProgress()*100;
@@ -172,10 +175,6 @@ public class Cargando implements Screen {
 
     }
 
-    /*private void borrarPantalla() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);    // r, g, b, alpha
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    }*/
     @Override
     public void show() {
         batch=new SpriteBatch();

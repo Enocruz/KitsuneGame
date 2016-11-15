@@ -30,14 +30,14 @@ public class NivelPersecucion implements Screen,InputProcessor{
     private Texture texturaFondo,texturaNaveEnemiga,texturaMiwaCentro,texturaMiwaDerecha,texturaMiwaIzquierda,
             texturaPausa,texNebAzul,texNebRoja,texturaMenuInicial,texturaReanudar, texturaHoyo,
             texturaPiedra, texturaPiedrita,texturaVida,texturaBarra,texturaMiniNave,texturaGemaVida,texturaGema,
-            texPreNiv,texPreNiv2,texPreNiv3,texPreNiv4,texNiv,texNiv2,texNiv3,texNiv4,texNiv5;
+            texPreNiv,texPreNiv2,texPreNiv3,texPreNiv4,texNiv,texNiv2,texNiv3,texNiv4,texNiv5,texturaSkip;
     private AssetManager assetManager;
-    private int y=0,yNave,xGema,velXGema;
+    private int y=0,yNave,xGema,velXGema,nivel;
     private Piedra piedra,piedrita;
     private Array<Piedra> piedras,piedritas;
     private  float accelX;
     public static EstadosPersecucion estadosJuego;
-    private Boton botonPausa,botonMenu,botonReanudar;
+    private Boton botonPausa,botonMenu,botonReanudar,botonSkip;
     private Random rnd;
     private GemaVida gemaVida;
     private Gemas gemas;
@@ -47,8 +47,10 @@ public class NivelPersecucion implements Screen,InputProcessor{
     private float tiempoInvencible,tiempoNivel,tiempoFinal,tiempoGemas,tiempoInvencibleG;
     private Texture[] Predialogos,Dialogos;
 
-    NivelPersecucion(MisionKitsune misionKitsune){
-        this.misionKitsune=misionKitsune;
+    NivelPersecucion(MisionKitsune misionKitsune, EstadosPersecucion estado,int nivel){
+        this.estadosJuego=estado;
+        this.misionKitsune = misionKitsune;
+        this.nivel=nivel;
     }
 
     @Override
@@ -56,7 +58,6 @@ public class NivelPersecucion implements Screen,InputProcessor{
         tiempoInvencible=3;
         rnd=new Random();
         Gdx.input.setInputProcessor(this);
-        estadosJuego=EstadosPersecucion.INTRO;
         assetManager=misionKitsune.getAssetManager();
         inicializarCamara();
         cargarTexturas();
@@ -88,7 +89,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
         tiempoNivel=1;
         tiempoFinal=0;
         tiempoInvencibleG=0.5f;
-        Predialogos=new Texture[]{texPreNiv,texPreNiv2,texPreNiv3,texPreNiv4};
+        Predialogos=new Texture[]{texPreNiv,texPreNiv2,texPreNiv3};
         Dialogos=new Texture[]{texNiv,texNiv2,texNiv3,texNiv4,texNiv5};
     }
     private void inicializarBotones(){
@@ -101,11 +102,14 @@ public class NivelPersecucion implements Screen,InputProcessor{
         botonReanudar=new Boton(texturaReanudar);
         botonReanudar.setPosicion(ANCHO/2-texturaReanudar.getWidth()/2,ALTO/3);
         botonReanudar.setDisabled(true);
+        botonSkip=new Boton(texturaSkip);
+        botonSkip.setPosicion(ANCHO-texturaSkip.getWidth()*1.5f,ALTO-texturaSkip.getHeight()*1.5f);
     }
 
     private void cargarTexturas() {
         batch = new SpriteBatch();
         //Texturas Dialogos
+        texturaSkip=assetManager.get("Skip.png");
         texPreNiv=assetManager.get("Dialogo_PreNivel2_1.jpg");
         texPreNiv2=assetManager.get("Dialogo_PreNivel2_2.jpg");
         texPreNiv3=assetManager.get("Dialogo_PreNivel2_3.jpg");
@@ -350,6 +354,8 @@ public class NivelPersecucion implements Screen,InputProcessor{
                     batch.setProjectionMatrix(camaraDialogos.combined);
                     batch.begin();
                     batch.draw(Dialogos[conDial], 0, 0);
+                    if(misionKitsune.getNivel()!=2)
+                        botonSkip.render(batch);
                     batch.end();
                 }
                 else{
@@ -363,14 +369,20 @@ public class NivelPersecucion implements Screen,InputProcessor{
                     batch.setProjectionMatrix(camaraDialogos.combined);
                     batch.begin();
                     batch.draw(Predialogos[conPre], 0, 0);
-                    if(misionKitsune.getNivel()!=2){
-                        //botonSkip.render(batch);
-                    }
+                    if (misionKitsune.getNivel() != 2)
+                        botonSkip.render(batch);
                     batch.end();
                 }
-                else{
-                    estadosJuego= estadosJuego.JUGANDO;
-                }
+                else
+                    estadosJuego= estadosJuego.ESPERA;
+                break;
+            case ESPERA:
+                batch.setProjectionMatrix(camaraDialogos.combined);
+                batch.begin();
+                batch.draw(texPreNiv4,0,0);
+                batch.end();
+                if(Gdx.input.getAccelerometerY()>=8)
+                    estadosJuego=EstadosPersecucion.JUGANDO;
                 break;
         }
     }
@@ -391,7 +403,23 @@ public class NivelPersecucion implements Screen,InputProcessor{
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-       return false;
+        Vector3 v=new Vector3(screenX,screenY,0);
+        camaraDialogos.unproject(v);
+        float x=v.x,y=v.y;
+        if(estadosJuego== EstadosPersecucion.INTRO)
+            if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
+                System.out.println(conPre);
+                conPre++;
+                Menu.sonidoBotones.play();
+            }
+
+        if(estadosJuego== EstadosPersecucion.GANO) {
+            if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
+                conDial++;
+                Menu.sonidoBotones.play();
+            }
+        }
+        return true;
     }
 
     @Override
@@ -399,27 +427,21 @@ public class NivelPersecucion implements Screen,InputProcessor{
         Vector3 v=new Vector3(screenX,screenY,0);
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
-        if(estadosJuego== estadosJuego.INTRO)
-            if(x>0&&x<ANCHO&&y>0&&y<ALTO) {
-                conPre++;
-                Menu.sonidoBotones.play();
-            }
-        if(estadosJuego== estadosJuego.GANO)
-            if(x>0&&x<ANCHO&&y>0&&y<ALTO) {
-                conDial++;
-                Menu.sonidoBotones.play();
-            }
         if(botonPausa.contiene(x,y)) {
             estadosJuego=EstadosPersecucion.PAUSADO;
         }
-        if(botonReanudar.contiene(x,y)){
+        else if(botonReanudar.contiene(x,y)){
             estadosJuego=EstadosPersecucion.JUGANDO;
         }
-        if(botonMenu.contiene(x,y)){
+        else if(botonMenu.contiene(x,y)){
             misionKitsune.getMusicaFondo().play();
             Menu.sonidoBotones.play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }
+        camaraDialogos.unproject(v);
+        x=v.x;y=v.y;
+        if(botonSkip.contiene(x,y))
+            estadosJuego=EstadosPersecucion.ESPERA;
         return true;
     }
 
@@ -445,7 +467,8 @@ public class NivelPersecucion implements Screen,InputProcessor{
         GANO,
         INTRO,
         INVENCIBLE,
-        INVENCIBLEG
+        INVENCIBLEG,
+        ESPERA
     }
 
 }

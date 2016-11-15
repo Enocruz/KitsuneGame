@@ -13,7 +13,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
  */
 public class MisionKitsune extends Game{
     private Music musicaFondo;
-    private int nivel=2;
+    private int nivel=3;
     private final AssetManager assetManager = new AssetManager();
 
     @Override

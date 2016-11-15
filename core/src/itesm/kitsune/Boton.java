@@ -62,4 +62,8 @@ public class Boton implements Disableable{
         if (disabled= true){return true;}
         return false;
     }
+
+    public float getY() {
+        return sprite.getY();
+    }
 }
