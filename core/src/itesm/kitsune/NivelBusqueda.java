@@ -140,16 +140,16 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texturaBotonMenuInicial = assetManager.get("Menu_Inicial.png");
         texturaSkip=assetManager.get("Skip.png");
         //Texturas Dialogos
-        Dial1=assetManager.get("Dialogo_Nivel1_1.png");
-        Dial2=assetManager.get("Dialogo_Nivel1_2.png");
-        Predial1=assetManager.get("Dialogo_PreNivel1_1.png");
-        Predial2=assetManager.get("Dialogo_PreNivel1_2.png");
-        Predial3=assetManager.get("Dialogo_PreNivel1_3.png");
-        Predial4=assetManager.get("Dialogo_PreNivel1_4.png");
-        Predial5=assetManager.get("Dialogo_PreNivel1_5.png");
-        Predial6=assetManager.get("Dialogo_PreNivel1_6.png");
-        Predial7=assetManager.get("Dialogo_PreNivel1_7.png");
-        Predial8=assetManager.get("Dialogo_PreNivel1_8.png");
+        Dial1=assetManager.get("Dialogo_Nivel1_1.jpg");
+        Dial2=assetManager.get("Dialogo_Nivel1_2.jpg");
+        Predial1=assetManager.get("Dialogo_PreNivel1_1.jpg");
+        Predial2=assetManager.get("Dialogo_PreNivel1_2.jpg");
+        Predial3=assetManager.get("Dialogo_PreNivel1_3.jpg");
+        Predial4=assetManager.get("Dialogo_PreNivel1_4.jpg");
+        Predial5=assetManager.get("Dialogo_PreNivel1_5.jpg");
+        Predial6=assetManager.get("Dialogo_PreNivel1_6.jpg");
+        Predial7=assetManager.get("Dialogo_PreNivel1_7.jpg");
+        Predial8=assetManager.get("Dialogo_PreNivel1_8.jpg");
         //Musica
         SonidoPicos=assetManager.get("SonidoPicos.mp3");
         SonidoGemas=assetManager.get("SonidoGemas.mp3");
@@ -334,7 +334,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 break;
             case INTRO:
 
-                if (conPre < 8) {
+                if (conPre < Predialogos.length) {
                     batch.setProjectionMatrix(camara.combined);
                     batch.begin();
                     batch.draw(Predialogos[conPre], 0, 0);
@@ -358,7 +358,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 break;
             case GANO:
                 camara.setToOrtho(false,ANCHO,ALTO);
-                if (conDial < 2) {
+                if (conDial < Dialogos.length) {
                     SonidoDial.play();
                     batch.setProjectionMatrix(camara.combined);
                     batch.begin();

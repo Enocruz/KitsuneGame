@@ -23,13 +23,14 @@ import java.util.Random;
 public class NivelPersecucion implements Screen,InputProcessor{
     private MisionKitsune misionKitsune;
     private NaveMiwa naveMiwa;
-    private OrthographicCamera camara,camaraHUD;
+    private OrthographicCamera camara,camaraHUD,camaraDialogos;
     private Viewport vista;
     public static final int ANCHO=1280, ALTO=800;
     private SpriteBatch batch;
     private Texture texturaFondo,texturaNaveEnemiga,texturaMiwaCentro,texturaMiwaDerecha,texturaMiwaIzquierda,
             texturaPausa,texNebAzul,texNebRoja,texturaMenuInicial,texturaReanudar, texturaHoyo,
-            texturaPiedra, texturaPiedrita,texturaVida,texturaBarra,texturaMiniNave,texturaGemaVida,texturaGema;
+            texturaPiedra, texturaPiedrita,texturaVida,texturaBarra,texturaMiniNave,texturaGemaVida,texturaGema,
+            texPreNiv,texPreNiv2,texPreNiv3,texPreNiv4,texNiv,texNiv2,texNiv3,texNiv4,texNiv5;
     private AssetManager assetManager;
     private int y=0,yNave,xGema,velXGema;
     private Piedra piedra,piedrita;
@@ -41,9 +42,10 @@ public class NivelPersecucion implements Screen,InputProcessor{
     private GemaVida gemaVida;
     private Gemas gemas;
     private Texto texto;
-    private int contadorGemas;
+    private int contadorGemas,conPre=0,conDial=0;
     private Hoyo hoyo;
     private float tiempoInvencible,tiempoNivel,tiempoFinal,tiempoGemas,tiempoInvencibleG;
+    private Texture[] Predialogos,Dialogos;
 
     NivelPersecucion(MisionKitsune misionKitsune){
         this.misionKitsune=misionKitsune;
@@ -54,7 +56,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
         tiempoInvencible=3;
         rnd=new Random();
         Gdx.input.setInputProcessor(this);
-        estadosJuego=EstadosPersecucion.JUGANDO;
+        estadosJuego=EstadosPersecucion.INTRO;
         assetManager=misionKitsune.getAssetManager();
         inicializarCamara();
         cargarTexturas();
@@ -86,6 +88,8 @@ public class NivelPersecucion implements Screen,InputProcessor{
         tiempoNivel=1;
         tiempoFinal=0;
         tiempoInvencibleG=0.5f;
+        Predialogos=new Texture[]{texPreNiv,texPreNiv2,texPreNiv3,texPreNiv4};
+        Dialogos=new Texture[]{texNiv,texNiv2,texNiv3,texNiv4,texNiv5};
     }
     private void inicializarBotones(){
         botonPausa=new Boton(texturaPausa);
@@ -102,6 +106,15 @@ public class NivelPersecucion implements Screen,InputProcessor{
     private void cargarTexturas() {
         batch = new SpriteBatch();
         //Texturas Dialogos
+        texPreNiv=assetManager.get("Dialogo_PreNivel2_1.jpg");
+        texPreNiv2=assetManager.get("Dialogo_PreNivel2_2.jpg");
+        texPreNiv3=assetManager.get("Dialogo_PreNivel2_3.jpg");
+        texPreNiv4=assetManager.get("Dialogo_PreNivel2_4.jpg");
+        texNiv=assetManager.get("Dialogo_Nivel2_1.jpg");
+        texNiv2=assetManager.get("Dialogo_Nivel2_2.jpg");
+        texNiv3=assetManager.get("Dialogo_Nivel2_3.jpg");
+        texNiv4=assetManager.get("Dialogo_Nivel2_4.jpg");
+        texNiv5=assetManager.get("Dialogo_Nivel2_5.jpg");
         texturaHoyo=assetManager.get("N2HoyoNegro.png");
         texturaReanudar = assetManager.get("N2Reanudar.png");
         texturaMenuInicial = assetManager.get("N2MenuInicialPausa.png");
@@ -136,147 +149,15 @@ public class NivelPersecucion implements Screen,InputProcessor{
         camaraHUD.position.set(ANCHO/2, ALTO/2, 0);
         camaraHUD.rotate(90);
         camaraHUD.update();
+        camaraDialogos=new OrthographicCamera(ANCHO,ALTO);
+        camaraDialogos.position.set(ANCHO/2,ALTO/2,0);
+        camaraDialogos.update();
     }
     @Override
     public void render(float delta) {
-        if(contadorGemas<=0)
-            contadorGemas=0;
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        texturaFondo.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        texNebAzul.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        texNebRoja.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        texNebRoja.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.Repeat);
-        batch.setProjectionMatrix(camara.combined);
-        batch.begin();
-        batch.draw(texturaFondo, 0, 0, 0, y, ANCHO, ALTO);
-        batch.draw(texNebAzul,ANCHO/2,0,0,y,ANCHO,ALTO);
-        batch.draw(texNebRoja,0,0,0,y,ANCHO,ALTO);
-        batch.end();
-        if(estadosJuego==EstadosPersecucion.PAUSADO){
-            batch.setProjectionMatrix(camaraHUD.combined);
-            botonMenu.setDisabled(false);
-            botonReanudar.setDisabled(false);
-            botonPausa.setDisabled(true);
-            batch.begin();
-            botonMenu.render(batch);
-            botonReanudar.render(batch);
-            batch.end();
-        }
-        else{
-            if(xGema>=ANCHO-texturaGema.getWidth())
-                velXGema=-5;
-            if(xGema<=0+texturaGema.getWidth()/2)
-                velXGema=+5;
-            xGema+=velXGema;
-            tiempoNivel-=Gdx.graphics.getDeltaTime();
-            if(tiempoNivel<=0){
-                yNave+=5;//7.6 * segundo
-                tiempoNivel=1;
-                tiempoFinal++;
-            }
-            if(tiempoFinal>=90)
-                System.out.println("GAnaste");
-            if(estadosJuego==EstadosPersecucion.INVENCIBLE){
-                tiempoInvencible -= Gdx.graphics.getDeltaTime();
-                if(tiempoInvencible%0.5<0.25)
-                    naveMiwa.setAlfa(0.7f);
-                else if(tiempoInvencible%0.5>=0.25)
-                    naveMiwa.setAlfa(0.9f);
-                if (tiempoInvencible<=0) {
-                    estadosJuego = EstadosPersecucion.JUGANDO;
-                    tiempoInvencible = 3;
-                    naveMiwa.setAlfa(1);
-                }
-            }
-            if(estadosJuego==EstadosPersecucion.INVENCIBLEG){
-                tiempoInvencibleG-=Gdx.graphics.getDeltaTime();
-                if(tiempoInvencibleG<=0){
-                    estadosJuego=estadosJuego.JUGANDO;
-                    tiempoInvencibleG=0.5f;
-                }
-            }
-            if(naveMiwa.getVidas()<=0){
-                estadosJuego=EstadosPersecucion.PERDIO;
-                misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("FondoEstrellas.png"),2));
-            }
-            for(Piedra p:piedritas)
-                if(p.getEstadosPiedra()== Piedra.EstadosPiedra.NUEVA)
-                    if(rnd.nextInt(10)>=6)
-                        p.getSprite().setX(naveMiwa.getX());
-            if(gemas.getEstadoGemas()==Gemas.EstadoGema.NUEVA)
-                gemas.getSprite().setY(ALTO);
-            if(rnd.nextInt(100)>=99)
-                gemas.getSprite().setX(xGema);
-            botonMenu.setDisabled(true);
-            botonReanudar.setDisabled(true);
-            botonPausa.setDisabled(false);
-            batch.setProjectionMatrix(camaraHUD.combined);
-            batch.begin();
-            gemaVida.render(batch);
-            //hoyo.render(batch);
-            batch.draw(texturaNaveEnemiga,ANCHO/2,ALTO-texturaNaveEnemiga.getHeight());
-            naveMiwa.render(batch);
-            gemas.render(batch,xGema);
-            botonPausa.render(batch);
-            batch.draw(texturaBarra,ANCHO-texturaBarra.getWidth()*3,ALTO/2-texturaBarra.getHeight()/2);
-            batch.draw(texturaVida, texturaVida.getWidth() / 8, ALTO - texturaVida.getHeight() - 16);
-            texto.mostrarMensaje(batch, "" + naveMiwa.getVidas(), 126, 722);
-            batch.draw(texturaMiniNave,ANCHO-texturaBarra.getWidth()*3-texturaMiniNave.getWidth()/4,yNave);
-            for(Piedra x: piedras)
-                x.render(batch,7);
-            for(Piedra x: piedritas)
-                x.render(batch,3);
-            batch.end();
-            accelX = Gdx.input.getAccelerometerX();
-            if (accelX < -0.5f) {
-                naveMiwa.setMovimiento(NaveMiwa.MOVIMIENTO.DERECHA);
-            } else if (accelX > 0.5f) {
-                naveMiwa.setMovimiento(NaveMiwa.MOVIMIENTO.IZQUIERDA);
-            } else {
-                naveMiwa.setMovimiento(NaveMiwa.MOVIMIENTO.QUIETO);
-            }
-            //Movimiento con teclas
-            if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
-                naveMiwa.setMovimiento(NaveMiwa.MOVIMIENTO.IZQUIERDA);
-            if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
-                naveMiwa.setMovimiento(NaveMiwa.MOVIMIENTO.DERECHA);
-            //Movimiento con teclas
-
-            if(estadosJuego!=EstadosPersecucion.INVENCIBLEG) {
-                if (naveMiwa.getRectangle().overlaps(gemas.getRectangle())) {
-                    gemas.setEstadoGema(Gemas.EstadoGema.DESAPARECER);
-                    contadorGemas += 1;
-                    gemaVida.setGemas(contadorGemas);
-                    estadosJuego=EstadosPersecucion.INVENCIBLEG;
-                }
-            }
-            y -= 1;
-            if(estadosJuego!=EstadosPersecucion.INVENCIBLE) {
-                for (Piedra p : piedras)
-                    if (naveMiwa.getRectangle().overlaps(p.getRectangle())) {
-                        p.setEstado(Piedra.EstadosPiedra.DESAPARECER);
-                        naveMiwa.setVidas(naveMiwa.getVidas() - 1);
-                        estadosJuego=EstadosPersecucion.INVENCIBLE;
-                    }
-                for (Piedra p : piedritas)
-                    if (naveMiwa.getRectangle().overlaps(p.getRectangle())) {
-                        p.setEstado(Piedra.EstadosPiedra.DESAPARECER);
-                        contadorGemas-=1;
-                        gemaVida.setGemas(contadorGemas);
-                        estadosJuego=EstadosPersecucion.INVENCIBLE;
-                    }
-            }
-            if (contadorGemas >= 3) {
-                tiempoGemas -= Gdx.graphics.getDeltaTime();
-                if (tiempoGemas <= 0) {
-                    contadorGemas = 0;
-                    gemaVida.setGemas(contadorGemas);
-                    tiempoGemas = 1;
-                    naveMiwa.setVidas(naveMiwa.getVidas() + 1);
-                }
-            }
-        }
+        consultarEstado();
     }
 
     @Override
@@ -320,7 +201,178 @@ public class NivelPersecucion implements Screen,InputProcessor{
         texturaBarra.dispose();
         texturaGemaVida.dispose();
         texturaGema.dispose();
+    }
+    private void consultarEstado(){
+        switch(estadosJuego){
+            case JUGANDO:
+            case PAUSADO:
+            case INVENCIBLE:
+            case INVENCIBLEG:
+                if(contadorGemas<=0)
+                    contadorGemas=0;
+                texturaFondo.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+                texNebAzul.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+                texNebRoja.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+                texNebRoja.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.Repeat);
+                batch.setProjectionMatrix(camara.combined);
+                batch.begin();
+                batch.draw(texturaFondo, 0, 0, 0, y, ANCHO, ALTO);
+                batch.draw(texNebAzul,ANCHO/2,0,0,y,ANCHO,ALTO);
+                batch.draw(texNebRoja,0,0,0,y,ANCHO,ALTO);
+                batch.end();
+                if(estadosJuego==EstadosPersecucion.PAUSADO){
+                    batch.setProjectionMatrix(camaraHUD.combined);
+                    botonMenu.setDisabled(false);
+                    botonReanudar.setDisabled(false);
+                    botonPausa.setDisabled(true);
+                    batch.begin();
+                    botonMenu.render(batch);
+                    botonReanudar.render(batch);
+                    batch.end();
+                }
+                else{
+                    if(xGema>=ANCHO-texturaGema.getWidth())
+                        velXGema=-5;
+                    if(xGema<=0+texturaGema.getWidth()/2)
+                        velXGema=+5;
+                    xGema+=velXGema;
+                    tiempoNivel-=Gdx.graphics.getDeltaTime();
+                    if(tiempoNivel<=0){
+                        yNave+=5;//7.6 * segundo
+                        tiempoNivel=1;
+                        tiempoFinal++;
+                    }
+                    if(tiempoFinal>=90)
+                        estadosJuego=EstadosPersecucion.GANO;
+                    if(estadosJuego==EstadosPersecucion.INVENCIBLE){
+                        tiempoInvencible -= Gdx.graphics.getDeltaTime();
+                        if(tiempoInvencible%0.5<0.25)
+                            naveMiwa.setAlfa(0.7f);
+                        else if(tiempoInvencible%0.5>=0.25)
+                            naveMiwa.setAlfa(0.9f);
+                        if (tiempoInvencible<=0) {
+                            estadosJuego = EstadosPersecucion.JUGANDO;
+                            tiempoInvencible = 3;
+                            naveMiwa.setAlfa(1);
+                        }
+                    }
+                    if(estadosJuego==EstadosPersecucion.INVENCIBLEG){
+                        tiempoInvencibleG-=Gdx.graphics.getDeltaTime();
+                        if(tiempoInvencibleG<=0){
+                            estadosJuego=estadosJuego.JUGANDO;
+                            tiempoInvencibleG=0.5f;
+                        }
+                    }
+                    if(naveMiwa.getVidas()<=0){
+                        estadosJuego=EstadosPersecucion.PERDIO;
+                        misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("FondoEstrellas.png"),2));
+                    }
+                    for(Piedra p:piedritas)
+                        if(p.getEstadosPiedra()== Piedra.EstadosPiedra.NUEVA)
+                            if(rnd.nextInt(10)>=6)
+                                p.getSprite().setX(naveMiwa.getX());
+                    if(gemas.getEstadoGemas()==Gemas.EstadoGema.NUEVA)
+                        gemas.getSprite().setY(ALTO);
+                    if(rnd.nextInt(100)>=99)
+                        gemas.getSprite().setX(xGema);
+                    botonMenu.setDisabled(true);
+                    botonReanudar.setDisabled(true);
+                    botonPausa.setDisabled(false);
+                    batch.setProjectionMatrix(camaraHUD.combined);
+                    batch.begin();
+                    gemaVida.render(batch);
+                    //hoyo.render(batch);
+                    batch.draw(texturaNaveEnemiga,ANCHO/2,ALTO-texturaNaveEnemiga.getHeight());
+                    naveMiwa.render(batch);
+                    gemas.render(batch,xGema);
+                    botonPausa.render(batch);
+                    batch.draw(texturaBarra,ANCHO-texturaBarra.getWidth()*3,ALTO/2-texturaBarra.getHeight()/2);
+                    batch.draw(texturaVida, texturaVida.getWidth() / 8, ALTO - texturaVida.getHeight() - 16);
+                    texto.mostrarMensaje(batch, "" + naveMiwa.getVidas(), 126, 722);
+                    batch.draw(texturaMiniNave,ANCHO-texturaBarra.getWidth()*3-texturaMiniNave.getWidth()/4,yNave);
+                    for(Piedra x: piedras)
+                        x.render(batch,7);
+                    for(Piedra x: piedritas)
+                        x.render(batch,3);
+                    batch.end();
+                    accelX = Gdx.input.getAccelerometerX();
+                    if (accelX < -0.5f) {
+                        naveMiwa.setMovimiento(NaveMiwa.MOVIMIENTO.DERECHA);
+                    } else if (accelX > 0.5f) {
+                        naveMiwa.setMovimiento(NaveMiwa.MOVIMIENTO.IZQUIERDA);
+                    } else {
+                        naveMiwa.setMovimiento(NaveMiwa.MOVIMIENTO.QUIETO);
+                    }
+                    //Movimiento con teclas
+                    if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
+                        naveMiwa.setMovimiento(NaveMiwa.MOVIMIENTO.IZQUIERDA);
+                    if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
+                        naveMiwa.setMovimiento(NaveMiwa.MOVIMIENTO.DERECHA);
+                    //Movimiento con teclas
 
+                    if(estadosJuego!=EstadosPersecucion.INVENCIBLEG) {
+                        if (naveMiwa.getRectangle().overlaps(gemas.getRectangle())) {
+                            gemas.setEstadoGema(Gemas.EstadoGema.DESAPARECER);
+                            contadorGemas += 1;
+                            gemaVida.setGemas(contadorGemas);
+                            estadosJuego=EstadosPersecucion.INVENCIBLEG;
+                        }
+                    }
+                    y -= 1;
+                    if(estadosJuego!=EstadosPersecucion.INVENCIBLE) {
+                        for (Piedra p : piedras)
+                            if (naveMiwa.getRectangle().overlaps(p.getRectangle())) {
+                                p.setEstado(Piedra.EstadosPiedra.DESAPARECER);
+                                naveMiwa.setVidas(naveMiwa.getVidas() - 1);
+                                estadosJuego=EstadosPersecucion.INVENCIBLE;
+                            }
+                        for (Piedra p : piedritas)
+                            if (naveMiwa.getRectangle().overlaps(p.getRectangle())) {
+                                p.setEstado(Piedra.EstadosPiedra.DESAPARECER);
+                                contadorGemas-=1;
+                                gemaVida.setGemas(contadorGemas);
+                                estadosJuego=EstadosPersecucion.INVENCIBLE;
+                            }
+                    }
+                    if (contadorGemas >= 3) {
+                        tiempoGemas -= Gdx.graphics.getDeltaTime();
+                        if (tiempoGemas <= 0) {
+                            contadorGemas = 0;
+                            gemaVida.setGemas(contadorGemas);
+                            tiempoGemas = 1;
+                            naveMiwa.setVidas(naveMiwa.getVidas() + 1);
+                        }
+                    }
+                }
+                break;
+            case GANO:
+                if (conDial < Dialogos.length) {
+                    batch.setProjectionMatrix(camaraDialogos.combined);
+                    batch.begin();
+                    batch.draw(Dialogos[conDial], 0, 0);
+                    batch.end();
+                }
+                else{
+                    misionKitsune.setNivel(3);
+                    misionKitsune.setScreen(new MenuMapas(misionKitsune));
+                    misionKitsune.getMusicaFondo().play();
+                }
+                break;
+            case INTRO:
+                if (conPre < Predialogos.length) {
+                    batch.setProjectionMatrix(camaraDialogos.combined);
+                    batch.begin();
+                    batch.draw(Predialogos[conPre], 0, 0);
+                    if(misionKitsune.getNivel()!=2){
+                        //botonSkip.render(batch);
+                    }
+                    batch.end();
+                }
+                else{
+                    estadosJuego= estadosJuego.JUGANDO;
+                }
+                break;
+        }
     }
     @Override
     public boolean keyDown(int keycode) {
@@ -347,6 +399,16 @@ public class NivelPersecucion implements Screen,InputProcessor{
         Vector3 v=new Vector3(screenX,screenY,0);
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
+        if(estadosJuego== estadosJuego.INTRO)
+            if(x>0&&x<ANCHO&&y>0&&y<ALTO) {
+                conPre++;
+                Menu.sonidoBotones.play();
+            }
+        if(estadosJuego== estadosJuego.GANO)
+            if(x>0&&x<ANCHO&&y>0&&y<ALTO) {
+                conDial++;
+                Menu.sonidoBotones.play();
+            }
         if(botonPausa.contiene(x,y)) {
             estadosJuego=EstadosPersecucion.PAUSADO;
         }

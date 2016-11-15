@@ -45,16 +45,16 @@ public class Cargando implements Screen {
         private void cargarElementos(){
             Gdx.app.log("cargarRecursos","Iniciando...");
             super.assetManager.load("Skip.png",Texture.class);
-            super.assetManager.load("Dialogo_Nivel1_1.png",Texture.class);
-            super.assetManager.load("Dialogo_Nivel1_2.png",Texture.class);
-            super.assetManager.load("Dialogo_PreNivel1_1.png",Texture.class);
-            super.assetManager.load("Dialogo_PreNivel1_2.png",Texture.class);
-            super.assetManager.load("Dialogo_PreNivel1_3.png",Texture.class);
-            super.assetManager.load("Dialogo_PreNivel1_4.png",Texture.class);
-            super.assetManager.load("Dialogo_PreNivel1_5.png",Texture.class);
-            super.assetManager.load("Dialogo_PreNivel1_6.png",Texture.class);
-            super.assetManager.load("Dialogo_PreNivel1_7.png",Texture.class);
-            super.assetManager.load("Dialogo_PreNivel1_8.png",Texture.class);
+            super.assetManager.load("Dialogo_Nivel1_1.jpg",Texture.class);
+            super.assetManager.load("Dialogo_Nivel1_2.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel1_1.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel1_2.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel1_3.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel1_4.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel1_5.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel1_6.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel1_7.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel1_8.jpg",Texture.class);
             //Musica
             super.assetManager.load("MusicaJuegoN1.mp3",Music.class);
             super.assetManager.load("SonidoGemas.mp3",Music.class);
@@ -114,6 +114,15 @@ public class Cargando implements Screen {
         }
         private void cargarElementos(){
             Gdx.app.log("cargarRecursos","Iniciando...");
+            super.assetManager.load("Dialogo_PreNivel2_1.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel2_2.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel2_3.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel2_4.jpg",Texture.class);
+            super.assetManager.load("Dialogo_Nivel2_1.jpg",Texture.class);
+            super.assetManager.load("Dialogo_Nivel2_2.jpg",Texture.class);
+            super.assetManager.load("Dialogo_Nivel2_3.jpg",Texture.class);
+            super.assetManager.load("Dialogo_Nivel2_4.jpg",Texture.class);
+            super.assetManager.load("Dialogo_Nivel2_5.jpg",Texture.class);
             super.assetManager.load("N2HoyoNegro.png",Texture.class);
             super.assetManager.load("N2Vida.png",Texture.class);
             super.assetManager.load("N2Reanudar.png", Texture.class);
