@@ -290,10 +290,10 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                     miwa.setVelocidadX(3);
                 } else {
-                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO) {
+                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
                         miwa.setEstadoSalto(Miwa.EstadosSalto.BAJANDO);
-                        miwa.setVelocidadX(6);
-                    }
+                    miwa.setVelocidadX(6);
+
                 }
 
                 TiledMapTileLayer capaGanar = (TiledMapTileLayer) mapa.getMapa().getLayers().get(5);
