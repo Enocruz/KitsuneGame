@@ -1,10 +1,8 @@
 package itesm.kitsune;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,7 +23,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class AcercaDe implements Screen {
     private final MisionKitsune misionKitsune;
     private Stage escena;
-    private Texture texturaFondo,texturaRegresar,textureEnock,textureEli,textureLes,textureSnell,textureDaph,popupEnock,
+    private Texture texturaFondo,textureEnock,textureEli,textureLes,textureSnell,textureDaph,popupEnock,
             popupEli,popupSnell,popupDaph,popupLes,textureCerrar;
     private AssetManager assetManager;
     private Table tablepopup,tabla;
@@ -204,7 +202,6 @@ public class AcercaDe implements Screen {
         assetManager.load("snell.png",Texture.class);
         assetManager.load("daff.png",Texture.class);
         assetManager.load("eli.png",Texture.class);
-        assetManager.load("back.png",Texture.class);
 
         //imagen pop up prueba
         assetManager.load("enockCard.png",Texture.class);
@@ -232,7 +229,6 @@ public class AcercaDe implements Screen {
         textureEnock=assetManager.get("enock.png");
         textureLes=assetManager.get("leslie.png");
         texturaFondo=assetManager.get("AcercaDe.png");
-        texturaRegresar=assetManager.get("back.png");
         textureCerrar=assetManager.get("cerrar.png");
 
     }
@@ -270,7 +266,6 @@ public class AcercaDe implements Screen {
     @Override
     public void dispose() {
         texturaFondo.dispose();
-        texturaRegresar.dispose();
         textureLes.dispose();
         textureSnell.dispose();
         textureCerrar.dispose();

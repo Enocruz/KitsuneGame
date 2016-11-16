@@ -397,7 +397,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 }
                 else{
                     SonidoDial.stop();
-                    misionKitsune.setNivel(2);
+                    if(misionKitsune.getNivel()==1)
+                        misionKitsune.setNivel(2);
                     misionKitsune.setScreen(new MenuMapas(misionKitsune));
                     misionKitsune.getMusicaFondo().play();
                 }
@@ -484,16 +485,19 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Vector3 v=new Vector3(screenX,screenY,0);
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
-        if(estadosJuego==EstadosJuego.INTRO)
-            if(x>0&&x<ANCHO-botonSkip.getY()-texturaSkip.getHeight()/2&&y>0&&y<ALTO) {
+        if(estadosJuego==EstadosJuego.INTRO) {
+            if (x > 0 && x < ANCHO - botonSkip.getY() - texturaSkip.getHeight() / 2 && y > 0 && y < ALTO) {
                 conPre++;
                 Menu.sonidoBotones.play();
             }
-        if(estadosJuego==EstadosJuego.GANO)
-            if(x>0&&x<ANCHO&&y>0&&y<ALTO) {
+        }
+        if(estadosJuego==EstadosJuego.GANO) {
+            if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
                 conDial++;
                 Menu.sonidoBotones.play();
             }
+
+        }
         if(botonIzq.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
         }
@@ -529,10 +533,16 @@ public class NivelBusqueda implements Screen, InputProcessor {
             Menu.sonidoBotones.play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }
-        else if(botonSkip.contiene(x,y)){
+        else if(botonSkip.contiene(x,y)&&estadosJuego==EstadosJuego.GANO){
+            SonidoDial.stop();
+            misionKitsune.getMusicaFondo().play();
+            if(misionKitsune.getNivel()==1)
+                misionKitsune.setNivel(2);
+            misionKitsune.setScreen(new MenuMapas(misionKitsune));
+        }
+        else if(botonSkip.contiene(x,y)&&estadosJuego==EstadosJuego.INTRO){
             SonidoPre.stop();
             estadosJuego=EstadosJuego.JUGANDO;
-
         }
         return true;
     }
