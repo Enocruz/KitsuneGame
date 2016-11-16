@@ -30,7 +30,8 @@ public class GemaVida {
             gemasContador=3;
         else
             gemasContador=0;
-        batch.draw(gemaVidas[gemasContador],spriteGemas.getX(),spriteGemas.getY());
+        spriteGemas.setRegion(gemaVidas[gemasContador]);
+        spriteGemas.draw(batch);
     }
     public int getGemas(){
         return this.gemasContador;

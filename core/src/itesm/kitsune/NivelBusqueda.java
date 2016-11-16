@@ -1,6 +1,7 @@
 package itesm.kitsune;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -279,18 +280,20 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 if (mapa.esPiso(celda)) {
                     miwa.setVelocidadX(7);
                     if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
-                    miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
+                        miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                 } else if (mapa.esHielo(celda)) {
                     if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
-                    miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
+                        miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                     miwa.setVelocidadX(13);
                 } else if (mapa.esPegajoso(celda)) {
                     if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
                     miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                     miwa.setVelocidadX(3);
                 } else {
-                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
+                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO) {
                         miwa.setEstadoSalto(Miwa.EstadosSalto.BAJANDO);
+                        miwa.setVelocidadX(6);
+                    }
                 }
 
                 TiledMapTileLayer capaGanar = (TiledMapTileLayer) mapa.getMapa().getLayers().get(5);
@@ -323,7 +326,13 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     }
                     if (contadorGemas >= 3) {
                         tiempoGemas -= Gdx.graphics.getDeltaTime();
+                        System.out.println(tiempoGemas%0.4);
+                        if(tiempoGemas%0.4>0.2)
+                            gemaVida.getSprite().setAlpha(0.5f);
+                        if(tiempoGemas%0.4<=0.2)
+                            gemaVida.getSprite().setAlpha(1);
                         if (tiempoGemas <= 0) {
+                            gemaVida.getSprite().setAlpha(1);
                             contadorGemas = 0;
                             gemaVida.setGemas(contadorGemas);
                             tiempoGemas = 2;
@@ -338,7 +347,17 @@ public class NivelBusqueda implements Screen, InputProcessor {
                         }
                     }
                 }
-                //Activa los botones para que puedan ser usados
+                if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
+                miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
+               else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
+                    miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+                else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
+                    miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
+                else
+                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+
+
+
 
                 break;
             case INTRO:
