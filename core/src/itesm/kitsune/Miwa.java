@@ -96,7 +96,6 @@ public class Miwa {
             case SUBIENDO:
                 sprite.setRegion(salto);
                 y += velSalto*0.2f;
-                System.out.println(velSalto);
                 velSalto+=VELOCIDAD_Y;
                 if (velSalto<=0){
                     estadoSalto=EstadosSalto.BAJANDO;
@@ -105,7 +104,7 @@ public class Miwa {
                 break;
             case BAJANDO:
                 sprite.setRegion(salto);
-                sprite.setY(sprite.getY() + 2*VELOCIDAD_Y);
+                sprite.setY(sprite.getY() + 9.81f*VELOCIDAD_Y*0.3f);
                 break;
         }
 

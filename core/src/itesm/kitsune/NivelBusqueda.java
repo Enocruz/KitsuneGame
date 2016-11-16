@@ -326,7 +326,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     }
                     if (contadorGemas >= 3) {
                         tiempoGemas -= Gdx.graphics.getDeltaTime();
-                        System.out.println(tiempoGemas%0.4);
                         if(tiempoGemas%0.4>0.2)
                             gemaVida.getSprite().setAlpha(0.5f);
                         if(tiempoGemas%0.4<=0.2)
