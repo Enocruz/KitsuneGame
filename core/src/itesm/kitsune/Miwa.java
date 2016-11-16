@@ -79,11 +79,10 @@ public class Miwa {
                     sprite.setRegion(salto);
                 else{
                     sprite.setRegion(inicio);
-                    if(right==false)
-                        if(!sprite.isFlipX())
-                            sprite.flip(true, false);
-
                 }
+                if(right==false)
+                    if(!sprite.isFlipX())
+                        sprite.flip(true, false);
                 break;
         }
     }
@@ -105,11 +104,11 @@ public class Miwa {
                 sprite.setY(y);
                 break;
             case BAJANDO:
-                System.out.println(right);
                 sprite.setRegion(salto);
                 sprite.setY(sprite.getY() + VELOCIDAD_Y);
                 break;
         }
+
 
     }
 

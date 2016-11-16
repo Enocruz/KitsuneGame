@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,12 +24,13 @@ import java.util.Random;
 public class NivelPersecucion implements Screen,InputProcessor{
     private MisionKitsune misionKitsune;
     private NaveMiwa naveMiwa;
+    private Music musicaIntro;
     private OrthographicCamera camara,camaraHUD,camaraDialogos;
     private Viewport vista;
     public static final int ANCHO=1280, ALTO=800;
     private SpriteBatch batch;
     private Texture texturaFondo,texturaNaveEnemiga,texturaMiwaCentro,texturaMiwaDerecha,texturaMiwaIzquierda,
-            texturaPausa,texNebAzul,texNebRoja,texturaMenuInicial,texturaReanudar, texturaHoyo,
+            texturaPausa,texNebAzul,texNebRoja,texturaMenuInicial,texturaReanudar,
             texturaPiedra, texturaPiedrita,texturaVida,texturaBarra,texturaMiniNave,texturaGemaVida,texturaGema,
             texPreNiv,texPreNiv2,texPreNiv3,texPreNiv4,texNiv,texNiv2,texNiv3,texNiv4,texNiv5,texturaSkip;
     private AssetManager assetManager;
@@ -43,7 +45,6 @@ public class NivelPersecucion implements Screen,InputProcessor{
     private Gemas gemas;
     private Texto texto;
     private int contadorGemas,conPre=0,conDial=0;
-    private Hoyo hoyo;
     private float tiempoInvencible,tiempoNivel,tiempoFinal,tiempoGemas,tiempoInvencibleG;
     private Texture[] Predialogos,Dialogos;
 
@@ -69,8 +70,6 @@ public class NivelPersecucion implements Screen,InputProcessor{
         gemas=new Gemas(texturaGema,ANCHO,ALTO);
         gemaVida=new GemaVida(texturaGemaVida);
         gemas.getSprite().setY(ALTO);
-        hoyo=new Hoyo(texturaHoyo);
-        hoyo.getSprite().setPosition(ANCHO/2,ALTO/2);
         texto=new Texto("DominoFont.fnt");
         contadorGemas=0;
         gemaVida.getSprite().setPosition(texturaGemaVida.getWidth()/2,ALTO-texturaGemaVida.getHeight()-ANCHO/80);
@@ -119,7 +118,6 @@ public class NivelPersecucion implements Screen,InputProcessor{
         texNiv3=assetManager.get("Dialogo_Nivel2_3.jpg");
         texNiv4=assetManager.get("Dialogo_Nivel2_4.jpg");
         texNiv5=assetManager.get("Dialogo_Nivel2_5.jpg");
-        texturaHoyo=assetManager.get("N2HoyoNegro.png");
         texturaReanudar = assetManager.get("N2Reanudar.png");
         texturaMenuInicial = assetManager.get("N2MenuInicialPausa.png");
         texturaFondo = assetManager.get("FondoEstrellas.png");
@@ -137,6 +135,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
         texturaBarra=assetManager.get("Barra.png");
         texturaGemaVida=assetManager.get("N2ContadorGemas.png");
         texturaGema=assetManager.get("N2Gema.png");
+        musicaIntro=assetManager.get("MusicaDialogoFinalNivel1.mp3");
     }
 
 
@@ -187,7 +186,6 @@ public class NivelPersecucion implements Screen,InputProcessor{
 
     @Override
     public void dispose() {
-        texturaHoyo.dispose();
         texturaReanudar.dispose();
         texturaMenuInicial.dispose();
         texturaFondo.dispose();
@@ -218,6 +216,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
                 texNebAzul.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
                 texNebRoja.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
                 texNebRoja.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.Repeat);
+                botonSkip.setDisabled(true);
                 batch.setProjectionMatrix(camara.combined);
                 batch.begin();
                 batch.draw(texturaFondo, 0, 0, 0, y, ANCHO, ALTO);
@@ -235,6 +234,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
                     batch.end();
                 }
                 else{
+                    naveMiwa.setAlfa(1);
                     if(xGema>=ANCHO-texturaGema.getWidth())
                         velXGema=-5;
                     if(xGema<=0+texturaGema.getWidth()/2)
@@ -242,22 +242,22 @@ public class NivelPersecucion implements Screen,InputProcessor{
                     xGema+=velXGema;
                     tiempoNivel-=Gdx.graphics.getDeltaTime();
                     if(tiempoNivel<=0){
-                        yNave+=5;//7.6 * segundo
+                        yNave+=5;//7.6 * segundos
                         tiempoNivel=1;
                         tiempoFinal++;
                     }
-                    if(tiempoFinal>=90)
+                    if(tiempoFinal>=5)
                         estadosJuego=EstadosPersecucion.GANO;
                     if(estadosJuego==EstadosPersecucion.INVENCIBLE){
                         tiempoInvencible -= Gdx.graphics.getDeltaTime();
                         if(tiempoInvencible%0.5<0.25)
                             naveMiwa.setAlfa(0.7f);
                         else if(tiempoInvencible%0.5>=0.25)
-                            naveMiwa.setAlfa(0.9f);
-                        if (tiempoInvencible<=0) {
-                            estadosJuego = EstadosPersecucion.JUGANDO;
-                            tiempoInvencible = 3;
                             naveMiwa.setAlfa(1);
+                        if (tiempoInvencible<=0) {
+                            tiempoInvencible = 3;
+                            estadosJuego = EstadosPersecucion.JUGANDO;
+
                         }
                     }
                     if(estadosJuego==EstadosPersecucion.INVENCIBLEG){
@@ -285,14 +285,13 @@ public class NivelPersecucion implements Screen,InputProcessor{
                     batch.setProjectionMatrix(camaraHUD.combined);
                     batch.begin();
                     gemaVida.render(batch);
-                    //hoyo.render(batch);
-                    batch.draw(texturaNaveEnemiga,ANCHO/2,ALTO-texturaNaveEnemiga.getHeight());
+                    batch.draw(texturaNaveEnemiga,xGema,ALTO-texturaNaveEnemiga.getHeight());
                     naveMiwa.render(batch);
                     gemas.render(batch,xGema);
                     botonPausa.render(batch);
                     batch.draw(texturaBarra,ANCHO-texturaBarra.getWidth()*3,ALTO/2-texturaBarra.getHeight()/2);
                     batch.draw(texturaVida, texturaVida.getWidth() / 8, ALTO - texturaVida.getHeight() - 16);
-                    texto.mostrarMensaje(batch, "" + naveMiwa.getVidas(), 126, 722);
+                    texto.mostrarMensaje(batch, "" + naveMiwa.getVidas(), 126, 752);
                     batch.draw(texturaMiniNave,ANCHO-texturaBarra.getWidth()*3-texturaMiniNave.getWidth()/4,yNave);
                     for(Piedra x: piedras)
                         x.render(batch,7);
@@ -351,6 +350,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
                 break;
             case GANO:
                 if (conDial < Dialogos.length) {
+                    musicaIntro.play();
                     batch.setProjectionMatrix(camaraDialogos.combined);
                     batch.begin();
                     batch.draw(Dialogos[conDial], 0, 0);
@@ -359,6 +359,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
                     batch.end();
                 }
                 else{
+                    musicaIntro.stop();
                     misionKitsune.setNivel(3);
                     misionKitsune.setScreen(new MenuMapas(misionKitsune));
                     misionKitsune.getMusicaFondo().play();
@@ -366,6 +367,7 @@ public class NivelPersecucion implements Screen,InputProcessor{
                 break;
             case INTRO:
                 if (conPre < Predialogos.length) {
+                    musicaIntro.play();
                     batch.setProjectionMatrix(camaraDialogos.combined);
                     batch.begin();
                     batch.draw(Predialogos[conPre], 0, 0);
@@ -373,16 +375,23 @@ public class NivelPersecucion implements Screen,InputProcessor{
                         botonSkip.render(batch);
                     batch.end();
                 }
-                else
-                    estadosJuego= estadosJuego.ESPERA;
+                else {
+                    estadosJuego = EstadosPersecucion.JUGANDO;
+                    musicaIntro.stop();
+                }
+
+                    //estadosJuego= estadosJuego.ESPERA;
                 break;
             case ESPERA:
                 batch.setProjectionMatrix(camaraDialogos.combined);
                 batch.begin();
                 batch.draw(texPreNiv4,0,0);
                 batch.end();
-                if(Gdx.input.getAccelerometerY()>=8)
-                    estadosJuego=EstadosPersecucion.JUGANDO;
+                if(Gdx.input.getAccelerometerY()>=8) {
+                    estadosJuego = EstadosPersecucion.JUGANDO;
+                    musicaIntro.stop();
+                }
+
                 break;
         }
     }
@@ -408,16 +417,17 @@ public class NivelPersecucion implements Screen,InputProcessor{
         float x=v.x,y=v.y;
         if(estadosJuego== EstadosPersecucion.INTRO)
             if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
-                System.out.println(conPre);
                 conPre++;
                 Menu.sonidoBotones.play();
             }
-
         if(estadosJuego== EstadosPersecucion.GANO) {
-            if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
+            if (x > 0 && x < ALTO && y > 0 && y < ANCHO) {
                 conDial++;
                 Menu.sonidoBotones.play();
             }
+        }
+        if(botonSkip.contiene(x,y)){
+            estadosJuego=EstadosPersecucion.ESPERA;
         }
         return true;
     }
@@ -438,10 +448,6 @@ public class NivelPersecucion implements Screen,InputProcessor{
             Menu.sonidoBotones.play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }
-        camaraDialogos.unproject(v);
-        x=v.x;y=v.y;
-        if(botonSkip.contiene(x,y))
-            estadosJuego=EstadosPersecucion.ESPERA;
         return true;
     }
 

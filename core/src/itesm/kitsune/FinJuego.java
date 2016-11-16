@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class FinJuego implements Screen, InputProcessor {
     private MisionKitsune misionKitsune;
-    private Texture texturaFondo,texturaFin,texturaReintentar,texturaMenu;
+    private Texture texturaFondo,texturaFin,texturaReintentar,texturaMenu,texturaFondoFin;
     private AssetManager assetManager;
     private Boton BtnReintentar,BtnMenu;
     private OrthographicCamera camara;
@@ -51,13 +51,15 @@ public class FinJuego implements Screen, InputProcessor {
             texturaReintentar = assetManager.get("BtnReintentar.png");
         }
         else{
-            assetManager.load("N2Fin.png", Texture.class);
+            assetManager.load("N2Fin.png",Texture.class);
+            assetManager.load("N2FinFondo.png", Texture.class);
             assetManager.load("N2Reintentar.png", Texture.class);
             assetManager.load("N2MenuInicialFin.png", Texture.class);
             assetManager.finishLoading();
-            texturaFin = assetManager.get("N2Fin.png");
+            texturaFin = assetManager.get("N2FinFondo.png");
             texturaMenu = assetManager.get("N2MenuInicialFin.png");
             texturaReintentar = assetManager.get("N2Reintentar.png");
+            texturaFondoFin=assetManager.get("N2Fin.png");
         }
     }
     private void cargarCamara(){
@@ -91,6 +93,8 @@ public class FinJuego implements Screen, InputProcessor {
         batch.begin();
         batch.draw(texturaFondo,0,0);
         batch.draw(texturaFin,0,0);
+        if(nivel==2)
+            batch.draw(texturaFondoFin,ancho/2-texturaFondoFin.getWidth()/2,alto/1.65f);
         BtnMenu.render(batch);
         BtnReintentar.render(batch);
         batch.end();

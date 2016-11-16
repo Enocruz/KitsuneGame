@@ -124,8 +124,6 @@ public class Cargando implements Screen {
             super.assetManager.load("Dialogo_Nivel2_3.jpg",Texture.class);
             super.assetManager.load("Dialogo_Nivel2_4.jpg",Texture.class);
             super.assetManager.load("Dialogo_Nivel2_5.jpg",Texture.class);
-
-
             super.assetManager.load("N2HoyoNegro.png",Texture.class);
             super.assetManager.load("N2Vida.png",Texture.class);
             super.assetManager.load("N2Reanudar.png", Texture.class);
@@ -140,13 +138,13 @@ public class Cargando implements Screen {
             super.assetManager.load("N2NaveEnemigaDerecha.png", Texture.class);
             super.assetManager.load("FondoNebulosaAzul.png", Texture.class);
             super.assetManager.load("FondoNebulosaRoja.png", Texture.class);
-            //assetManager.load("Pantalla_Pausa.png", Texture.class);
             super.assetManager.load("N2Piedra.png", Texture.class);
             super.assetManager.load("N2Piedritas.png", Texture.class);
             super.assetManager.load("Barra.png",Texture.class);
             super.assetManager.load("N2IconoNave.png",Texture.class);
             super.assetManager.load("N2ContadorGemas.png",Texture.class);
             super.assetManager.load("N2Gema.png",Texture.class);
+            super.assetManager.load("MusicaDialogoFinalNivel1.mp3",Music.class);
             super.assetManager.finishLoading();
             //Se bloquea hasta cargar los recursos
             Gdx.app.log("cargarRecursos", "Terminando...");
@@ -154,12 +152,9 @@ public class Cargando implements Screen {
         @Override
         public void render(float delta) {
             // Actualizar carga
-
             actualizar();
             // Dibujar
             super.render(delta);
-           // super.borrarPantalla();
-
         }
         private void actualizar() {
 

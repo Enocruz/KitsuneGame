@@ -205,10 +205,14 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 SonidoJuego.play();
                 if (estadosJuego == EstadosJuego.INVENCIBLE) {
                     tiempoInvencible -= Gdx.graphics.getDeltaTime();
-                    //miwa.getSprite().setAlpha(0.7f);
+                    if(tiempoInvencible%0.5<0.25)
+                        miwa.getSprite().setAlpha(0.7f);
+                    else if(tiempoInvencible%0.5>=0.25)
+                        miwa.getSprite().setAlpha(0.9f);
                     if (tiempoInvencible <= 0) {
                         estadosJuego = EstadosJuego.JUGANDO;
                         tiempoInvencible = 3;
+                        miwa.getSprite().setAlpha(1);
                     }
                 }
                 if (miwa.getY() + texturaMiwa.getHeight() <= 0) {
