@@ -410,7 +410,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
         else if(rnd<=1)
             return xNave=-5;
         else
-            return xNave;
+            return xNave+=5;
     }
     @Override
     public boolean keyDown(int keycode) {
