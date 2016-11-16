@@ -17,7 +17,7 @@ public class Miwa {
     private float tiempo,tiempoSalto;
     private Estados estados;
     private EstadosSalto estadoSalto= EstadosSalto.EN_PISO;
-    public static float VELOCIDAD_Y = -3f, VELOCIDAD_X=7;
+    public static float VELOCIDAD_Y = -5f, VELOCIDAD_X=7;
     private TextureRegion salto, inicio;
     private float velSalto = 192f;
     private int vidas = 3;
@@ -43,12 +43,12 @@ public class Miwa {
     public void render(SpriteBatch batch) {
         float x = sprite.getX();
         float y = sprite.getY();
-        miwaSalto(x,y,batch);
-        miwaMovimiento(x, y, batch, estadoSalto);
+        miwaSalto(y);
+        miwaMovimiento(x,estadoSalto);
         sprite.draw(batch);
     }
 
-    public void miwaMovimiento(float x, float y, SpriteBatch batch,EstadosSalto estadosSalto) {
+    public void miwaMovimiento(float x,EstadosSalto estadosSalto) {
         switch (estados) {
             case DERECHA:
             case IZQUIERDA:
@@ -86,17 +86,17 @@ public class Miwa {
                 break;
         }
     }
-
-    public void miwaSalto(float x, float y,SpriteBatch batch){
+    public void miwaSalto(float y){
         switch (estadoSalto){
             case EN_PISO:
-                velSalto=192f;
+                velSalto=52;
                 tiempoSalto = 0;
                 yInicial = sprite.getY();
                 break;
             case SUBIENDO:
                 sprite.setRegion(salto);
-                y += velSalto*0.75f;
+                y += velSalto*0.3f;
+                System.out.println(velSalto);
                 velSalto+=VELOCIDAD_Y;
                 if (velSalto<=0){
                     estadoSalto=EstadosSalto.BAJANDO;

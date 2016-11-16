@@ -276,15 +276,21 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 int celdaY = (int) ((miwa.getY()) / TAM_CELDA);
                 TiledMapTileLayer capa = (TiledMapTileLayer) mapa.getMapa().getLayers().get(1);
                 TiledMapTileLayer.Cell celda = capa.getCell(celdaX, celdaY);
-                miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                 if (mapa.esPiso(celda)) {
                     miwa.setVelocidadX(7);
+                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
+                    miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                 } else if (mapa.esHielo(celda)) {
+                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
+                    miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                     miwa.setVelocidadX(13);
                 } else if (mapa.esPegajoso(celda)) {
+                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
+                    miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                     miwa.setVelocidadX(3);
                 } else {
-                    miwa.setEstadoSalto(Miwa.EstadosSalto.BAJANDO);
+                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
+                        miwa.setEstadoSalto(Miwa.EstadosSalto.BAJANDO);
                 }
 
                 TiledMapTileLayer capaGanar = (TiledMapTileLayer) mapa.getMapa().getLayers().get(5);
