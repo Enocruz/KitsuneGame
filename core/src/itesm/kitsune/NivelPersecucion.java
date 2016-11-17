@@ -34,10 +34,10 @@ public class NivelPersecucion implements Screen,InputProcessor {
             texturaPiedra, texturaPiedrita, texturaVida, texturaBarra, texturaMiniNave, texturaGemaVida, texturaGema,
             texPreNiv, texPreNiv2, texPreNiv3, texPreNiv4, texNiv, texNiv2, texNiv3, texNiv4, texNiv5, texturaSkip;
     private AssetManager assetManager;
-    private int y = 0, yNave, xGema, velXGema, nivel,xNave;
+    private int y = 0, yNave, xGema, velXGema, nivel,xNave,velxNave;
     private Piedra piedra, piedrita;
     private Array<Piedra> piedras, piedritas;
-    private float accelX;
+    private float accelX,velyNave,yNaveEnemiga;
     public static EstadosPersecucion estadosJuego;
     private Boton botonPausa, botonMenu, botonReanudar, botonSkip;
     private Random rnd;
@@ -88,7 +88,10 @@ public class NivelPersecucion implements Screen,InputProcessor {
         tiempoNivel = 1;
         tiempoFinal = 0;
         tiempoInvencibleG = 0.5f;
-        xNave=5;
+        xNave=ANCHO/2;
+        yNaveEnemiga=ALTO-texturaNaveEnemiga.getHeight();
+        velyNave=0;
+        velxNave=3;
         Predialogos = new Texture[]{texPreNiv, texPreNiv2, texPreNiv3};
         Dialogos = new Texture[]{texNiv, texNiv2, texNiv3, texNiv4, texNiv5};
     }
@@ -215,6 +218,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
             case PAUSADO:
             case INVENCIBLE:
             case INVENCIBLEG:
+                naveMiwa.setAlfa(1);
                 if (contadorGemas <= 0)
                     contadorGemas = 0;
                 texturaFondo.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -238,14 +242,14 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     batch.end();
                 } else {
                     moverGema();
-                    xNave=moverNave(rnd.nextInt(100));
+                    moverNave();
                     tiempoNivel -= Gdx.graphics.getDeltaTime();
                     if (tiempoNivel <= 0) {
                         yNave += 5;//7.6p * segundos
                         tiempoNivel = 1;
                         tiempoFinal++;
                     }
-                    if (tiempoFinal >= 5)//Cambiar el tiempo
+                    if (tiempoFinal >=90 )//Cambiar el tiempo
                         estadosJuego = EstadosPersecucion.GANO;
 
                     if (estadosJuego == EstadosPersecucion.INVENCIBLE) {
@@ -264,7 +268,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         if (tiempoInvencibleG <= 0) {
                             estadosJuego = estadosJuego.JUGANDO;
                             tiempoInvencibleG = 0.5f;
-                            naveMiwa.setAlfa(1);
+
                         }
                     }
                     if (naveMiwa.getVidas() <= 0) {
@@ -285,7 +289,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     batch.setProjectionMatrix(camaraHUD.combined);
                     batch.begin();
                     gemaVida.render(batch);
-                    batch.draw(texturaNaveEnemiga, xNave, ALTO - texturaNaveEnemiga.getHeight());
+                    batch.draw(texturaNaveEnemiga, xNave, yNaveEnemiga);
                     naveMiwa.render(batch);
                     gemas.render(batch, xGema);
                     botonPausa.render(batch);
@@ -339,8 +343,13 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     }
                     if (contadorGemas >= 3) {
                         tiempoGemas -= Gdx.graphics.getDeltaTime();
+                        if(tiempoGemas%0.4>0.2)
+                            gemaVida.getSprite().setAlpha(0.5f);
+                        if(tiempoGemas%0.4<=0.2)
+                            gemaVida.getSprite().setAlpha(1);
                         if (tiempoGemas <= 0) {
                             contadorGemas = 0;
+                            gemaVida.getSprite().setAlpha(1);
                             gemaVida.setGemas(contadorGemas);
                             tiempoGemas = 1;
                             naveMiwa.setVidas(naveMiwa.getVidas() + 1);
@@ -404,13 +413,24 @@ public class NivelPersecucion implements Screen,InputProcessor {
         velXGema=+5;
         xGema+=velXGema;
     }
-    private int moverNave(int rnd){
-        if(rnd>=99)
-            return xNave=+5;
-        else if(rnd<=1)
-            return xNave=-5;
-        else
-            return xNave+=5;
+    private  void moverNave(){
+        int algo=rnd.nextInt(100);
+        if(xNave<=texturaNaveEnemiga.getWidth()*2.5f)
+            velxNave+=5;
+        if(xNave>=ANCHO-texturaNaveEnemiga.getWidth()*2.5f)
+           velxNave-=5;
+        if (yNaveEnemiga >= ALTO + texturaNaveEnemiga.getHeight())
+            if (algo >= 75)
+                velyNave = -2;
+        if(yNaveEnemiga<=ALTO-texturaNaveEnemiga.getHeight())
+            if (algo <= 25)
+                velyNave = 2;
+        if(tiempoFinal>=85) //Corregir
+            velyNave = -2.2f;
+
+        yNaveEnemiga+=velyNave;
+        xNave+=velxNave;
+
     }
     @Override
     public boolean keyDown(int keycode) {
