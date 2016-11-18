@@ -18,11 +18,11 @@ public class Miwa {
     private Estados estados;
     private EstadosSalto estadoSalto= EstadosSalto.EN_PISO;
     public static float VELOCIDAD_Y = -3f, VELOCIDAD_X=7;
-    private TextureRegion salto, inicio;
+    private TextureRegion salto, inicio, texturaDisparo;
     private float velSalto = 192f;
     private int vidas = 3;
     private boolean right;
-    private float yInicial;
+
 
     Miwa(Texture textura) {
         TextureRegion texturaCompleta = new TextureRegion(textura);
@@ -38,7 +38,13 @@ public class Miwa {
         sprite = new Sprite(texturaMiwa[0][0]);
         estados = Estados.QUIETO;
         right=true;
+
     }
+    Miwa(Texture textura,TextureRegion texturaDisparo){
+        this(textura);
+        this.texturaDisparo=texturaDisparo;
+    }
+
 
     public void render(SpriteBatch batch) {
         float x = sprite.getX();
@@ -91,7 +97,6 @@ public class Miwa {
             case EN_PISO:
                 velSalto=64;
                 tiempoSalto = 0;
-                yInicial = sprite.getY();
                 break;
             case SUBIENDO:
                 sprite.setRegion(salto);
@@ -107,8 +112,6 @@ public class Miwa {
                 sprite.setY(sprite.getY() + 9.81f*VELOCIDAD_Y*0.3f);
                 break;
         }
-
-
     }
 
     public void setVidas(int vidas) {
@@ -155,5 +158,9 @@ public class Miwa {
         SUBIENDO,
         BAJANDO,
         CAIDA_LIBRE
+    }
+    public enum EstadoDisparo{
+        DISPARO,
+        QUIETO
     }
 }

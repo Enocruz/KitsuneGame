@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -51,7 +52,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
     private Texto texto;
     //Contador gemas para vida extra
     private int contadorGemas=0,conPre=0,conDial=0,nivel;
-    private float tiempoInvencible=3,tiempoGemas=2;
+    private float tiempoInvencible=2,tiempoGemas=2;
     private Music SonidoGemas,SonidoPicos,SonidoPre,SonidoDial,SonidoJuego;
 
     public NivelBusqueda(MisionKitsune misionKitsune, EstadosJuego estado,int nivel) {
@@ -212,7 +213,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                         miwa.getSprite().setAlpha(0.9f);
                     if (tiempoInvencible <= 0) {
                         estadosJuego = EstadosJuego.JUGANDO;
-                        tiempoInvencible = 3;
+                        tiempoInvencible = 2;
                         miwa.getSprite().setAlpha(1);
                     }
                 }
@@ -352,8 +353,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
                 else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
                     miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
-                else
-                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+                /*else
+                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);*/
 
 
 
@@ -485,19 +486,18 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Vector3 v=new Vector3(screenX,screenY,0);
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
-        if(estadosJuego==EstadosJuego.INTRO) {
+        if(estadosJuego==EstadosJuego.INTRO)
             if (x > 0 && x < ANCHO - botonSkip.getY() - texturaSkip.getHeight() / 2 && y > 0 && y < ALTO) {
                 conPre++;
                 Menu.sonidoBotones.play();
             }
-        }
-        if(estadosJuego==EstadosJuego.GANO) {
+
+        if(estadosJuego==EstadosJuego.GANO)
             if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
                 conDial++;
                 Menu.sonidoBotones.play();
             }
 
-        }
         if(botonIzq.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
         }
@@ -516,12 +516,17 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Vector3 v=new Vector3(screenX,screenY,0);
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
-        if(botonIzq.contiene(x,y)||botonDer.contiene(x,y)){
+        if(botonIzq.contiene(x,y)){
             if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO||
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.CAIDA_LIBRE )
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
         }
-        else if(botonPausa.contiene(x,y)){
+        else if(botonDer.contiene(x,y)){
+            if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO||
+                    miwa.getEstadosSalto() == Miwa.EstadosSalto.CAIDA_LIBRE )
+                miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+        }
+         if(botonPausa.contiene(x,y)){
             this.estadosJuego = EstadosJuego.PAUSADO;
         }
         else if (botonReanudar.contiene(x,y)){
@@ -549,6 +554,18 @@ public class NivelBusqueda implements Screen, InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        Vector3 v = new Vector3(screenX, screenY, 0);
+        camaraHUD.unproject(v);
+        float x = v.x, y = v.y;
+        /*if (botonIzq.contiene(x, y)) {
+            if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO ||
+                    miwa.getEstadosSalto() == Miwa.EstadosSalto.CAIDA_LIBRE)
+                miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+        } else if (botonDer.contiene(x, y)) {
+            if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO ||
+                    miwa.getEstadosSalto() == Miwa.EstadosSalto.CAIDA_LIBRE)
+                miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+        }*/
         return false;
     }
 

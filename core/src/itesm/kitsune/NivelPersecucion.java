@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import java.util.Random;
 
 
@@ -24,7 +23,7 @@ import java.util.Random;
 public class NivelPersecucion implements Screen,InputProcessor {
     private MisionKitsune misionKitsune;
     private NaveMiwa naveMiwa;
-    private Music musicaIntro;
+    private Music musicaIntro,musicaFondo,naveSonido;
     private OrthographicCamera camara, camaraHUD, camaraDialogos;
     private Viewport vista;
     public static final int ANCHO = 1280, ALTO = 800;
@@ -56,7 +55,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
 
     @Override
     public void show() {
-        tiempoInvencible = 3;
+        tiempoInvencible = 2;
         rnd = new Random();
         Gdx.input.setInputProcessor(this);
         assetManager = misionKitsune.getAssetManager();
@@ -66,7 +65,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
         naveMiwa = new NaveMiwa(texturaMiwaCentro, texturaMiwaDerecha, texturaMiwaIzquierda);
         naveMiwa.getSprite().setPosition(ANCHO / 2, 0);
         piedras = new Array<Piedra>(3);
-        piedritas = new Array<Piedra>(2);
+        piedritas = new Array<Piedra>(3);
         gemas = new Gemas(texturaGema, ANCHO, ALTO);
         gemaVida = new GemaVida(texturaGemaVida);
         gemas.getSprite().setY(ALTO);
@@ -77,8 +76,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
             piedra = new Piedra(texturaPiedra, (350 * (i + 1)) - texturaPiedra.getWidth() / 2, ALTO + texturaPiedrita.getHeight());
             piedras.add(piedra);
         }
-        for (int i = 0; i < 2; i++) {
-            piedrita = new Piedra(texturaPiedrita, 400 * (i + 1), ALTO + texturaPiedrita.getHeight());
+        for (int i = 0; i < 3; i++) {
+            piedrita = new Piedra(texturaPiedrita, 250 * (i + 1), ALTO + texturaPiedrita.getHeight());
             piedritas.add(piedrita);
         }
         xGema = 0;
@@ -87,13 +86,16 @@ public class NivelPersecucion implements Screen,InputProcessor {
         yNave = ALTO / 2 - texturaBarra.getHeight() / 2 - texturaMiniNave.getHeight() / 2;
         tiempoNivel = 1;
         tiempoFinal = 0;
-        tiempoInvencibleG = 0.5f;
+        tiempoInvencibleG = 0.2f;
         xNave=ANCHO/2;
         yNaveEnemiga=ALTO-texturaNaveEnemiga.getHeight();
         velyNave=0;
         velxNave=3;
         Predialogos = new Texture[]{texPreNiv, texPreNiv2, texPreNiv3};
         Dialogos = new Texture[]{texNiv, texNiv2, texNiv3, texNiv4, texNiv5};
+        musicaFondo.setVolume(0.4f);
+        musicaFondo.setLooping(true);
+        naveSonido.setLooping(true);
     }
 
     private void inicializarBotones() {
@@ -142,6 +144,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
         texturaGemaVida = assetManager.get("N2ContadorGemas.png");
         texturaGema = assetManager.get("N2Gema.png");
         musicaIntro = assetManager.get("MusicaDialogoFinalNivel1.mp3");
+        musicaFondo=assetManager.get("FondoPersecucion.mp3");
+        naveSonido=assetManager.get("naveSonido.wav");
     }
 
 
@@ -218,6 +222,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
             case PAUSADO:
             case INVENCIBLE:
             case INVENCIBLEG:
+                musicaFondo.play();
                 naveMiwa.setAlfa(1);
                 if (contadorGemas <= 0)
                     contadorGemas = 0;
@@ -232,6 +237,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 batch.draw(texNebRoja, 0, 0, 0, y, ANCHO, ALTO);
                 batch.end();
                 if (estadosJuego == EstadosPersecucion.PAUSADO) {
+                    naveSonido.stop();
                     batch.setProjectionMatrix(camaraHUD.combined);
                     botonMenu.setDisabled(false);
                     botonReanudar.setDisabled(false);
@@ -241,6 +247,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     botonReanudar.render(batch);
                     batch.end();
                 } else {
+                    naveSonido.play();
                     moverGema();
                     moverNave();
                     tiempoNivel -= Gdx.graphics.getDeltaTime();
@@ -259,7 +266,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         else if (tiempoInvencible % 0.5 >= 0.25)
                             naveMiwa.setAlfa(1);
                         if (tiempoInvencible <= 0) {
-                            tiempoInvencible = 3;
+                            tiempoInvencible = 2;
                             estadosJuego = EstadosPersecucion.JUGANDO;
                         }
                     }
@@ -267,7 +274,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         tiempoInvencibleG -= Gdx.graphics.getDeltaTime();
                         if (tiempoInvencibleG <= 0) {
                             estadosJuego = estadosJuego.JUGANDO;
-                            tiempoInvencibleG = 0.5f;
+                            tiempoInvencibleG = 0.2f;
 
                         }
                     }
@@ -277,7 +284,6 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     }
                     for (Piedra p : piedritas)
                         if (p.getEstadosPiedra() == Piedra.EstadosPiedra.NUEVA)
-                            if (rnd.nextInt(10) >= 6)
                                 p.getSprite().setX(naveMiwa.getX());
                     if (gemas.getEstadoGemas() == Gemas.EstadoGema.NUEVA)
                         gemas.getSprite().setY(ALTO);
@@ -358,6 +364,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 }
                 break;
             case GANO:
+                naveSonido.stop();
+                musicaFondo.stop();
                 botonPausa.setDisabled(true);
                 if (conDial < Dialogos.length) {
                     musicaIntro.play();
@@ -492,6 +500,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
             estadosJuego=EstadosPersecucion.JUGANDO;
         }
         else if(botonMenu.contiene(x,y)){
+            musicaFondo.stop();
+            naveSonido.stop();
             misionKitsune.getMusicaFondo().play();
             Menu.sonidoBotones.play();
             misionKitsune.setScreen(new Menu(misionKitsune));
