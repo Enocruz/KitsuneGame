@@ -347,13 +347,14 @@ public class NivelBusqueda implements Screen, InputProcessor {
                         }
                     }
                 }
+                /*
                 if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
                 miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
                else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
                     miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
                 else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
                     miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
-                /*else
+                else
                     miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);*/
 
 
@@ -487,7 +488,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
         if(estadosJuego==EstadosJuego.INTRO)
-            if (x > 0 && x < ANCHO - botonSkip.getY() - texturaSkip.getHeight() / 2 && y > 0 && y < ALTO) {
+            if (x > 0 && x < ANCHO-texturaSkip.getWidth()/2&& y > 0 && y < ALTO-texturaSkip.getHeight()/2) {
                 conPre++;
                 Menu.sonidoBotones.play();
             }
@@ -557,15 +558,15 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Vector3 v = new Vector3(screenX, screenY, 0);
         camaraHUD.unproject(v);
         float x = v.x, y = v.y;
-        /*if (botonIzq.contiene(x, y)) {
+        if (botonIzq.contiene(x, y)&&pointer==0) {
             if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO ||
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.CAIDA_LIBRE)
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
-        } else if (botonDer.contiene(x, y)) {
+        } else if (botonDer.contiene(x, y)&&pointer==0) {
             if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO ||
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.CAIDA_LIBRE)
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
-        }*/
+        }
         return false;
     }
 

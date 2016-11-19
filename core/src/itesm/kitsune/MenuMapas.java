@@ -166,13 +166,10 @@ public class MenuMapas implements Screen , InputProcessor{
             misionKitsune.getMusicaFondo().stop();
             Menu.sonidoBotones.play();
             misionKitsune.setScreen(new Cargando.CargandoBusqueda(misionKitsune));
-            //misionKitsune.setScreen(new NivelBusqueda(misionKitsune, NivelBusqueda.EstadosJuego.INTRO,1));
         }
         if(boton2.contiene(x,y)){
             misionKitsune.getMusicaFondo().stop();
             Menu.sonidoBotones.play();
-            dispose();
-            //misionKitsune.setScreen(new NivelPersecucion(misionKitsune));
             misionKitsune.setScreen(new Cargando.CargandoPersecucion(misionKitsune));
         }
         if(botonCerrar.contiene(x,y)){

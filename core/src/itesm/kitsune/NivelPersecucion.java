@@ -279,6 +279,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         }
                     }
                     if (naveMiwa.getVidas() <= 0) {
+                        musicaFondo.stop();
                         estadosJuego = EstadosPersecucion.PERDIO;
                         misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("FondoEstrellas.png"), 2));
                     }
