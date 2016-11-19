@@ -115,7 +115,7 @@ public class AcercaDe implements Screen {
         btCerrar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
-                Menu.sonidoBotones.play();
+                misionKitsune.getSonidoBotones().play();
                 tabla.setVisible(true);
                 tablepopup.setVisible(false);
                 tablepopup.clear();
@@ -125,7 +125,7 @@ public class AcercaDe implements Screen {
         btEnock.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
-                Menu.sonidoBotones.play();
+                misionKitsune.getSonidoBotones().play();
                 tabla.setVisible(false);
                 tablepopup.add(btPopUpEnock).width(ancho/1.38f).height(alto/1.28f);
                 tablepopup.add(btCerrar).top().left();
@@ -136,7 +136,7 @@ public class AcercaDe implements Screen {
         btLes.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
-                Menu.sonidoBotones.play();
+                misionKitsune.getSonidoBotones().play();
                 tabla.setVisible(false);
                 tablepopup.add(btPopUpLeslie).width(ancho/1.38f).height(alto/1.28f);
                 tablepopup.add(btCerrar).top().left();
@@ -148,7 +148,7 @@ public class AcercaDe implements Screen {
         btSnell.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
-                Menu.sonidoBotones.play();
+                misionKitsune.getSonidoBotones().play();
                 tabla.setVisible(false);
                 tablepopup.add(btPopUpSnell).width(ancho/1.38f).height(alto/1.28f);
                 tablepopup.add(btCerrar).top().left();
@@ -160,7 +160,7 @@ public class AcercaDe implements Screen {
         btEli.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
-                Menu.sonidoBotones.play();
+                misionKitsune.getSonidoBotones().play();
                 tabla.setVisible(false);
                 tablepopup.add(btPopUpEli).width(ancho/1.38f).height(alto/1.28f);
                 tablepopup.add(btCerrar).top().left();
@@ -170,7 +170,7 @@ public class AcercaDe implements Screen {
         btDaph.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x, float y){
-                Menu.sonidoBotones.play();
+                misionKitsune.getSonidoBotones().play();
                 tabla.setVisible(false);
                 tablepopup.add(btPopUpDaph).width(ancho/1.38f).height(alto/1.28f);
                 tablepopup.add(btCerrar).top().left();
@@ -184,7 +184,7 @@ public class AcercaDe implements Screen {
         btnRegresar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Menu.sonidoBotones.play();
+                misionKitsune.getSonidoBotones().play();
                 //Regresar a la pantalla del Menu
                 misionKitsune.setScreen(new Menu(misionKitsune));
                 }

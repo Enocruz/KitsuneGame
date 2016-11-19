@@ -146,12 +146,12 @@ public class FinJuego implements Screen, InputProcessor {
         camara.unproject(v);
         float x=v.x,y=v.y;
         if(BtnMenu.contiene(x,y)){
-            Menu.sonidoBotones.play();
+            misionKitsune.getSonidoBotones().play();
             misionKitsune.getMusicaFondo().play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }
         else if(BtnReintentar.contiene(x,y)){
-            Menu.sonidoBotones.play();
+            misionKitsune.getSonidoBotones().play();
             if(nivel==1)
                 misionKitsune.setScreen(new NivelBusqueda(misionKitsune, NivelBusqueda.EstadosJuego.JUGANDO,1));
             else if(nivel==2)
