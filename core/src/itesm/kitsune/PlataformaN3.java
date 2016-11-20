@@ -31,7 +31,7 @@ public class PlataformaN3 {
         colision.setPosition(x,y);
         switch (estado){
             case NUEVA:
-                tiempo = (float)(Math.random()*5+2);
+                tiempo = (float)(Math.random()*4+2);
                 estado = estadosP.DENTRO;
                 break;
             case DENTRO:
@@ -64,6 +64,9 @@ public class PlataformaN3 {
     public float getY(){
         return sprite.getY();
     }
+    public void setEstado (estadosP estado) {this.estado = estado;}
+    public void setTiempo(float tiempo) {this.tiempo = tiempo;}
+    public Sprite getSprite (){return sprite;}
 
     enum estadosP{
         DENTRO,

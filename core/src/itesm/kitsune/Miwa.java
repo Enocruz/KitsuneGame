@@ -44,6 +44,24 @@ public class Miwa {
         colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
 
     }
+    Miwa(Texture textura,int x,int y) {
+        TextureRegion texturaCompleta = new TextureRegion(textura);
+        TextureRegion[][] texturaMiwa = texturaCompleta.split(textura.getWidth() / 10, textura.getHeight());
+        walkFrames = new TextureRegion[8];
+        for (int i = 1; i < 9; i++)
+            walkFrames[i - 1] = texturaMiwa[0][i];
+        salto = texturaMiwa[0][9];
+        inicio = texturaMiwa[0][0];
+        animacion = new Animation(0.09f, walkFrames);
+        animacion.setPlayMode(Animation.PlayMode.LOOP);
+        tiempo = 0;
+        sprite = new Sprite(texturaMiwa[0][0]);
+        sprite.setPosition(x,y);
+        estados = Estados.QUIETO;
+        right=true;
+        colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
+
+    }
 
     public void render(SpriteBatch batch) {
         float x = sprite.getX();
@@ -52,8 +70,6 @@ public class Miwa {
         miwaSalto(y);
         miwaMovimiento(x,estadoSalto);
         sprite.draw(batch);
-        System.out.println(colision.toString());
-
     }
 
     public void miwaMovimiento(float x,EstadosSalto estadosSalto) {
@@ -97,9 +113,9 @@ public class Miwa {
                 sprite.setX(x);
                 break;
             case N3:
-                if (sprite.getX() <  NivelBusqueda.ANCHO-sprite.getWidth()){
-                    VELOCIDAD_X =3;
-                }else VELOCIDAD_X=0;
+                /*if (sprite.getX() <  NivelBusqueda.ANCHO-sprite.getWidth()){
+                    VELOCIDAD_X =5;
+                }else */VELOCIDAD_X=0;
                 sprite.setX(sprite.getX()+VELOCIDAD_X);
                 tiempo += Gdx.graphics.getDeltaTime();
                 sprite.setRegion(animacion.getKeyFrame(tiempo));
@@ -174,7 +190,4 @@ public class Miwa {
         SUBIENDO,
         BAJANDO
     }
-    public enum EstadoDisparo{
-        DISPARO,
-     }
 }

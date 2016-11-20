@@ -227,12 +227,11 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         batch=new SpriteBatch();
 
         //miwa
-        miwa = new Miwa(texturaMiwa);
-        miwa.getSprite().setPosition(ANCHO/2,400);
+        miwa = new Miwa(texturaMiwa,ANCHO/2,398);
         miwa.setEstadoMovimiento(Miwa.Estados.N3);
         miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
         //jefe
-        jefe = new JefeN3(texturaJefe,-150);
+        jefe = new JefeN3(texturaJefe,-190);
         barra = new NinePatch(new TextureRegion(texturaVidaJefe,0,0,texturaVidaJefe.getWidth(),texturaVidaJefe.getHeight()),8,8,8,8);
 
         plataformas = new Array<PlataformaN3>();
@@ -251,11 +250,15 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         Dialogos = new Texture[]{texturaD1,texturaD2,texturaD3,texturaD4,texturaD5,texturaD6};
 
         // Plataformas que aparecen inicialmente
-
-        p_apoyo = new PlataformaN3(texturaPlataforma, miwa.getX(),321);
-        p_apoyo2 = new PlataformaN3(texturaPlataforma, miwa.getX()+texturaPlataforma.getWidth()*1.75f,321);
+        p_apoyo = new PlataformaN3(texturaPlataforma, miwa.getX(),362);
+        p_apoyo2 = new PlataformaN3(texturaPlataforma, miwa.getX()+texturaPlataforma.getWidth()*1.75f,362);
+        p_apoyo.setTiempo(0);
+        p_apoyo2.setTiempo(0);
+        p_apoyo.setEstado(PlataformaN3.estadosP.DENTRO);
+        p_apoyo2.setEstado(PlataformaN3.estadosP.DENTRO);
         p_apoyoa.add(p_apoyo);
         p_apoyoa.add(p_apoyo2);
+
         //plataformas qe se estarán repitiendo
         for (int i = 0; i<9; i++) {
             if (i<=2){
@@ -292,8 +295,8 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 //PROBLEMAS CON VOLTEAR LA TEXTURA (NebulosaAzul y roja)
                 batch.draw(texturaEstrellas, 0, 0, x, 0, ANCHO, ALTO);
                 batch.draw(texturaFondoNA, 0, 0, x, 0, ANCHO, ALTO,0,0,90,0,0,texturaFondoNA.getWidth(),texturaFondoNA.getHeight(),false,false);
-                batch.draw(texturaFondoNR, 0, 0, ANCHO/2, ALTO/2, ANCHO, ALTO);
-                batch.draw(texturaFondoP,0,0,x,0,ANCHO,ALTO);
+                batch.draw(texturaFondoNR, 0, 0, x, 0, ANCHO, ALTO,1,1,90,0,0,texturaFondoNA.getWidth(),texturaFondoNR.getHeight(),false,false);
+                batch.draw(texturaFondoP,0,0,x,0,ANCHO,ALTO,2,2,0,0,0,texturaFondoP.getWidth(),texturaFondoP.getHeight(),false,false);
                 x+=4;xp+=1;
                 batch.end();
                 batch.setProjectionMatrix(camara.combined);
@@ -301,13 +304,15 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 if (p_apoyoa.size!=0) {
                     for (PlataformaN3 p : p_apoyoa) {
                         if (p.estado != PlataformaN3.estadosP.FUERA) {
-                            p.render(batch,velNivel);
-                        }else p_apoyoa.removeIndex(p_apoyoa.indexOf(p, true));
+                            p.render(batch, velNivel);
+                        }
                     }
                 }
                 for (PlataformaN3 p: plataformas){
                     p.render(batch,velNivel);
                 }
+
+
 
                 for (Disparo d :disparos){
                     if (d.estado == Disparo.estadoD.ADENTRO){
@@ -334,17 +339,14 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 batch.draw(texturaVida, texturaVida.getWidth() / 8, ALTO - texturaVida.getHeight() - 16);
                 texto.mostrarMensaje(batch, "" + miwa.getVidas(), 126, 722);
                 batch.end();
-                if (miwa.colision.overlaps(jefe.colision)){
-                    System.out.println("PERO NO SE ESTAN FUCKIN TOCANDO");
-                    estadosJuego=EstadosJuego.PERDIO;
-                }
+
                 if (estadosJuego == EstadosJuego.PAUSADO) {
+                    miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                     batch.begin();
                     batch.draw(texturaMenuPausa, ANCHO / 2 - texturaMenuPausa.getWidth() / 2, ALTO / 2 - texturaMenuPausa.getHeight() / 2);
                     botonReanudar.render(batch);
                     botonMenuInicial.render(batch);
                     batch.end();
-                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
                     botonDisparar.setDisabled(true);
                     botonPausa.setDisabled(true);
                     botonSaltar.setDisabled(true);
@@ -353,7 +355,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 }else if (estadosJuego==EstadosJuego.MENOSVIDA){
                     velNivel = 0;
                     miwa.getSprite().setPosition(ANCHO/2,400);
-                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+                    miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                     botonDisparar.setDisabled(true);
                     botonPausa.setDisabled(true);
                     botonSaltar.setDisabled(true);
@@ -372,7 +374,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                         miwa.getSprite().setAlpha(1);
                     }
 
-                }else if (estadosJuego==EstadosJuego.JUGANDO){
+                }else {
                     botonDisparar.setDisabled(false);
                     botonPausa.setDisabled(false);
                     botonSaltar.setDisabled(false);
@@ -390,6 +392,11 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 }
                 if (jefe.getEstado() == JefeN3.Estado.MUERTO){
                     estadosJuego = EstadosJuego.GANO;
+                }
+                if(miwa.colision.overlaps(jefe.colision)){
+                    estadosJuego =EstadosJuego.PERDIO;
+                    misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("FondoEstrellas.png"), 3));
+
                 }
 
                 break;

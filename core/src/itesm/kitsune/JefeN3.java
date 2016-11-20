@@ -43,8 +43,6 @@ public class JefeN3 {
         sprite.setRegion(animacion.getKeyFrame(tiempo));*/
         sprite.draw(batch);
         actualizarVida();
-        System.out.println(colision.toString());
-
     }
 
     private void actualizarVida (){
@@ -57,7 +55,7 @@ public class JefeN3 {
                         public void run() {
                             vida += 1;
                         }
-                    }, 0, 50);
+                    },0,20);
                 }
                 else if (vida>=100){
                     timer.stop();
