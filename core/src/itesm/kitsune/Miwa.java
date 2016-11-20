@@ -52,6 +52,8 @@ public class Miwa {
         miwaSalto(y);
         miwaMovimiento(x,estadoSalto);
         sprite.draw(batch);
+        System.out.println(colision.toString());
+
     }
 
     public void miwaMovimiento(float x,EstadosSalto estadosSalto) {
