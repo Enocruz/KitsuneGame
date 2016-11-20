@@ -156,6 +156,10 @@ public class FinJuego implements Screen, InputProcessor {
                 misionKitsune.setScreen(new NivelBusqueda(misionKitsune, NivelBusqueda.EstadosJuego.JUGANDO,1));
             else if(nivel==2)
                 misionKitsune.setScreen(new NivelPersecucion(misionKitsune, NivelPersecucion.EstadosPersecucion.JUGANDO,2));
+            else if (nivel ==3){
+                misionKitsune.setScreen(new Nivel3MisionKitsune(misionKitsune, Nivel3MisionKitsune.EstadosJuego.JUGANDO,3));
+
+            }
         }
         return true;
     }

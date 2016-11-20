@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Created by b-and on 23/09/2016.
@@ -18,10 +19,12 @@ public class Miwa {
     private Estados estados;
     private EstadosSalto estadoSalto= EstadosSalto.EN_PISO;
     public static float VELOCIDAD_Y = -3f, VELOCIDAD_X=7;
-    private TextureRegion salto, inicio, texturaDisparo;
+    private TextureRegion salto, inicio;
+    private Texture texturaDisparo;
     private float velSalto = 192f;
     private int vidas = 3;
     private boolean right;
+    public Rectangle colision;
 
 
     Miwa(Texture textura) {
@@ -38,17 +41,14 @@ public class Miwa {
         sprite = new Sprite(texturaMiwa[0][0]);
         estados = Estados.QUIETO;
         right=true;
+        colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
 
     }
-    Miwa(Texture textura,TextureRegion texturaDisparo){
-        this(textura);
-        this.texturaDisparo=texturaDisparo;
-    }
-
 
     public void render(SpriteBatch batch) {
         float x = sprite.getX();
         float y = sprite.getY();
+        colision.setPosition(x,y);
         miwaSalto(y);
         miwaMovimiento(x,estadoSalto);
         sprite.draw(batch);
@@ -89,6 +89,18 @@ public class Miwa {
                 if(right==false)
                     if(!sprite.isFlipX())
                         sprite.flip(true, false);
+                break;
+            case DISPARANDO:
+                x += VELOCIDAD_X;
+                sprite.setX(x);
+                break;
+            case N3:
+                if (sprite.getX() <  NivelBusqueda.ANCHO-sprite.getWidth()){
+                    VELOCIDAD_X =3;
+                }else VELOCIDAD_X=0;
+                sprite.setX(sprite.getX()+VELOCIDAD_X);
+                tiempo += Gdx.graphics.getDeltaTime();
+                sprite.setRegion(animacion.getKeyFrame(tiempo));
                 break;
         }
     }
@@ -151,6 +163,8 @@ public class Miwa {
         IZQUIERDA,
         DERECHA,
         QUIETO,
+        DISPARANDO,
+        N3
     }
 
     public enum EstadosSalto {
@@ -161,6 +175,5 @@ public class Miwa {
     }
     public enum EstadoDisparo{
         DISPARO,
-        QUIETO
-    }
+     }
 }
