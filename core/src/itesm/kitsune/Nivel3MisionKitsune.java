@@ -63,10 +63,10 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
     private Music SonidoGemas, SonidoJuego;
 
     //Personaje principal
-    Miwa miwa;
+    private Miwa miwa;
 
     //Jefe Final
-    JefeN3 jefe;
+    private JefeN3 jefe;
     //coso fondo
     private int  x=0,xp=0;
     //Velocidad con la que avanza el nivel
@@ -79,8 +79,8 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
     private Array<PlataformaN3> plataformas,p_apoyoa;
 
     //disparos
-    private Disparo disparo;
-    private Array<Disparo> disparos;
+    //private Disparo disparo;
+    //private Array<Disparo> disparos;
 
     // Gemas
     private Gemas gema;
@@ -228,7 +228,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
         //miwa
         miwa = new Miwa(texturaMiwa);
-        miwa.getSprite().setPosition(ANCHO/2,400);
+        miwa.getSprite().setPosition(ANCHO/2,ALTO/2);
         miwa.setEstadoMovimiento(Miwa.Estados.N3);
         miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
         //jefe
@@ -236,7 +236,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         barra = new NinePatch(new TextureRegion(texturaVidaJefe,0,0,texturaVidaJefe.getWidth(),texturaVidaJefe.getHeight()),8,8,8,8);
 
         plataformas = new Array<PlataformaN3>();
-        disparos = new Array<Disparo>();
+        //disparos = new Array<Disparo>();
         p_apoyoa = new Array <PlataformaN3>();
 
         //listener
@@ -309,7 +309,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     p.render(batch,velNivel);
                 }
 
-                for (Disparo d :disparos){
+               /* for (Disparo d :disparos){
                     if (d.estado == Disparo.estadoD.ADENTRO){
                         d.render(batch);
                     }
@@ -317,7 +317,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                         jefe.setEstado(JefeN3.Estado.ATACADO);
                         disparos.removeIndex(disparos.indexOf(d, true));
                     }
-                }
+                }*/
 
                 jefe.render(batch);
                 miwa.render(batch);
@@ -334,7 +334,9 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 batch.draw(texturaVida, texturaVida.getWidth() / 8, ALTO - texturaVida.getHeight() - 16);
                 texto.mostrarMensaje(batch, "" + miwa.getVidas(), 126, 722);
                 batch.end();
-                if (miwa.colision.overlaps(jefe.colision)){
+                System.out.println(estadosJuego);
+                System.out.println(jefe.getX()+jefe.getSprite().getWidth());
+                if (miwa.getRectangle().overlaps(jefe.getRectangle())){
                     System.out.println("PERO NO SE ESTAN FUCKIN TOCANDO");
                     estadosJuego=EstadosJuego.PERDIO;
                 }
@@ -503,8 +505,8 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    disparo = new Disparo(texturaDisparo,(int)miwa.getSprite().getX(),(int)miwa.getY()+63);
-                    disparos.add(disparo);
+                    //disparo = new Disparo(texturaDisparo,(int)miwa.getSprite().getX(),(int)miwa.getY()+63);
+                    //disparos.add(disparo);
                 }
             },0,1);
 
