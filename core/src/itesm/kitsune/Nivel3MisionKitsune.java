@@ -492,7 +492,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         if(estadosJuego== EstadosJuego.INTRO)
             if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
                 conDial++;
-                Menu.sonidoBotones.play();
             }
 
         camaraHUD.unproject(v);
@@ -511,8 +510,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
         }
         else if (botonSaltar.contiene(x,y)){
-            if (miwa.getEstadosSalto() != Miwa.EstadosSalto.BAJANDO &&
-                    miwa.getEstadosSalto()!= Miwa.EstadosSalto.CAIDA_LIBRE)
+            if (miwa.getEstadosSalto() != Miwa.EstadosSalto.BAJANDO)
                 miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO) ;        }
         else if(botonSkip.contiene(x, y)) {
             if (estadosJuego == EstadosJuego.INTRO)
@@ -542,7 +540,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
             estadosJuego=EstadosJuego.JUGANDO;
         }else if(botonMenuInicial.contiene(x,y)){
             misionKitsune.getMusicaFondo().play();
-            Menu.sonidoBotones.play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }return true;
     }
