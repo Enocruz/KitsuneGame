@@ -315,7 +315,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     if (d.estado == Disparo.estadoD.ADENTRO){
                         d.render(batch);
                     }
-                    if (d.colision.overlaps(jefe.colision)) {
+                    if (d.colision.overlaps(jefe.getRectangle())) {
                         jefe.setEstado(JefeN3.Estado.ATACADO);
                         disparos.removeIndex(disparos.indexOf(d, true));
                     }
@@ -390,7 +390,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 if (jefe.getEstado() == JefeN3.Estado.MUERTO){
                     estadosJuego = EstadosJuego.GANO;
                 }
-                if(miwa.colision.overlaps(jefe.colision)){
+                if(miwa.getRectangle().overlaps(jefe.getRectangle())){
                     estadosJuego =EstadosJuego.PERDIO;
                     misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("FondoEstrellas.png"), 3));
 
