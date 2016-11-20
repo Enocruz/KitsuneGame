@@ -20,29 +20,31 @@ public class JefeN3 {
     private Sprite sprite;
     private float tiempo;
     private Estado estado = Estado.VIVO;
-    public Rectangle colision;
+    private Rectangle colision;
     private Timer timer =new Timer();
 
     public JefeN3(Texture textura,float x){
         TextureRegion completa = new TextureRegion(textura);
         TextureRegion[][] texturaLobo = completa.split(textura.getWidth()/3, textura.getHeight());
         mordida = new TextureRegion[3];
-        for (int i = 1; i<3;i++){
-            mordida[i-1] = texturaLobo[0][i];
+        for (int i = 0; i<3;i++){
+            mordida[i] = texturaLobo[0][i];
         }
-        animacion = new Animation(0.09f, mordida);
+        animacion = new Animation(0.25f, mordida);
         animacion.setPlayMode(Animation.PlayMode.LOOP);
         sprite = new Sprite(texturaLobo[0][0]);
         sprite.setX(x);
         tiempo = 0;
-        colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
+        colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getX()+sprite.getWidth(),sprite.getHeight());
     }
     public void render(SpriteBatch batch){
         //NO FUNCIONA :(
-        /*tiempo += Gdx.graphics.getDeltaTime();
-        sprite.setRegion(animacion.getKeyFrame(tiempo));*/
+        tiempo += Gdx.graphics.getDeltaTime();
+        sprite.setRegion(animacion.getKeyFrame(tiempo));
         sprite.draw(batch);
         actualizarVida();
+        System.out.println("ENEMIGO "+colision.toString());
+
     }
 
     private void actualizarVida (){
@@ -55,7 +57,7 @@ public class JefeN3 {
                         public void run() {
                             vida += 1;
                         }
-                    },0,20);
+                    }, 0, 50);
                 }
                 else if (vida>=100){
                     timer.stop();
@@ -79,11 +81,16 @@ public class JefeN3 {
     public float getY(){
         return sprite.getY();
     }
+    public Sprite getSprite(){
+        return sprite;
+    }
     public void setEstado(Estado estado){
         this.estado = estado;
     }
     public Estado getEstado (){return estado;}
-
+    public Rectangle getRectangle(){
+        return this.colision;
+    }
     public enum Estado{
         VIVO,
         MUERTO,

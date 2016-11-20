@@ -24,7 +24,7 @@ public class Miwa {
     private float velSalto = 192f;
     private int vidas = 3;
     private boolean right;
-    public Rectangle colision;
+    private Rectangle colision;
 
 
     Miwa(Texture textura) {
@@ -41,25 +41,7 @@ public class Miwa {
         sprite = new Sprite(texturaMiwa[0][0]);
         estados = Estados.QUIETO;
         right=true;
-        colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
-
-    }
-    Miwa(Texture textura,int x,int y) {
-        TextureRegion texturaCompleta = new TextureRegion(textura);
-        TextureRegion[][] texturaMiwa = texturaCompleta.split(textura.getWidth() / 10, textura.getHeight());
-        walkFrames = new TextureRegion[8];
-        for (int i = 1; i < 9; i++)
-            walkFrames[i - 1] = texturaMiwa[0][i];
-        salto = texturaMiwa[0][9];
-        inicio = texturaMiwa[0][0];
-        animacion = new Animation(0.09f, walkFrames);
-        animacion.setPlayMode(Animation.PlayMode.LOOP);
-        tiempo = 0;
-        sprite = new Sprite(texturaMiwa[0][0]);
-        sprite.setPosition(x,y);
-        estados = Estados.QUIETO;
-        right=true;
-        colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
+        colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getX()+sprite.getWidth(),sprite.getY()+sprite.getHeight());
 
     }
 
@@ -70,6 +52,8 @@ public class Miwa {
         miwaSalto(y);
         miwaMovimiento(x,estadoSalto);
         sprite.draw(batch);
+        System.out.println("MIWA "+colision.toString());
+
     }
 
     public void miwaMovimiento(float x,EstadosSalto estadosSalto) {
@@ -113,9 +97,9 @@ public class Miwa {
                 sprite.setX(x);
                 break;
             case N3:
-                /*if (sprite.getX() <  NivelBusqueda.ANCHO-sprite.getWidth()){
-                    VELOCIDAD_X =5;
-                }else */VELOCIDAD_X=0;
+                if (sprite.getX() <  NivelBusqueda.ANCHO-sprite.getWidth()){
+                    VELOCIDAD_X =3;
+                }else VELOCIDAD_X=0;
                 sprite.setX(sprite.getX()+VELOCIDAD_X);
                 tiempo += Gdx.graphics.getDeltaTime();
                 sprite.setRegion(animacion.getKeyFrame(tiempo));
@@ -167,7 +151,9 @@ public class Miwa {
     public void setVelocidadX(float x) {
         VELOCIDAD_X = x;
     }
-
+    public Rectangle getRectangle(){
+        return this.colision;
+    }
 
     public EstadosSalto getEstadosSalto(){ return this.estadoSalto;}
 
@@ -190,4 +176,7 @@ public class Miwa {
         SUBIENDO,
         BAJANDO
     }
+    public enum EstadoDisparo{
+        DISPARO,
+     }
 }

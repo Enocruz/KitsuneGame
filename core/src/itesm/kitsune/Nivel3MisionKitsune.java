@@ -63,10 +63,10 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
     private Music SonidoGemas, SonidoJuego;
 
     //Personaje principal
-    Miwa miwa;
+    private Miwa miwa;
 
     //Jefe Final
-    JefeN3 jefe;
+    private JefeN3 jefe;
     //coso fondo
     private int  x=0,xp=0;
     //Velocidad con la que avanza el nivel
@@ -227,8 +227,8 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         batch=new SpriteBatch();
 
         //miwa
-        miwa = new Miwa(texturaMiwa,ANCHO/2,398);
-        miwa.setEstadoMovimiento(Miwa.Estados.N3);
+        miwa = new Miwa(texturaMiwa);
+        miwa.getSprite().setPosition(ANCHO/2,ALTO/2);        miwa.setEstadoMovimiento(Miwa.Estados.N3);
         miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
         //jefe
         jefe = new JefeN3(texturaJefe,-190);
@@ -258,7 +258,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         p_apoyo2.setEstado(PlataformaN3.estadosP.DENTRO);
         p_apoyoa.add(p_apoyo);
         p_apoyoa.add(p_apoyo2);
-
         //plataformas qe se estarán repitiendo
         for (int i = 0; i<9; i++) {
             if (i<=2){
@@ -304,15 +303,13 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 if (p_apoyoa.size!=0) {
                     for (PlataformaN3 p : p_apoyoa) {
                         if (p.estado != PlataformaN3.estadosP.FUERA) {
-                            p.render(batch, velNivel);
-                        }
+                            p.render(batch,velNivel);
+                        }else p_apoyoa.removeIndex(p_apoyoa.indexOf(p, true));
                     }
                 }
                 for (PlataformaN3 p: plataformas){
                     p.render(batch,velNivel);
                 }
-
-
 
                 for (Disparo d :disparos){
                     if (d.estado == Disparo.estadoD.ADENTRO){
@@ -341,12 +338,12 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 batch.end();
 
                 if (estadosJuego == EstadosJuego.PAUSADO) {
-                    miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                     batch.begin();
                     batch.draw(texturaMenuPausa, ANCHO / 2 - texturaMenuPausa.getWidth() / 2, ALTO / 2 - texturaMenuPausa.getHeight() / 2);
                     botonReanudar.render(batch);
                     botonMenuInicial.render(batch);
                     batch.end();
+                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
                     botonDisparar.setDisabled(true);
                     botonPausa.setDisabled(true);
                     botonSaltar.setDisabled(true);

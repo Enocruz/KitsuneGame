@@ -174,6 +174,7 @@ public class MenuMapas implements Screen , InputProcessor{
         }
         if (boton3.contiene(x,y)){
             misionKitsune.getMusicaFondo().stop();
+            misionKitsune.getSonidoBotones().play();
             dispose();
             misionKitsune.setScreen(new Nivel3MisionKitsune(misionKitsune));
         }
