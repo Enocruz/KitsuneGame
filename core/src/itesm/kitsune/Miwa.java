@@ -172,8 +172,7 @@ public class Miwa {
     public enum EstadosSalto {
         EN_PISO,
         SUBIENDO,
-        BAJANDO,
-        CAIDA_LIBRE
+        BAJANDO
     }
     public enum EstadoDisparo{
         DISPARO,

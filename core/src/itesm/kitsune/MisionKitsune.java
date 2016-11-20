@@ -12,7 +12,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
  * Created by b-and, Leslie and D on 05/09/2016.
  */
 public class MisionKitsune extends Game{
-    private Music musicaFondo;
+    private Music musicaFondo,sonidoBotones;
     private int nivel=3;
     private final AssetManager assetManager = new AssetManager();
 
@@ -21,8 +21,8 @@ public class MisionKitsune extends Game{
         assetManager.setLoader(TiledMap.class,
                 new TmxMapLoader(new InternalFileHandleResolver()));
         musicaFondo=Gdx.audio.newMusic(Gdx.files.internal("MusicaMenu.mp3"));
+        sonidoBotones=Gdx.audio.newMusic(Gdx.files.internal("ClickBotonesMenu.mp3"));
         musicaFondo.setLooping(true);
-        musicaFondo.play();
         setScreen(new Menu(this));
     }
     public int getNivel(){
@@ -30,6 +30,9 @@ public class MisionKitsune extends Game{
     }
     public Music getMusicaFondo(){
         return this.musicaFondo;
+    }
+    public Music getSonidoBotones(){
+        return this.sonidoBotones;
     }
     public AssetManager getAssetManager(){
         return this.assetManager;

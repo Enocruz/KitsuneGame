@@ -164,15 +164,12 @@ public class MenuMapas implements Screen , InputProcessor{
         float x=v.x,y=v.y;
         if(boton1.contiene(x,y)){
             misionKitsune.getMusicaFondo().stop();
-            Menu.sonidoBotones.play();
+            misionKitsune.getSonidoBotones().play();
             misionKitsune.setScreen(new Cargando.CargandoBusqueda(misionKitsune));
-            //misionKitsune.setScreen(new NivelBusqueda(misionKitsune, NivelBusqueda.EstadosJuego.INTRO,1));
         }
         if(boton2.contiene(x,y)){
             misionKitsune.getMusicaFondo().stop();
-            Menu.sonidoBotones.play();
-            dispose();
-            //misionKitsune.setScreen(new NivelPersecucion(misionKitsune));
+            misionKitsune.getSonidoBotones().play();
             misionKitsune.setScreen(new Cargando.CargandoPersecucion(misionKitsune));
         }
         if (boton3.contiene(x,y)){
@@ -182,7 +179,7 @@ public class MenuMapas implements Screen , InputProcessor{
             misionKitsune.setScreen(new Nivel3MisionKitsune(misionKitsune));
         }
         if(botonCerrar.contiene(x,y)){
-            Menu.sonidoBotones.play();
+            misionKitsune.getSonidoBotones().play();
             dispose();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }

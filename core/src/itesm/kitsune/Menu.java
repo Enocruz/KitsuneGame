@@ -28,7 +28,6 @@ public class Menu implements Screen {
 	private final int ancho=1280,alto=800;
 	private OrthographicCamera camara;
 	private Viewport vista;
-	public static Music sonidoBotones;
 	private Animation guion;
 	private float tiempo=0;
 
@@ -39,7 +38,7 @@ public class Menu implements Screen {
 
 	@Override
 	public void show() {
-
+		misionKitsune.getMusicaFondo().play();
 		assetManager=new AssetManager();
 		camara=new OrthographicCamera(ancho,alto);
 		camara.position.set(ancho/2,alto/2,0);
@@ -76,7 +75,7 @@ public class Menu implements Screen {
 		btnJugar.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				sonidoBotones.play();
+				misionKitsune.getSonidoBotones().play();
 				misionKitsune.setScreen(new MenuMapas(misionKitsune));
 
 				}
@@ -86,7 +85,7 @@ public class Menu implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				sonidoBotones.play();
+				misionKitsune.getSonidoBotones().play();
 				misionKitsune.setScreen(new Instrucciones(misionKitsune));
 
 				}
@@ -96,7 +95,7 @@ public class Menu implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				sonidoBotones.play();
+				misionKitsune.getSonidoBotones().play();
 				misionKitsune.setScreen(new AcercaDe(misionKitsune));
 
 				}
@@ -121,7 +120,6 @@ public class Menu implements Screen {
 		texturaBtnJugar=assetManager.get("BtnJugar.png");
 		texturaBtnInstrucciones=assetManager.get("BtnInstrucciones.png");
 		texturaBtnAcercade=assetManager.get("BtnAcercaDe.png");
-		sonidoBotones=assetManager.get("ClickBotonesMenu.mp3");
 		texturaGuion=assetManager.get("Guion.png");
 		texturaWhite=assetManager.get("white.png");
 	}
