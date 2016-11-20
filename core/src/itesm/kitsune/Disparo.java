@@ -22,6 +22,7 @@ public class Disparo {
     }
 
     public void render(SpriteBatch batch) {
+        //xyjtcutvkuvh
         sprite.setX(sprite.getX()-vel);
         colision.setPosition(sprite.getX(),sprite.getY());
         actualizar();
