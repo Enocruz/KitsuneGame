@@ -58,6 +58,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
         tiempoInvencible = 2;
         rnd = new Random();
         Gdx.input.setInputProcessor(this);
+        Gdx.input.setCatchBackKey(true);
         assetManager = misionKitsune.getAssetManager();
         inicializarCamara();
         cargarTexturas();
@@ -93,9 +94,10 @@ public class NivelPersecucion implements Screen,InputProcessor {
         velxNave=3;
         Predialogos = new Texture[]{texPreNiv, texPreNiv2, texPreNiv3};
         Dialogos = new Texture[]{texNiv, texNiv2, texNiv3, texNiv4, texNiv5};
-        musicaFondo.setVolume(0.3f);
+        musicaFondo.setVolume(0.5f);
         musicaFondo.setLooping(true);
         naveSonido.setLooping(true);
+        naveSonido.setVolume(0.5f);
     }
 
     private void inicializarBotones() {
@@ -219,6 +221,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
         musicaIntro.dispose();
         sonidoGemas.dispose();
         texturaSkip.dispose();
+        naveSonido.dispose();
     }
 
     private void consultarEstado() {
@@ -401,11 +404,12 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     batch.end();
                 } else {
                     botonPausa.setDisabled(false);
-                    estadosJuego = EstadosPersecucion.JUGANDO;
+                    //Modificar esta linea para
+                    estadosJuego= EstadosPersecucion.ESPERA;
+                    //estadosJuego = EstadosPersecucion.JUGANDO;
                     musicaIntro.stop();
                 }
-                //Modificar esta linea para
-                //estadosJuego= estadosJuego.ESPERA;
+
                 break;
             case ESPERA:
                 batch.setProjectionMatrix(camaraDialogos.combined);
@@ -441,7 +445,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
             if (algo <= 25)
                 velyNave = 2;
         if(tiempoFinal>=85) //Corregir
-            velyNave = -2.2f;
+            velyNave = -2.3f;
 
         yNaveEnemiga+=velyNave;
         xNave+=velxNave;
@@ -449,7 +453,18 @@ public class NivelPersecucion implements Screen,InputProcessor {
     }
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+
+        if(keycode == Input.Keys.BACK){
+            misionKitsune.getMusicaFondo().play();
+            musicaIntro.stop();
+            musicaFondo.stop();
+            naveSonido.stop();
+            if(estadosJuego==EstadosPersecucion.GANO)
+                if (misionKitsune.getNivel() == 2)
+                    misionKitsune.setNivel(3);
+
+            misionKitsune.setScreen(new MenuMapas(misionKitsune));
+        }return false;
     }
 
     @Override

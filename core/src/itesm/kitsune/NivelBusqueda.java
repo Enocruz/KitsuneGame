@@ -64,6 +64,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
+        Gdx.input.setCatchBackKey(true);
         //Inicializamos camara
         inicializarCamara();
         //Cargamos texturas
@@ -85,7 +86,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texto=new Texto("DominoFont.fnt");
         Predialogos=new Texture[]{Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8};
         Dialogos=new Texture[]{Dial1,Dial2};
-
+misionKitsune.getMusicaFondo().stop();
 
     }
     //Crear los botones del menú principal
@@ -199,6 +200,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
 
 
     private void consultarEstado() {
+
         switch (estadosJuego) {
             case JUGANDO:
             case INVENCIBLE:
@@ -321,7 +323,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                         miwa.setVidas(miwa.getVidas() - 1);
                         SonidoPicos.play();
                     }
-                    if (mapa.esMiniPico(celdaMini)) {
+                    else  if (mapa.esMiniPico(celdaMini)) {
                         estadosJuego = EstadosJuego.INVENCIBLE;
                         contadorGemas -= 1;
                         gemaVida.setGemas(contadorGemas);
@@ -348,7 +350,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                         }
                     }
                 }
-                /*
+
                 if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
                 miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
                else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
@@ -356,14 +358,13 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
                     miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
                 else
-                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);*/
+                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
 
 
 
 
                 break;
             case INTRO:
-
                 if (conPre < Predialogos.length) {
                     batch.setProjectionMatrix(camara.combined);
                     batch.begin();
@@ -375,7 +376,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     SonidoPre.play();
                 }
                 else{
-                    SonidoPre.pause();
+                    SonidoPre.stop();
                     estadosJuego=EstadosJuego.JUGANDO;
                 }
                 botonIzq.setDisabled(true);
@@ -469,9 +470,19 @@ public class NivelBusqueda implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.BACK){
+            misionKitsune.getMusicaFondo().play();
+            SonidoJuego.stop();
+            SonidoPre.stop();
+            SonidoDial.stop();
+            if(estadosJuego==EstadosJuego.GANO){
+                if(misionKitsune.getNivel()==1)
+                    misionKitsune.setNivel(2);
+            }
 
-
-            return false;
+            misionKitsune.setScreen(new MenuMapas(misionKitsune));
+        }
+        return false;
     }
 
     @Override

@@ -52,7 +52,6 @@ public class Miwa {
         miwaSalto(y);
         miwaMovimiento(x,estadoSalto);
         sprite.draw(batch);
-        System.out.println("MIWA "+colision.toString());
 
     }
 

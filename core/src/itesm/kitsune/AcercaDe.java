@@ -1,6 +1,7 @@
 package itesm.kitsune;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
@@ -38,6 +39,7 @@ public class AcercaDe implements Screen {
     }
     @Override
     public void show() {
+        Gdx.input.setCatchBackKey(true);
         assetManager=new AssetManager();
         //Camara
         camara=new OrthographicCamera(ancho,alto);
@@ -240,6 +242,8 @@ public class AcercaDe implements Screen {
         //Dependencia de la camara
         escena.setViewport(vista);
         escena.draw();
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK))
+            misionKitsune.setScreen(new Menu(misionKitsune));
     }
 
     @Override

@@ -39,6 +39,7 @@ public class Menu implements Screen {
 	@Override
 	public void show() {
 		misionKitsune.getMusicaFondo().play();
+
 		assetManager=new AssetManager();
 		camara=new OrthographicCamera(ancho,alto);
 		camara.position.set(ancho/2,alto/2,0);
