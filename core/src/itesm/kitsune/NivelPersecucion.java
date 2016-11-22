@@ -161,6 +161,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
         musicaFondo=assetManager.get("FondoPersecucion.mp3");
         naveSonido=assetManager.get("naveSonido.wav");
         sonidoGemas=assetManager.get("SonidoGemas.mp3");
+        sonidoRoca=assetManager.get("blast.mp3");
+        sonidoRoca.setVolume(0.6f);
         assetManager.load("sonido.png",Texture.class);
         assetManager.finishLoading();
         textSonido =assetManager.get("sonido.png");
@@ -519,7 +521,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
     }
 
     @Override
-    public boolean touchjjDown(int screenX, int screenY, int pointer, int button) {
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector3 v=new Vector3(screenX,screenY,0);
         camaraDialogos.unproject(v);
         float x=v.x,y=v.y;
