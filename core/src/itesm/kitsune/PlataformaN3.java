@@ -13,25 +13,24 @@ import com.badlogic.gdx.math.Rectangle;
 public class PlataformaN3 {
 
     private Sprite sprite;
-    private float xInicial,tiempo;
+    private float xInicial, tiempo;
     public estadosP estado;
-    public Rectangle colision;
+    private Rectangle colision;
 
-    public PlataformaN3(Texture textura,float x,float y){
-        sprite = new Sprite (textura);
-        sprite.setPosition(x,y);
-        colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getRegionHeight());
+    public PlataformaN3(Texture textura, float x, float y) {
+        sprite = new Sprite(textura);
+        sprite.setPosition(x, y);
+        colision = new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getRegionHeight());
         estado = estadosP.NUEVA;
         xInicial = sprite.getX();
     }
-
     private void actualizar(float vel){
         float x= sprite.getX();
         float y = sprite.getY();
         colision.setPosition(x,y);
         switch (estado){
             case NUEVA:
-                tiempo = (float)(Math.random()*4+2);
+                tiempo = (float)(Math.random()*5);
                 estado = estadosP.DENTRO;
                 break;
             case DENTRO:
@@ -67,6 +66,8 @@ public class PlataformaN3 {
     public void setEstado (estadosP estado) {this.estado = estado;}
     public void setTiempo(float tiempo) {this.tiempo = tiempo;}
     public Sprite getSprite (){return sprite;}
+    public void setPosicion(float x,float y){this.getSprite().setPosition(x,y);}
+    public Rectangle getRectangle(){return colision;}
 
     enum estadosP{
         DENTRO,
