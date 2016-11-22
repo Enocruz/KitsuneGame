@@ -91,7 +91,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texto=new Texto("DominoFont.fnt");
         Predialogos=new Texture[]{Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8};
         Dialogos=new Texture[]{Dial1,Dial2};
-misionKitsune.getMusicaFondo().stop();
+        misionKitsune.getMusicaFondo().stop();
 
     }
     //Crear los botones del menú principal

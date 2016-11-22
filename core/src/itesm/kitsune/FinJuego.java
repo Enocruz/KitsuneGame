@@ -193,4 +193,9 @@ public class FinJuego implements Screen, InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
-}
+    private void mute(){
+        gameover.setVolume(0);
+    }
+    private void unmute(){
+        gameover.setVolume(1);
+    }}
