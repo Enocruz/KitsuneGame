@@ -472,6 +472,11 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 batch.begin();
                 batch.draw(texturaFin,0,0);
                 batch.end();
+                if(Gdx.input.getAccelerometerY()<=2){
+                    botonPausa.setDisabled(false);
+                    estadosJuego=EstadosPersecucion.GANO;
+                    musicaFondo.stop();
+                }
                 break;
         }
     }
