@@ -146,7 +146,6 @@ public class MenuMapas implements Screen , InputProcessor{
 
     @Override
     public boolean keyDown(int keycode) {
-
         if(keycode == Input.Keys.BACK)
             misionKitsune.setScreen(new Menu(misionKitsune));
         return false;
