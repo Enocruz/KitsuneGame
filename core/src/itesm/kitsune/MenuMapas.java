@@ -38,7 +38,6 @@ public class MenuMapas implements Screen , InputProcessor{
         cargarTexturas();
         batch=new SpriteBatch();
         //Fondo
-
         cargarBotones();
     }
     private void cargarBotones(){
@@ -110,7 +109,6 @@ public class MenuMapas implements Screen , InputProcessor{
         boton3.render(batch);
         botonCerrar.render(batch);
         batch.end();
-
     }
 
     @Override

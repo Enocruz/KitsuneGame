@@ -34,13 +34,17 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
     //Todas las texturas del nivel
     private Texture texturaVida, texturaSaltar, texturaDisparar,texturaDisparo,texturaMiwaDisparando, texturaMiwa,texturaGema, texturaPausa,texturaBotonReanudar, texturaBotonMenuInicial, texturaMenuPausa,
             texturaPlataforma, texturaJefe,texturaEstrellas, texturaFondoNA, texturaFondoNR, texturaFondoP,texturaMarcoVida,texturaVidaJefe,texturagemita,texturaD1,texturaD2,texturaD3,
-            texturaD4,texturaD5,texturaD6,texturaSkip,texturaFelicidades;
+            texturaD4,texturaD5,texturaD6,texturaSkip,texturaFelicidades,textSonido;
     private Texture[] Dialogos;
+    private TextureRegion texturaSonido;
+    private TextureRegion[] texturaBtnSonido;
+    private TextureRegion[][] texbtnson;
+
     // para cargar texturas
     private AssetManager assetManager = new AssetManager();
 
     // Los botones del nivel
-    private Boton botonSaltar, botonPausa, botonDisparar, botonReanudar, botonMenuInicial,botonSkip;
+    private Boton botonSaltar, botonPausa, botonDisparar, botonReanudar, botonMenuInicial,botonSkip,botonSonido;
 
     //Camara del nivel y de los botones
     private OrthographicCamera camara, camaraHUD,camaraDialogos;
@@ -123,11 +127,13 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         assetManager.load("GemaContador.png",Texture.class);
         assetManager.load("Vida.png",Texture.class);
         assetManager.load("Skip.png",Texture.class);
+
         //pantalla de pausa
         assetManager.load("Pantalla_Pausa.png", Texture.class);
         assetManager.load("Menu_Inicial.png", Texture.class);
         assetManager.load("Reanudar.png", Texture.class);
         assetManager.load("Pantalla_Perder.png",Texture.class);
+        assetManager.load("sonido.png",Texture.class);
         //musica
         assetManager.load("SonidoGemas.mp3",Music.class);
         assetManager.load("MusicaNivel3.mp3",Music.class);
@@ -171,6 +177,13 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         texturaMenuPausa = assetManager.get ("Pantalla_Pausa.png");
         texturaBotonMenuInicial = assetManager.get ("Menu_Inicial.png");
         texturaBotonReanudar = assetManager.get("Reanudar.png");
+        textSonido=assetManager.get("sonido.png");
+        texturaSonido = new TextureRegion(textSonido);
+        texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
+        for (int i = 0; i<2;i++){
+            System.out.println("wytfrgvh");
+            texturaBtnSonido [i] = texbtnson[0][i];
+        }
         //musica
         sonidoGemas = assetManager.get ("SonidoGemas.mp3");
         sonidoJuego =assetManager.get("MusicaNivel3.mp3");
@@ -228,10 +241,13 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         botonMenuInicial.setPosicion(ANCHO/2-texturaBotonMenuInicial.getWidth()/2,ALTO/4+texturaBotonMenuInicial.getHeight()/2);
         botonSkip=new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO-texturaSkip.getWidth()*1.5f,ALTO-texturaSkip.getHeight()*1.5f);
+        botonSonido = new Boton(texturaBtnSonido[0].getTexture());
+        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
     }
 
     @Override
     public void show() {
+        texturaBtnSonido = new TextureRegion[2];
         inicializarCamara();
         cargarTexturas();
         crearBotones();
@@ -309,6 +325,11 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         consultarEstado();
+        if (misionKitsune.isMudo()){
+            mute();
+        }else{
+            unmute();
+        }
     }
 
 
@@ -396,12 +417,19 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     batch.draw(texturaMenuPausa, ANCHO / 2 - texturaMenuPausa.getWidth() / 2, ALTO / 2 - texturaMenuPausa.getHeight() / 2);
                     botonReanudar.render(batch);
                     botonMenuInicial.render(batch);
+                    if (misionKitsune.isMudo()){
+                        botonSonido.setTexture(texturaBtnSonido[1]);
+                    }else{
+                        botonSonido.setTexture(texturaBtnSonido[0]);
+                    }
+                    botonSonido.render(batch);
                     batch.end();
                     botonDisparar.setDisabled(true);
                     botonPausa.setDisabled(true);
                     botonSaltar.setDisabled(true);
                     botonMenuInicial.setDisabled(false);
                     botonReanudar.setDisabled(false);
+                    botonSonido.setDisabled(false);
                 }else if (estadosJuego==EstadosJuego.MENOSVIDA){
                     gema.setEstadoGema(Gemas.EstadoGema.DESAPARECER);
                     posx=ANCHO/2;
@@ -429,6 +457,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     botonSaltar.setDisabled(true);
                     botonMenuInicial.setDisabled(true);
                     botonReanudar.setDisabled(true);
+                    botonSonido.setDisabled(true);
                     tiempovida -= Gdx.graphics.getDeltaTime();
                     if(tiempovida%0.5<0.25){
                         miwa.getSprite().setAlpha(0.7f);}
@@ -459,6 +488,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                         botonSaltar.setDisabled(true);
                         botonMenuInicial.setDisabled(true);
                         botonReanudar.setDisabled(true);
+                        botonSonido.setDisabled(true);
                     }
                 }else {
                     sonidoJuego.play();
@@ -469,6 +499,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     botonSaltar.setDisabled(false);
                     botonMenuInicial.setDisabled(true);
                     botonReanudar.setDisabled(true);
+                    botonSonido.setDisabled(true);
                     if (p_apoyoa.size != 0) {
                         for (PlataformaN3 p : p_apoyoa) {
                             if (miwa.getEstadosSalto() != Miwa.EstadosSalto.SUBIENDO) {
@@ -581,6 +612,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 botonSaltar.setDisabled(true);
                 botonReanudar.setDisabled(true);
                 botonMenuInicial.setDisabled(true);
+                botonSonido.setDisabled(true);
                 break;
         }
     }
@@ -607,6 +639,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
+        textSonido.dispose();
         sonidoDialogos.dispose();
         sonidoJuego.dispose();
         sonidoDisparo.dispose();
@@ -724,6 +757,14 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
             sonidoJuego.stop();
             misionKitsune.getMusicaFondo().play();
             misionKitsune.setScreen(new Menu(misionKitsune));
+        }else if(botonSonido.contiene(x,y)){
+            if (misionKitsune.isMudo()) {
+                botonSonido.setTexture(texturaBtnSonido[0]);
+                misionKitsune.setMudo(false);
+            }else{
+                botonSonido.setTexture(texturaBtnSonido[1]);
+                misionKitsune.setMudo(true);
+            }
         }
         return true;
     }
@@ -750,6 +791,18 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         xGema+=velXGema;
     }
 
+    private void mute (){
+        sonidoDisparo.setVolume(0);
+        sonidoJuego.setVolume(0);
+        sonidoDialogos.setVolume(0);
+        sonidoGemas.setVolume(0);
+    }
+    private void unmute(){
+        sonidoDisparo.setVolume(1);
+        sonidoJuego.setVolume(1);
+        sonidoDialogos.setVolume(1);
+        sonidoGemas.setVolume(1);
+    }
     enum EstadosJuego{
         PAUSADO,
         PERDIO,

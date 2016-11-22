@@ -13,6 +13,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -24,10 +28,14 @@ public class NivelBusqueda implements Screen, InputProcessor {
     //Texturas Pantalla
     private Texture texturaVida,texturaDer,texturaIzq,texturaSaltar,texturaPausa,
             texturaMiwa, texturaGema,texturaBotonReanudar, texturaBotonMenuInicial,texturaMenuPausa, Dial1,Dial2,
-            Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8,texturaSkip;
+            Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8,texturaSkip,textSonido;
     private Texture[] Dialogos,Predialogos;
+    private TextureRegion texturaSonido;
+    private TextureRegion[] texturaBtnSonido;
+    private TextureRegion[][] texbtnson;
+
     //Botones pantalla
-    private Boton botonIzq,botonDer,botonSaltar1,botonSaltar2,botonPausa,botonReanudar,botonMenuInicial,botonSkip;
+    private Boton botonIzq,botonDer,botonSaltar1,botonSaltar2,botonPausa,botonReanudar,botonMenuInicial,botonSkip,botonSonido;
     //AssetManager (Cargar texturas)
     private  AssetManager assetManager;
     // La cámara principal, la vista y la camara de botones
@@ -64,6 +72,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
+        texturaBtnSonido = new TextureRegion[2];
         //Inicializamos camara
         inicializarCamara();
         //Cargamos texturas
@@ -111,6 +120,13 @@ public class NivelBusqueda implements Screen, InputProcessor {
         botonMenuInicial.setPosicion(ANCHO/2-texturaBotonMenuInicial.getWidth()/2,ALTO/4+texturaBotonMenuInicial.getHeight()/2);
         botonSkip=new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO-texturaSkip.getWidth()*1.5f,ALTO-texturaSkip.getHeight()*1.5f);
+        botonSonido=new Boton(texturaBtnSonido[0].getTexture());
+        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
+        if (misionKitsune.isMudo()){
+            botonSonido.setTexture(texturaBtnSonido[1]);
+        }else{
+            botonSonido.setTexture(texturaBtnSonido[0]);
+        }
     }
     private void inicializarCamara() {
         //Creamos la camara principal del nivel
@@ -142,6 +158,16 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texturaBotonReanudar = assetManager.get("Reanudar.png");
         texturaBotonMenuInicial = assetManager.get("Menu_Inicial.png");
         texturaSkip=assetManager.get("Skip.png");
+        //Sonido
+        assetManager.load("sonido.png",Texture.class);
+        assetManager.finishLoading();
+        textSonido=assetManager.get("sonido.png");
+        texturaSonido = new TextureRegion(textSonido);
+        texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
+        for (int i = 0; i<2;i++){
+            System.out.println("wytfrgvh");
+            texturaBtnSonido [i] = texbtnson[0][i];
+        }
         //Texturas Dialogos
         Dial1=assetManager.get("Dialogo_Nivel1_1.jpg");
         Dial2=assetManager.get("Dialogo_Nivel1_2.jpg");
@@ -195,6 +221,12 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         consultarEstado();
         actualizarCamara();
+        if (misionKitsune.isMudo()){
+            mute();
+        }else{
+            unmute();
+        }
+
     }
 
 
@@ -236,6 +268,12 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     batch.draw(texturaMenuPausa, ANCHO / 2 - texturaMenuPausa.getWidth() / 2, ALTO / 2 - texturaMenuPausa.getHeight() / 2);
                     botonReanudar.render(batch);
                     botonMenuInicial.render(batch);
+                    if (misionKitsune.isMudo()){
+                        botonSonido.setTexture(texturaBtnSonido[1]);
+                    }else{
+                        botonSonido.setTexture(texturaBtnSonido[0]);
+                    }
+                    botonSonido.render(batch);
                         //Desactiva los botones para que no puedan ser usados mientras está en pausa
                     botonIzq.setDisabled(true);
                     botonDer.setDisabled(true);
@@ -244,6 +282,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     botonSaltar2.setDisabled(true);
                     botonReanudar.setDisabled(false);
                     botonMenuInicial.setDisabled(false);
+                    botonSonido.setDisabled(false);
                 }
                 else{
                     botonIzq.setDisabled(false);
@@ -253,6 +292,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     botonSaltar2.setDisabled(false);
                     botonReanudar.setDisabled(true);
                     botonMenuInicial.setDisabled(true);
+                    botonSonido.setDisabled(true);
+
                 }
                 if (miwa.getVidas() <= 0) {
                     SonidoJuego.stop();
@@ -385,6 +426,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 botonSaltar2.setDisabled(true);
                 botonReanudar.setDisabled(true);
                 botonMenuInicial.setDisabled(true);
+
                 break;
             case GANO:
                 camara.setToOrtho(false,ANCHO,ALTO);
@@ -403,7 +445,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     if(misionKitsune.getNivel()==1)
                         misionKitsune.setNivel(2);
                     misionKitsune.setScreen(new MenuMapas(misionKitsune));
-                    misionKitsune.getMusicaFondo().play();
                 }
                 botonIzq.setDisabled(true);
                 botonDer.setDisabled(true);
@@ -412,6 +453,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 botonSaltar2.setDisabled(true);
                 botonReanudar.setDisabled(true);
                 botonMenuInicial.setDisabled(true);
+                botonSonido.setDisabled(true);
+
                 break;
         }
 
@@ -450,6 +493,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texturaBotonMenuInicial.dispose();
         texturaMenuPausa.dispose();
         texturaSkip.dispose();
+        textSonido.dispose();
         Predial1.dispose();
         Predial5.dispose();
         Predial3.dispose();
@@ -539,7 +583,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         else if (botonMenuInicial.contiene(x,y)){
             SonidoJuego.stop();
             misionKitsune.getMusicaFondo().play();
-             misionKitsune.getSonidoBotones().play();
+            misionKitsune.getSonidoBotones().play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }
         else if(botonSkip.contiene(x,y)&&estadosJuego==EstadosJuego.GANO){
@@ -552,7 +596,13 @@ public class NivelBusqueda implements Screen, InputProcessor {
         else if(botonSkip.contiene(x,y)&&estadosJuego==EstadosJuego.INTRO){
             SonidoPre.stop();
             estadosJuego=EstadosJuego.JUGANDO;
-        }
+        }else if(botonSonido.contiene(x,y)){
+             if (misionKitsune.isMudo()){
+                 misionKitsune.setMudo(false);
+             }else{
+                 misionKitsune.setMudo(true);
+             }
+         }
         return true;
     }
 
@@ -582,6 +632,21 @@ public class NivelBusqueda implements Screen, InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
+    private void mute(){
+        SonidoGemas.setVolume(0);
+        SonidoPicos.setVolume(0);
+        SonidoPre.setVolume(0);
+        SonidoDial.setVolume(0);
+        SonidoJuego.setVolume(0);
+    }
+    private void unmute(){
+        SonidoGemas.setVolume(1);
+        SonidoPicos.setVolume(1);
+        SonidoPre.setVolume(0.6f);
+        SonidoDial.setVolume(1);
+        SonidoJuego.setVolume(0.5f);
+    }
+
     public enum EstadosJuego {
         GANO,
         INTRO,

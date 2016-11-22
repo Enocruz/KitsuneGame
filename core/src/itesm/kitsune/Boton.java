@@ -3,6 +3,7 @@ package itesm.kitsune;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 
@@ -16,6 +17,11 @@ public class Boton implements Disableable{
     private boolean disabled = false;
     public Boton(Texture textura) {
         sprite = new Sprite(textura);
+        rectColision = new Rectangle(sprite.getX(), sprite.getY(),
+                sprite.getWidth(), sprite.getHeight());
+    }
+    public Boton(TextureRegion tr) {
+        sprite = new Sprite(tr.getTexture());
         rectColision = new Rectangle(sprite.getX(), sprite.getY(),
                 sprite.getWidth(), sprite.getHeight());
     }
@@ -66,4 +72,7 @@ public class Boton implements Disableable{
     public float getY() {
         return sprite.getY();
     }
+    public float getHeight(){return sprite.getHeight();}
+    public float getWidth(){return sprite.getWidth();}
+    public void setTexture (TextureRegion tr){sprite.setTexture(tr.getTexture());}
 }

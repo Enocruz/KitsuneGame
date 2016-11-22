@@ -15,6 +15,7 @@ public class MisionKitsune extends Game{
     private Music musicaFondo,sonidoBotones;
     private int nivel=3;
     private final AssetManager assetManager = new AssetManager();
+    private boolean mudo;
 
     @Override
     public void create() {
@@ -41,4 +42,6 @@ public class MisionKitsune extends Game{
     public void setNivel(int nivel) {
         this.nivel = nivel;
     }
+    public boolean isMudo(){return mudo;}
+    public void setMudo(boolean mudo){this.mudo=mudo;}
 }

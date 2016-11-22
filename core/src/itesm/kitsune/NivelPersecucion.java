@@ -9,7 +9,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -31,14 +33,17 @@ public class NivelPersecucion implements Screen,InputProcessor {
     private Texture texturaFondo, texturaNaveEnemiga, texturaMiwaCentro, texturaMiwaDerecha, texturaMiwaIzquierda,
             texturaPausa, texNebAzul, texNebRoja, texturaMenuInicial, texturaReanudar,
             texturaPiedra, texturaPiedrita, texturaVida, texturaBarra, texturaMiniNave, texturaGemaVida, texturaGema,
-            texPreNiv, texPreNiv2, texPreNiv3, texPreNiv4, texNiv, texNiv2, texNiv3, texNiv4, texNiv5, texturaSkip;
+            texPreNiv, texPreNiv2, texPreNiv3, texPreNiv4, texNiv, texNiv2, texNiv3, texNiv4, texNiv5, texturaSkip,textSonido;
+    private TextureRegion texturaSonido;
+    private TextureRegion[] texturaBtnSonido;
+    private TextureRegion[][] texbtnson;
     private AssetManager assetManager;
     private int y = 0, yNave, xGema, velXGema, nivel,xNave,velxNave;
     private Piedra piedra, piedrita;
     private Array<Piedra> piedras, piedritas;
     private float accelX,velyNave,yNaveEnemiga;
     public static EstadosPersecucion estadosJuego;
-    private Boton botonPausa, botonMenu, botonReanudar, botonSkip;
+    private Boton botonPausa, botonMenu, botonReanudar, botonSkip,botonSonido;
     private Random rnd;
     private GemaVida gemaVida;
     private Gemas gemas;
@@ -59,6 +64,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
         rnd = new Random();
         Gdx.input.setInputProcessor(this);
         assetManager = misionKitsune.getAssetManager();
+        texturaBtnSonido = new TextureRegion[2];
         inicializarCamara();
         cargarTexturas();
         inicializarBotones();
@@ -111,6 +117,13 @@ public class NivelPersecucion implements Screen,InputProcessor {
         botonReanudar.setDisabled(true);
         botonSkip = new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO - texturaSkip.getWidth() * 1.5f, ALTO - texturaSkip.getHeight() * 1.5f);
+        botonSonido=new Boton(texturaBtnSonido[0].getTexture());
+        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
+        if (misionKitsune.isMudo()){
+            botonSonido.setTexture(texturaBtnSonido[1]);
+        }else{
+            botonSonido.setTexture(texturaBtnSonido[0]);
+        }
     }
 
     private void cargarTexturas() {
@@ -147,6 +160,15 @@ public class NivelPersecucion implements Screen,InputProcessor {
         musicaFondo=assetManager.get("FondoPersecucion.mp3");
         naveSonido=assetManager.get("naveSonido.wav");
         sonidoGemas=assetManager.get("SonidoGemas.mp3");
+        assetManager.load("sonido.png",Texture.class);
+        assetManager.finishLoading();
+        textSonido =assetManager.get("sonido.png");
+        textSonido=assetManager.get("sonido.png");
+        texturaSonido = new TextureRegion(textSonido);
+        texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
+        for (int i = 0; i<2;i++){
+            texturaBtnSonido [i] = texbtnson[0][i];
+        }
     }
 
 
@@ -173,6 +195,11 @@ public class NivelPersecucion implements Screen,InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         consultarEstado();
+        if (misionKitsune.isMudo()){
+            mute();
+        }else{
+            unmute();
+        }
     }
 
     @Override
@@ -198,6 +225,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
 
     @Override
     public void dispose() {
+        textSonido.dispose();
         texturaReanudar.dispose();
         texturaMenuInicial.dispose();
         texturaFondo.dispose();
@@ -247,9 +275,16 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     botonMenu.setDisabled(false);
                     botonReanudar.setDisabled(false);
                     botonPausa.setDisabled(true);
+                    botonSonido.setDisabled(false);
                     batch.begin();
                     botonMenu.render(batch);
                     botonReanudar.render(batch);
+                    if (misionKitsune.isMudo()){
+                        botonSonido.setTexture(texturaBtnSonido[1]);
+                    }else{
+                        botonSonido.setTexture(texturaBtnSonido[0]);
+                    }
+                    botonSonido.render(batch);
                     batch.end();
                 } else {
                     naveSonido.play();
@@ -297,6 +332,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         gemas.getSprite().setX(xGema);
                     botonMenu.setDisabled(true);
                     botonReanudar.setDisabled(true);
+                    botonSonido.setDisabled(true);
                     botonPausa.setDisabled(false);
                     batch.setProjectionMatrix(camaraHUD.combined);
                     batch.begin();
@@ -514,6 +550,14 @@ public class NivelPersecucion implements Screen,InputProcessor {
             misionKitsune.getMusicaFondo().play();
             misionKitsune.getSonidoBotones().play();
             misionKitsune.setScreen(new Menu(misionKitsune));
+        }else if(botonSonido.contiene(x,y)){
+            if (misionKitsune.isMudo()) {
+                botonSonido.setTexture(texturaBtnSonido[0]);
+                misionKitsune.setMudo(false);
+            }else{
+                botonSonido.setTexture(texturaBtnSonido[1]);
+                misionKitsune.setMudo(true);
+            }
         }
         return true;
     }
@@ -531,6 +575,19 @@ public class NivelPersecucion implements Screen,InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    private void mute(){
+        sonidoGemas.setVolume(0);
+        naveSonido.setVolume(0);
+        musicaFondo.setVolume(0);
+        musicaIntro.setVolume(0);
+    }
+    private void unmute(){
+        sonidoGemas.setVolume(1);
+        naveSonido.setVolume(1);
+        musicaFondo.setVolume(0.3f);
+        musicaIntro.setVolume(1);
     }
 
     public enum EstadosPersecucion{

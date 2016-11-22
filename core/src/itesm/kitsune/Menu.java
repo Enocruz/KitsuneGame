@@ -24,7 +24,9 @@ public class Menu implements Screen {
 	private final MisionKitsune misionKitsune;
 	private AssetManager assetManager;
 	private Stage escena;
-	private Texture texturaFondo,texturaBtnJugar,texturaBtnInstrucciones,texturaBtnAcercade,texturaGuion,texturaWhite;
+	private Texture texturaFondo,texturaBtnJugar,texturaBtnInstrucciones,texturaBtnAcercade,texturaGuion,texturaWhite,textSonido;
+	private TextureRegion texturaSonido;
+	private TextureRegionDrawable [] texturaBtnSonido;
 	private final int ancho=1280,alto=800;
 	private OrthographicCamera camara;
 	private Viewport vista;
@@ -43,6 +45,7 @@ public class Menu implements Screen {
 		camara=new OrthographicCamera(ancho,alto);
 		camara.position.set(ancho/2,alto/2,0);
 		camara.update();
+		texturaBtnSonido = new TextureRegionDrawable[2];
 		//Vista
 		vista= new StretchViewport(ancho,alto,camara);
 		cargarTexturas();
@@ -71,6 +74,37 @@ public class Menu implements Screen {
 		ImageButton btnAcercade=new ImageButton(trBtnAcercade);
 		btnAcercade.setPosition(ancho/2-btnAcercade.getWidth()/2, 0.09f*alto);
 		escena.addActor(btnAcercade);
+		//sonido
+		if (misionKitsune.isMudo()){
+			ImageButton btnSonido=new ImageButton(texturaBtnSonido[1],texturaBtnSonido[1],texturaBtnSonido[0]);
+			btnSonido.setPosition(0,alto-btnSonido.getHeight());
+			escena.addActor(btnSonido);
+			btnSonido.addListener(new ClickListener(){
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					if (misionKitsune.isMudo()) {
+						misionKitsune.setMudo(false);
+					}else{
+						misionKitsune.setMudo(true);
+					}
+				}
+			});
+		}else{
+			ImageButton btnSonido=new ImageButton(texturaBtnSonido[0],texturaBtnSonido[0],texturaBtnSonido[1]);
+			btnSonido.setPosition(0,alto-btnSonido.getHeight());
+			escena.addActor(btnSonido);
+			btnSonido.addListener(new ClickListener(){
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					if (misionKitsune.isMudo()) {
+						misionKitsune.setMudo(false);
+					}else{
+						misionKitsune.setMudo(true);
+					}
+				}
+			});
+		}
+
 
 		btnJugar.addListener(new ClickListener(){
 			@Override
@@ -111,6 +145,7 @@ public class Menu implements Screen {
 		assetManager.load("BtnInstrucciones.png",Texture.class);
 		assetManager.load("BtnAcercaDe.png",Texture.class);
 		assetManager.load("ClickBotonesMenu.mp3",Music.class);
+		assetManager.load("sonido.png",Texture.class);
 		assetManager.load("Guion.png",Texture.class);
 		assetManager.load("white.png",Texture.class);
 		//Se bloquea hasta cargar los recursos
@@ -122,6 +157,12 @@ public class Menu implements Screen {
 		texturaBtnAcercade=assetManager.get("BtnAcercaDe.png");
 		texturaGuion=assetManager.get("Guion.png");
 		texturaWhite=assetManager.get("white.png");
+		textSonido =assetManager.get("sonido.png");
+		texturaSonido = new TextureRegion(textSonido);
+		TextureRegion[][] TrSonido = texturaSonido.split(texturaSonido.getRegionWidth()/2,texturaSonido.getRegionHeight());
+		for (int i = 0; i < 2; i++) {
+			texturaBtnSonido[i] = new TextureRegionDrawable(TrSonido[0][i]) ;
+		}
 	}
 
 	@Override
@@ -135,6 +176,14 @@ public class Menu implements Screen {
 		escena.getBatch().begin();
 		escena.getBatch().draw(guion.getKeyFrame(tiempo),ancho/1.47f,alto/1.8f);
 		escena.getBatch().end();
+
+		if (misionKitsune.isMudo()){
+			misionKitsune.getMusicaFondo().setVolume(0);
+			misionKitsune.getSonidoBotones().setVolume(0);
+		}else {
+			misionKitsune.getMusicaFondo().setVolume(1);
+			misionKitsune.getSonidoBotones().setVolume(1);
+		}
 	}
 
 	@Override
@@ -162,6 +211,10 @@ public class Menu implements Screen {
 
 	@Override
 	public void dispose() {
+
+	}
+
+	public void mute(){
 
 	}
 }
