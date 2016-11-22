@@ -111,54 +111,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
     private void cargarTexturas(){
         //miwa
-        assetManager.load("miwa.png",Texture.class);
-        assetManager.load("Disparo.png",Texture.class);
-        assetManager.load("SpriteDisparando.png",Texture.class);
-        //jefe final
-        assetManager.load("SpritesJefe.png",Texture.class);
-        assetManager.load("VidaEnemigoColor.png",Texture.class);
-        assetManager.load("VidaEnemigoMarco.png",Texture.class);
-        //plataformas
-        assetManager.load("PlataformaFinal.png",Texture.class);
-        //en la camara de botones...
-        assetManager.load("pausa.png",Texture.class);
-        assetManager.load("salto.png",Texture.class);
-        assetManager.load("BtnDisparo.png",Texture.class);
-        assetManager.load("GemaContador.png",Texture.class);
-        assetManager.load("Vida.png",Texture.class);
-        assetManager.load("Skip.png",Texture.class);
-
-        //pantalla de pausa
-        assetManager.load("Pantalla_Pausa.png", Texture.class);
-        assetManager.load("Menu_Inicial.png", Texture.class);
-        assetManager.load("Reanudar.png", Texture.class);
-        assetManager.load("Pantalla_Perder.png",Texture.class);
-        assetManager.load("sonido.png",Texture.class);
-        //musica
-        assetManager.load("SonidoGemas.mp3",Music.class);
-        assetManager.load("MusicaNivel3.mp3",Music.class);
-        assetManager.load("MusicaDialogoInicioN3.mp3",Music.class);
-        assetManager.load("MusicaDisparo.mp3",Music.class);
-        //fondo
-        assetManager.load("FondoEstrellas.png",Texture.class);
-        assetManager.load("FondoNebulosaAzul.png",Texture.class);
-        assetManager.load("FondoNebulosaRoja.png",Texture.class);
-        assetManager.load("FondoPlaneta.png",Texture.class);
-        //Dialogos
-        assetManager.load("Dialogo_PreNivel3_1.jpg",Texture.class);
-        assetManager.load("Dialogo_PreNivel3_2.jpg",Texture.class);
-        assetManager.load("Dialogo_PreNivel3_3.jpg",Texture.class);
-        assetManager.load("Dialogo_PreNivel3_4.jpg",Texture.class);
-        assetManager.load("Dialogo_PreNivel3_5.jpg",Texture.class);
-        assetManager.load("Dialogo_PreNivel3_6.jpg",Texture.class);
-        //gema
-        assetManager.load ("N3Gema.png",Texture.class);
-        //final
-        assetManager.load("Felicidades.png",Texture.class);
-
-        assetManager.finishLoading();
-
-        //miwa
+        assetManager=misionKitsune.getAssetManager();
         texturaMiwa = assetManager.get("miwa.png");
         texturaMiwaDisparando = assetManager.get("SpriteDisparando.png");
         texturaDisparo = assetManager.get("Disparo.png");
@@ -417,12 +370,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     batch.draw(texturaMenuPausa, ANCHO / 2 - texturaMenuPausa.getWidth() / 2, ALTO / 2 - texturaMenuPausa.getHeight() / 2);
                     botonReanudar.render(batch);
                     botonMenuInicial.render(batch);
-                    if (misionKitsune.isMudo()){
-                        botonSonido.setTexture(texturaBtnSonido[1]);
-                    }else{
-                        botonSonido.setTexture(texturaBtnSonido[0]);
-                    }
-                    botonSonido.render(batch);
                     batch.end();
                     botonDisparar.setDisabled(true);
                     botonPausa.setDisabled(true);
