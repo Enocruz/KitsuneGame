@@ -515,13 +515,14 @@ misionKitsune.getMusicaFondo().stop();
             miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
         else if(keycode==(Input.Keys.DPAD_UP))
             miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
-        else
-            miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
+        if(keycode==(Input.Keys.DPAD_LEFT)||keycode==Input.Keys.DPAD_RIGHT)
+            miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
         return false;
     }
 
@@ -549,6 +550,18 @@ misionKitsune.getMusicaFondo().stop();
 
         if(botonIzq.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
+        }
+        else if(botonIzq.contiene(x,y)&&pointer==0&&botonSaltar2.contiene(x,y)&&pointer==1){
+            if (miwa.getEstadosSalto() != Miwa.EstadosSalto.BAJANDO) {
+                miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO) ;
+                miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
+            }
+        }
+        else if(botonDer.contiene(x,y)&&pointer==1&&botonSaltar2.contiene(x,y)&&pointer==0){
+            if (miwa.getEstadosSalto() != Miwa.EstadosSalto.BAJANDO) {
+                miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO) ;
+                miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
+            }
         }
         else if(botonDer.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
@@ -617,7 +630,7 @@ misionKitsune.getMusicaFondo().stop();
             if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO ||
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO)
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
-        } else if (botonDer.contiene(x, y)&&pointer==1) {
+        } else if (botonDer.contiene(x, y)&&pointer==0) {
             if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO ||
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO)
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);

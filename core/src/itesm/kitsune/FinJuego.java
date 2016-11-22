@@ -41,11 +41,13 @@ public class FinJuego implements Screen, InputProcessor {
         cargarCamara();
         cargarTexturas();
         cargarBotones();
+        gameover.play();
     }
     private void cargarTexturas(){
         assetManager.load("gameover.mp3",Music.class);
         assetManager.finishLoading();
         gameover=assetManager.get("gameover.mp3");
+        gameover.setVolume(0.5f);
         if(nivel==2) {
             assetManager.load("N2Fin.png",Texture.class);
             assetManager.load("N2FinFondo.png", Texture.class);
@@ -95,12 +97,6 @@ public class FinJuego implements Screen, InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if (misionKitsune.isMudo()){
-            mute();
-        }else{
-            unmute();
-        }
-        gameover.play();
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
         batch.draw(texturaFondo,0,0);
@@ -196,11 +192,5 @@ public class FinJuego implements Screen, InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
-    }
-    private void mute(){
-        gameover.setVolume(0);
-    }
-    private void unmute(){
-        gameover.setVolume(1);
     }
 }

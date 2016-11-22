@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
@@ -19,11 +21,12 @@ public class Splash implements Screen{
     private MisionKitsune misionKitsune;
     private float tiempo;
     private Stage escena;
-    private Texture textura,materia;
+    private Texture textura;
     private Camera camara;
     private Viewport vista;
     private AssetManager assetManager;
-    private final int ANCHO=4728,ALTO=1278;
+    private final int ANCHO=1920,ALTO=1280;
+
     Splash(MisionKitsune misionKitsune){
         this.misionKitsune=misionKitsune;
     }
@@ -34,14 +37,11 @@ public class Splash implements Screen{
         escena=new Stage();
         tiempo=1;
         inicializarCamara();
-        Gdx.input.setInputProcessor(escena);
     }
     private void cargarTexturas(){
-        assetManager.load("Materia.png",Texture.class);
-        assetManager.load("LogoTec.png",Texture.class);
+        assetManager.load("Splash.jpg",Texture.class);
         assetManager.finishLoading();
-        textura=assetManager.get("LogoTec.png");
-        materia=assetManager.get("Materia.png");
+        textura=assetManager.get("Splash.jpg");
     }
     private void inicializarCamara() {
         //Creamos la camara principal del nivel
@@ -57,19 +57,13 @@ public class Splash implements Screen{
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiempo-= Gdx.graphics.getDeltaTime();
+        escena.setViewport(vista);
+        escena.draw();
+        escena.getBatch().begin();
+        escena.getBatch().draw(textura,0,0);
+        escena.getBatch().end();
         if(tiempo<=0)
             misionKitsune.setScreen(new Menu(misionKitsune));
-        else
-        {
-            /*escena.getBatch().begin();
-            escena.getBatch().draw(materia,0,0);
-            escena.getBatch().end();*/
-            escena.setViewport(vista);
-            escena.getBatch().begin();
-            escena.getBatch().draw(textura,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-            escena.getBatch().draw(materia,0,0,Gdx.graphics.getWidth(),30);
-            escena.getBatch().end();
-        }
     }
 
 

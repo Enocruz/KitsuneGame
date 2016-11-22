@@ -32,7 +32,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
     private Texture texturaFondo, texturaNaveEnemiga, texturaMiwaCentro, texturaMiwaDerecha, texturaMiwaIzquierda,
             texturaPausa, texNebAzul, texNebRoja, texturaMenuInicial, texturaReanudar,
             texturaPiedra, texturaPiedrita, texturaVida, texturaBarra, texturaMiniNave, texturaGemaVida, texturaGema,
-            texPreNiv, texPreNiv2, texPreNiv3, texPreNiv4, texNiv, texNiv2, texNiv3, texNiv4, texNiv5, texturaSkip,textSonido;
+            texPreNiv, texPreNiv2, texPreNiv3, texPreNiv4, texNiv, texNiv2, texNiv3, texNiv4, texNiv5, texturaSkip,textSonido,
+            texturaFin;
     private TextureRegion texturaSonido;
     private TextureRegion[] texturaBtnSonido;
     private TextureRegion[][] texbtnson;
@@ -167,6 +168,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
         assetManager.finishLoading();
         textSonido =assetManager.get("sonido.png");
         textSonido=assetManager.get("sonido.png");
+        texturaFin=assetManager.get("Alerta.png");
         texturaSonido = new TextureRegion(textSonido);
         texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
         for (int i = 0; i<2;i++){
@@ -302,7 +304,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         tiempoFinal++;
                     }
                     if (tiempoFinal >=90 )//Cambiar el tiempo
-                        estadosJuego = EstadosPersecucion.GANO;
+                        estadosJuego = EstadosPersecucion.ESPERAFIN;
 
                     if (estadosJuego == EstadosPersecucion.INVENCIBLE) {
                         tiempoInvencible -= Gdx.graphics.getDeltaTime();
@@ -465,6 +467,12 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     musicaIntro.stop();
                 }
                 break;
+            case ESPERAFIN:
+                batch.setProjectionMatrix(camara.combined);
+                batch.begin();
+                batch.draw(texturaFin,0,0);
+                batch.end();
+                break;
         }
     }
 
@@ -620,7 +628,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
         INTRO,
         INVENCIBLE,
         INVENCIBLEG,
-        ESPERA
+        ESPERA,
+        ESPERAFIN
     }
 
 }
