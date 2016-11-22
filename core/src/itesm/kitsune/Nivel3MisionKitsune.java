@@ -284,7 +284,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         }
     }
 
-
     private void consultarEstado() {
         switch (estadosJuego) {
             case JUGANDO:
