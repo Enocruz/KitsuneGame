@@ -23,7 +23,7 @@ public class MisionKitsune extends Game{
         musicaFondo=Gdx.audio.newMusic(Gdx.files.internal("MusicaMenu.mp3"));
         sonidoBotones=Gdx.audio.newMusic(Gdx.files.internal("ClickBotonesMenu.mp3"));
         musicaFondo.setLooping(true);
-        setScreen(new Menu(this));
+        setScreen(new Splash(this));
     }
     public int getNivel(){
         return this.nivel;
