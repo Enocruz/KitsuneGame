@@ -18,7 +18,7 @@ public class MisionKitsune extends Game{
     private int nivel=3;
     private final AssetManager assetManager = new AssetManager();
     private boolean mudo;
-
+    //jijiji
     @Override
     public void create() {
         assetManager.setLoader(TiledMap.class,
