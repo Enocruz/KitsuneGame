@@ -21,10 +21,11 @@ public class Miwa {
     public static float VELOCIDAD_Y = -3f, VELOCIDAD_X=7;
     private TextureRegion salto, inicio;
     private Texture texturaDisparo;
-    private float velSalto = 192f;
+    private float velSalto = 195f;
     private int vidas = 3;
     private boolean right;
     private Rectangle colision;
+    public boolean enpiso;
 
 
     Miwa(Texture textura) {
@@ -42,7 +43,7 @@ public class Miwa {
         estados = Estados.QUIETO;
         right=true;
         colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getX()+sprite.getWidth(),sprite.getY()+sprite.getHeight());
-
+        enpiso=false;
     }
 
     public void render(SpriteBatch batch) {
@@ -52,8 +53,6 @@ public class Miwa {
         miwaSalto(y);
         miwaMovimiento(x,estadoSalto);
         sprite.draw(batch);
-        System.out.println("MIWA "+colision.toString());
-
     }
 
     public void miwaMovimiento(float x,EstadosSalto estadosSalto) {
@@ -98,7 +97,9 @@ public class Miwa {
                 break;
             case N3:
                 if (sprite.getX() <  NivelBusqueda.ANCHO-sprite.getWidth()){
-                    VELOCIDAD_X =3;
+                    VELOCIDAD_X =4;
+                }else if (sprite.getX()+sprite.getWidth() >  NivelBusqueda.ANCHO){
+                    VELOCIDAD_X=-1;
                 }else VELOCIDAD_X=0;
                 sprite.setX(sprite.getX()+VELOCIDAD_X);
                 tiempo += Gdx.graphics.getDeltaTime();
@@ -157,6 +158,7 @@ public class Miwa {
 
     public EstadosSalto getEstadosSalto(){ return this.estadoSalto;}
 
+    public Estados getEstadoMovimiento (){ return this.estados;}
     // Modificador del estadoMovimiento
     public void setEstadoMovimiento(Estados estadoMovimiento) {
         this.estados = estadoMovimiento;
@@ -176,7 +178,4 @@ public class Miwa {
         SUBIENDO,
         BAJANDO
     }
-    public enum EstadoDisparo{
-        DISPARO,
-     }
 }

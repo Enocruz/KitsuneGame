@@ -16,18 +16,20 @@ import com.badlogic.gdx.utils.Timer;
 public class JefeN3 {
     public int vida = 100;
     private TextureRegion[] mordida;
-    private Animation animacion;
+    public Animation animacion;
     private Sprite sprite;
     private float tiempo;
     private Estado estado = Estado.VIVO;
     private Rectangle colision;
-    private Timer timer =new Timer();
+    private Timer timer = new Timer();
+    private Timer.Task tarea;
+    private boolean corriendo;
 
-    public JefeN3(Texture textura,float x){
+    public JefeN3(Texture textura, float x) {
         TextureRegion completa = new TextureRegion(textura);
-        TextureRegion[][] texturaLobo = completa.split(textura.getWidth()/3, textura.getHeight());
+        TextureRegion[][] texturaLobo = completa.split(textura.getWidth() / 3, textura.getHeight());
         mordida = new TextureRegion[3];
-        for (int i = 0; i<3;i++){
+        for (int i = 0; i < 3; i++) {
             mordida[i] = texturaLobo[0][i];
         }
         animacion = new Animation(0.25f, mordida);
@@ -35,39 +37,45 @@ public class JefeN3 {
         sprite = new Sprite(texturaLobo[0][0]);
         sprite.setX(x);
         tiempo = 0;
-        colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getX()+sprite.getWidth(),sprite.getHeight());
+        colision = new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth() - 70, sprite.getHeight());
+        tarea = new Timer.Task() {
+            @Override
+            public void run() {
+                vida += 5;
+            }
+        };
+        timer.schedule(tarea, 0, 10);
+
+
     }
+
     public void render(SpriteBatch batch){
-        //NO FUNCIONA :(
-        tiempo += Gdx.graphics.getDeltaTime();
-        sprite.setRegion(animacion.getKeyFrame(tiempo));
+        if(corriendo == true) {
+            tiempo += Gdx.graphics.getDeltaTime();
+            sprite.setRegion(animacion.getKeyFrame(tiempo));
+        }
         sprite.draw(batch);
         actualizarVida();
-        System.out.println("ENEMIGO "+colision.toString());
-
     }
 
     private void actualizarVida (){
         switch(estado) {
             case VIVO:
                 if (vida < 50) {
-                    timer.start();
-                    timer.schedule(new Timer.Task() {
-                        @Override
-                        public void run() {
-                            vida += 1;
-                        }
-                    }, 0, 50);
+                    if (tarea.isScheduled()){
+                        timer.start();
+                    }else
+                        timer.scheduleTask(tarea,0,2);
                 }
                 else if (vida>=100){
-                    timer.stop();
+                    tarea.cancel();
                 }
 
                 break;
             case MUERTO:
                 break;
             case ATACADO:
-                vida -= 5;
+                vida -= 1;
                 estado = Estado.VIVO;
                 break;
         }if (vida<=0){
@@ -91,6 +99,8 @@ public class JefeN3 {
     public Rectangle getRectangle(){
         return this.colision;
     }
+    public boolean isCorriendo(){return corriendo;}
+    public void  setCorriendo(boolean corriendo){this.corriendo=corriendo;}
     public enum Estado{
         VIVO,
         MUERTO,

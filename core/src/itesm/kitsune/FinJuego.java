@@ -41,16 +41,7 @@ public class FinJuego implements Screen, InputProcessor {
         cargarBotones();
     }
     private void cargarTexturas(){
-        if(nivel==1) {
-            assetManager.load("Pantalla_Perder.png", Texture.class);
-            assetManager.load("BtnReintentar.png", Texture.class);
-            assetManager.load("BtnFinal_Menu.png", Texture.class);
-            assetManager.finishLoading();
-            texturaFin = assetManager.get("Pantalla_Perder.png");
-            texturaMenu = assetManager.get("BtnFinal_Menu.png");
-            texturaReintentar = assetManager.get("BtnReintentar.png");
-        }
-        else{
+        if(nivel==2) {
             assetManager.load("N2Fin.png",Texture.class);
             assetManager.load("N2FinFondo.png", Texture.class);
             assetManager.load("N2Reintentar.png", Texture.class);
@@ -60,6 +51,16 @@ public class FinJuego implements Screen, InputProcessor {
             texturaMenu = assetManager.get("N2MenuInicialFin.png");
             texturaReintentar = assetManager.get("N2Reintentar.png");
             texturaFondoFin=assetManager.get("N2Fin.png");
+        }
+        else {
+
+            assetManager.load("Pantalla_Perder.png", Texture.class);
+            assetManager.load("BtnReintentar.png", Texture.class);
+            assetManager.load("BtnFinal_Menu.png", Texture.class);
+            assetManager.finishLoading();
+            texturaFin = assetManager.get("Pantalla_Perder.png");
+            texturaMenu = assetManager.get("BtnFinal_Menu.png");
+            texturaReintentar = assetManager.get("BtnReintentar.png");
         }
     }
     private void cargarCamara(){
