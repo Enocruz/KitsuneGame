@@ -350,19 +350,6 @@ misionKitsune.getMusicaFondo().stop();
                         }
                     }
                 }
-
-                if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
-                miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
-               else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
-                    miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
-                else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
-                    miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
-                else
-                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
-
-
-
-
                 break;
             case INTRO:
                 if (conPre < Predialogos.length) {
@@ -482,6 +469,14 @@ misionKitsune.getMusicaFondo().stop();
 
             misionKitsune.setScreen(new MenuMapas(misionKitsune));
         }
+        if(keycode==(Input.Keys.DPAD_LEFT))
+            miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
+        else if(keycode==(Input.Keys.DPAD_RIGHT))
+            miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+        else if(keycode==(Input.Keys.DPAD_UP))
+            miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
+        else
+            miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
         return false;
     }
 

@@ -148,6 +148,7 @@ public class Cargando implements Screen {
             super.assetManager.load("FondoPersecucion.mp3",Music.class);
             super.assetManager.load("naveSonido.wav",Music.class);
             super.assetManager.load("SonidoGemas.mp3",Music.class);
+            super.assetManager.load("blast.mp3",Music.class);
             super.assetManager.finishLoading();
             //Se bloquea hasta cargar los recursos
             Gdx.app.log("cargarRecursos", "Terminando...");

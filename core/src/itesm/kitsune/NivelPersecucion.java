@@ -23,7 +23,7 @@ import java.util.Random;
 public class NivelPersecucion implements Screen,InputProcessor {
     private MisionKitsune misionKitsune;
     private NaveMiwa naveMiwa;
-    private Music musicaIntro,musicaFondo,naveSonido,sonidoGemas;
+    private Music musicaIntro,musicaFondo,naveSonido,sonidoGemas,sonidoRoca;
     private OrthographicCamera camara, camaraHUD, camaraDialogos;
     private Viewport vista;
     public static final int ANCHO = 1280, ALTO = 800;
@@ -149,6 +149,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
         musicaFondo=assetManager.get("FondoPersecucion.mp3");
         naveSonido=assetManager.get("naveSonido.wav");
         sonidoGemas=assetManager.get("SonidoGemas.mp3");
+        sonidoRoca=assetManager.get("blast.mp3");
+        sonidoRoca.setVolume(0.6f);
     }
 
 
@@ -222,6 +224,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
         sonidoGemas.dispose();
         texturaSkip.dispose();
         naveSonido.dispose();
+        sonidoRoca.dispose();
     }
 
     private void consultarEstado() {
@@ -273,6 +276,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                             naveMiwa.setAlfa(0.7f);
                         else if (tiempoInvencible % 0.5 >= 0.25)
                             naveMiwa.setAlfa(1);
+
                         if (tiempoInvencible <= 0) {
                             tiempoInvencible = 2;
                             estadosJuego = EstadosPersecucion.JUGANDO;
@@ -287,6 +291,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         }
                     }
                     if (naveMiwa.getVidas() <= 0) {
+                        naveSonido.stop();
+                        sonidoRoca.stop();
                         musicaFondo.stop();
                         estadosJuego = EstadosPersecucion.PERDIO;
                         misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("FondoEstrellas.png"), 2));
@@ -348,6 +354,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                                 p.setEstado(Piedra.EstadosPiedra.DESAPARECER);
                                 naveMiwa.setVidas(naveMiwa.getVidas() - 1);
                                 estadosJuego = EstadosPersecucion.INVENCIBLE;
+                                sonidoRoca.play();
                             }
                         for (Piedra p : piedritas)
                             if (naveMiwa.getRectangle().overlaps(p.getRectangle())) {
@@ -355,6 +362,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                                 contadorGemas -= 1;
                                 gemaVida.setGemas(contadorGemas);
                                 estadosJuego = EstadosPersecucion.INVENCIBLE;
+                                sonidoRoca.play();
                             }
                     }
                     if (contadorGemas >= 3) {
@@ -405,8 +413,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 } else {
                     botonPausa.setDisabled(false);
                     //Modificar esta linea para
-                    estadosJuego= EstadosPersecucion.ESPERA;
-                    //estadosJuego = EstadosPersecucion.JUGANDO;
+                    //estadosJuego= EstadosPersecucion.ESPERA;
+                    estadosJuego = EstadosPersecucion.JUGANDO;
                     musicaIntro.stop();
                 }
 

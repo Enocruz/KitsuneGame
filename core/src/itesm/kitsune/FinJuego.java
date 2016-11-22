@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,6 +21,7 @@ public class FinJuego implements Screen, InputProcessor {
     private MisionKitsune misionKitsune;
     private Texture texturaFondo,texturaFin,texturaReintentar,texturaMenu,texturaFondoFin;
     private AssetManager assetManager;
+    private Music gameover;
     private Boton BtnReintentar,BtnMenu;
     private OrthographicCamera camara;
     private Viewport vista;
@@ -41,6 +43,9 @@ public class FinJuego implements Screen, InputProcessor {
         cargarBotones();
     }
     private void cargarTexturas(){
+        assetManager.load("gameover.mp3",Music.class);
+        assetManager.finishLoading();
+        gameover=assetManager.get("gameover.mp3");
         if(nivel==2) {
             assetManager.load("N2Fin.png",Texture.class);
             assetManager.load("N2FinFondo.png", Texture.class);
@@ -53,7 +58,6 @@ public class FinJuego implements Screen, InputProcessor {
             texturaFondoFin=assetManager.get("N2Fin.png");
         }
         else {
-
             assetManager.load("Pantalla_Perder.png", Texture.class);
             assetManager.load("BtnReintentar.png", Texture.class);
             assetManager.load("BtnFinal_Menu.png", Texture.class);
@@ -64,6 +68,7 @@ public class FinJuego implements Screen, InputProcessor {
         }
     }
     private void cargarCamara(){
+
         if(nivel!=2) {
             camara = new OrthographicCamera(ancho, alto);
             camara.position.set(ancho / 2, alto / 2, 0);
@@ -90,6 +95,7 @@ public class FinJuego implements Screen, InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        gameover.play();
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
         batch.draw(texturaFondo,0,0);
@@ -147,11 +153,13 @@ public class FinJuego implements Screen, InputProcessor {
         camara.unproject(v);
         float x=v.x,y=v.y;
         if(BtnMenu.contiene(x,y)){
+            gameover.stop();
             misionKitsune.getSonidoBotones().play();
             misionKitsune.getMusicaFondo().play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }
         else if(BtnReintentar.contiene(x,y)){
+            gameover.stop();
             misionKitsune.getSonidoBotones().play();
             if(nivel==1)
                 misionKitsune.setScreen(new NivelBusqueda(misionKitsune, NivelBusqueda.EstadosJuego.JUGANDO,1));
