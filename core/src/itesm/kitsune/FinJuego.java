@@ -99,7 +99,6 @@ public class FinJuego implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
-
         batch.draw(texturaFondo,0,0);
         batch.draw(texturaFin,0,0);
         if(nivel==2)
