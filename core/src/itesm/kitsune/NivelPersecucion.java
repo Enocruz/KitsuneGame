@@ -303,7 +303,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         tiempoNivel = 1;
                         tiempoFinal++;
                     }
-                    if (tiempoFinal >=90 )//Cambiar el tiempo
+                    if (tiempoFinal >=5 )//Cambiar el tiempo
                         estadosJuego = EstadosPersecucion.ESPERAFIN;
 
                     if (estadosJuego == EstadosPersecucion.INVENCIBLE) {
@@ -450,8 +450,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 } else {
                     botonPausa.setDisabled(false);
                     //Modificar esta linea para
-                    //estadosJuego= EstadosPersecucion.ESPERA;
-                    estadosJuego = EstadosPersecucion.JUGANDO;
+                    estadosJuego= EstadosPersecucion.ESPERA;
+                    //estadosJuego = EstadosPersecucion.JUGANDO;
                     musicaIntro.stop();
                 }
 
@@ -470,7 +470,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
             case ESPERAFIN:
                 batch.setProjectionMatrix(camara.combined);
                 batch.begin();
-                batch.draw(texturaFin,0,0);
+                batch.draw(texturaFin,100,100);
                 batch.end();
                 if(Gdx.input.getAccelerometerY()<=2){
                     botonPausa.setDisabled(false);

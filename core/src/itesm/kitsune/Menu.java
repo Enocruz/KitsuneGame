@@ -92,7 +92,7 @@ public class Menu implements Screen {
 			});
 		}else{
 			ImageButton btnSonido=new ImageButton(texturaBtnSonido[0],texturaBtnSonido[0],texturaBtnSonido[1]);
-			btnSonido.setPosition(0,alto-btnSonido.getHeight());
+			btnSonido.setPosition(textSonido.getWidth()/2,alto-textSonido.getHeight()*1.5f);
 			escena.addActor(btnSonido);
 			btnSonido.addListener(new ClickListener(){
 				@Override

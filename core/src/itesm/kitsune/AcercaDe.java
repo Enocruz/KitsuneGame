@@ -110,7 +110,7 @@ public class AcercaDe implements Screen {
         final Image btPopUpEli=new Image(popupEli);
         final Image Materia = new Image(texturaMateria);
 
-        Materia.setPosition(ancho/2-Materia.getWidth()/2,alto-Materia.getHeight());
+        Materia.setPosition(ancho/2-Materia.getWidth()/2,alto-Materia.getHeight()*2);
 
         //Agregando la tabla vacía a la escena
         escena.addActor(tablepopup);
