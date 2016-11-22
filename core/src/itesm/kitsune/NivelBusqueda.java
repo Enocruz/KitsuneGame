@@ -41,7 +41,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
     //Personaje principal
     private Miwa miwa;
     //Mapa del nivel
-    private Mapa.MapaBusqueda mapa;
+    private Mapa mapa;
     //Tamaño celdas TileMap
     public static final int TAM_CELDA = 32;
     //Estados Juego
@@ -72,7 +72,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         //Cargamos botones
         crearBotones();
         //Creamos mapa
-        mapa=new Mapa.MapaBusqueda("MapaN1.tmx");
+        mapa=new Mapa("MapaN1.tmx");
         //Creamos personaje principal
         miwa=new Miwa(texturaMiwa);
         miwa.getSprite().setPosition(ANCHO/5,ALTO/5.333f); //Posicion inicial de Miwa
