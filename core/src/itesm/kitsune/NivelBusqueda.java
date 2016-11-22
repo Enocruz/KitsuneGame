@@ -13,10 +13,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -72,6 +68,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
+        Gdx.input.setCatchBackKey(true);
         texturaBtnSonido = new TextureRegion[2];
         //Inicializamos camara
         inicializarCamara();
@@ -94,7 +91,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texto=new Texto("DominoFont.fnt");
         Predialogos=new Texture[]{Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8};
         Dialogos=new Texture[]{Dial1,Dial2};
-
+misionKitsune.getMusicaFondo().stop();
 
     }
     //Crear los botones del menú principal
@@ -231,6 +228,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
 
 
     private void consultarEstado() {
+
         switch (estadosJuego) {
             case JUGANDO:
             case INVENCIBLE:
@@ -362,7 +360,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                         miwa.setVidas(miwa.getVidas() - 1);
                         SonidoPicos.play();
                     }
-                    if (mapa.esMiniPico(celdaMini)) {
+                    else  if (mapa.esMiniPico(celdaMini)) {
                         estadosJuego = EstadosJuego.INVENCIBLE;
                         contadorGemas -= 1;
                         gemaVida.setGemas(contadorGemas);
@@ -389,22 +387,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
                         }
                     }
                 }
-                /*
-                if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
-                miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
-               else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
-                    miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
-                else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
-                    miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
-                else
-                    miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);*/
-
-
-
-
                 break;
             case INTRO:
-
                 if (conPre < Predialogos.length) {
                     batch.setProjectionMatrix(camara.combined);
                     batch.begin();
@@ -416,7 +400,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     SonidoPre.play();
                 }
                 else{
-                    SonidoPre.pause();
+                    SonidoPre.stop();
                     estadosJuego=EstadosJuego.JUGANDO;
                 }
                 botonIzq.setDisabled(true);
@@ -426,7 +410,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 botonSaltar2.setDisabled(true);
                 botonReanudar.setDisabled(true);
                 botonMenuInicial.setDisabled(true);
-
                 break;
             case GANO:
                 camara.setToOrtho(false,ANCHO,ALTO);
@@ -445,6 +428,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     if(misionKitsune.getNivel()==1)
                         misionKitsune.setNivel(2);
                     misionKitsune.setScreen(new MenuMapas(misionKitsune));
+                    misionKitsune.getMusicaFondo().play();
                 }
                 botonIzq.setDisabled(true);
                 botonDer.setDisabled(true);
@@ -513,9 +497,27 @@ public class NivelBusqueda implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.BACK){
+            misionKitsune.getMusicaFondo().play();
+            SonidoJuego.stop();
+            SonidoPre.stop();
+            SonidoDial.stop();
+            if(estadosJuego==EstadosJuego.GANO){
+                if(misionKitsune.getNivel()==1)
+                    misionKitsune.setNivel(2);
+            }
 
-
-            return false;
+            misionKitsune.setScreen(new MenuMapas(misionKitsune));
+        }
+        if(keycode==(Input.Keys.DPAD_LEFT))
+            miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
+        else if(keycode==(Input.Keys.DPAD_RIGHT))
+            miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+        else if(keycode==(Input.Keys.DPAD_UP))
+            miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
+        else
+            miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+        return false;
     }
 
     @Override
