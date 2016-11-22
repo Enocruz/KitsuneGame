@@ -19,7 +19,7 @@ public class Splash implements Screen{
     private MisionKitsune misionKitsune;
     private float tiempo;
     private Stage escena;
-    private Texture textura;
+    private Texture textura,materia;
     private Camera camara;
     private Viewport vista;
     private AssetManager assetManager;
@@ -30,14 +30,18 @@ public class Splash implements Screen{
     @Override
     public void show() {
         assetManager=new AssetManager();
+        cargarTexturas();
+        escena=new Stage();
+        tiempo=1;
+        inicializarCamara();
+        Gdx.input.setInputProcessor(escena);
+    }
+    private void cargarTexturas(){
+        assetManager.load("Materia.png",Texture.class);
         assetManager.load("LogoTec.png",Texture.class);
         assetManager.finishLoading();
         textura=assetManager.get("LogoTec.png");
-        escena=new Stage();
-        tiempo=1;
-        //textura=new Texture(Gdx.files.internal("LogoTec.png"));
-        inicializarCamara();
-        Gdx.input.setInputProcessor(escena);
+        materia=assetManager.get("Materia.png");
     }
     private void inicializarCamara() {
         //Creamos la camara principal del nivel
@@ -57,10 +61,13 @@ public class Splash implements Screen{
             misionKitsune.setScreen(new Menu(misionKitsune));
         else
         {
+            /*escena.getBatch().begin();
+            escena.getBatch().draw(materia,0,0);
+            escena.getBatch().end();*/
             escena.setViewport(vista);
             escena.getBatch().begin();
-            //escena.getBatch().draw(textura,0,0);
             escena.getBatch().draw(textura,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+            escena.getBatch().draw(materia,0,0,Gdx.graphics.getWidth(),30);
             escena.getBatch().end();
         }
     }

@@ -173,6 +173,81 @@ public class Cargando implements Screen {
         }
 
     }
+    static class CargandoKitsune extends Cargando{
+        CargandoKitsune(MisionKitsune misionKitsune){
+            super(misionKitsune);
+        }
+        @Override
+        public void show(){
+            super.show();
+            cargarElementos();
+        }
+        private void cargarElementos(){
+            super.assetManager.load("miwa.png",Texture.class);
+            super.assetManager.load("Disparo.png",Texture.class);
+            super.assetManager.load("SpriteDisparando.png",Texture.class);
+            //jefe final
+            super.assetManager.load("SpritesJefe.png",Texture.class);
+            super.assetManager.load("VidaEnemigoColor.png",Texture.class);
+            super.assetManager.load("VidaEnemigoMarco.png",Texture.class);
+            //plataformas
+            super.assetManager.load("PlataformaFinal.png",Texture.class);
+            //en la camara de botones...
+            super.assetManager.load("pausa.png",Texture.class);
+            super.assetManager.load("salto.png",Texture.class);
+            super.assetManager.load("BtnDisparo.png",Texture.class);
+            super.assetManager.load("GemaContador.png",Texture.class);
+            super.assetManager.load("Vida.png",Texture.class);
+            super.assetManager.load("Skip.png",Texture.class);
+            //pantalla de pausa
+            super.assetManager.load("Pantalla_Pausa.png", Texture.class);
+            super.assetManager.load("Menu_Inicial.png", Texture.class);
+            super.assetManager.load("Reanudar.png", Texture.class);
+            super.assetManager.load("Pantalla_Perder.png",Texture.class);
+            //musica
+            super.assetManager.load("SonidoGemas.mp3",Music.class);
+            super.assetManager.load("MusicaNivel3.mp3",Music.class);
+            super.assetManager.load("MusicaDialogoInicioN3.mp3",Music.class);
+            super.assetManager.load("MusicaDisparo.mp3",Music.class);
+            //fondo
+            super.assetManager.load("FondoEstrellas.png",Texture.class);
+            super.assetManager.load("FondoNebulosaAzul.png",Texture.class);
+            super.assetManager.load("FondoNebulosaRoja.png",Texture.class);
+            super.assetManager.load("FondoPlaneta.png",Texture.class);
+            //Dialogos
+            super.assetManager.load("Dialogo_PreNivel3_1.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel3_2.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel3_3.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel3_4.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel3_5.jpg",Texture.class);
+            super.assetManager.load("Dialogo_PreNivel3_6.jpg",Texture.class);
+            //gema
+            super.assetManager.load ("N3Gema.png",Texture.class);
+            //final
+            super.assetManager.load("Felicidades.png",Texture.class);
+
+            super.assetManager.finishLoading();
+        }
+        @Override
+        public void render(float delta) {
+            // Actualizar carga
+            actualizar();
+            // Dibujar
+            super.render(delta);
+        }
+        private void actualizar() {
+
+            if (super.assetManager.update()) {
+                // Terminó la carga, cambiar de pantalla
+                super.misionKitsune.setScreen(new Nivel3MisionKitsune(super.misionKitsune));
+            } else {
+                // Aún no termina la carga de assets, leer el avance
+                float avance = super.assetManager.getProgress()*100;
+                Gdx.app.log("Cargando",avance+"%");
+            }
+        }
+
+    }
 
     @Override
     public void show() {
