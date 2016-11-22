@@ -36,9 +36,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
             texturaPlataforma, texturaJefe,texturaEstrellas, texturaFondoNA, texturaFondoNR, texturaFondoP,texturaMarcoVida,texturaVidaJefe,texturagemita,texturaD1,texturaD2,texturaD3,
             texturaD4,texturaD5,texturaD6,texturaSkip,texturaFelicidades,textSonido;
     private Texture[] Dialogos;
-    private TextureRegion texturaSonido;
     private TextureRegion[] texturaBtnSonido;
-    private TextureRegion[][] texbtnson;
 
     // para cargar texturas
     private AssetManager assetManager = new AssetManager();
@@ -130,11 +128,12 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         texturaMenuPausa = assetManager.get ("Pantalla_Pausa.png");
         texturaBotonMenuInicial = assetManager.get ("Menu_Inicial.png");
         texturaBotonReanudar = assetManager.get("Reanudar.png");
+        assetManager.load("sonido.png",Texture.class);
+        assetManager.finishLoading();
         textSonido=assetManager.get("sonido.png");
-        texturaSonido = new TextureRegion(textSonido);
-        texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
+        TextureRegion texturaSonido = new TextureRegion(textSonido);
+        TextureRegion[][] texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
         for (int i = 0; i<2;i++){
-            System.out.println("wytfrgvh");
             texturaBtnSonido [i] = texbtnson[0][i];
         }
         //musica
@@ -370,6 +369,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     batch.draw(texturaMenuPausa, ANCHO / 2 - texturaMenuPausa.getWidth() / 2, ALTO / 2 - texturaMenuPausa.getHeight() / 2);
                     botonReanudar.render(batch);
                     botonMenuInicial.render(batch);
+                    botonSonido.render(batch);
                     batch.end();
                     botonDisparar.setDisabled(true);
                     botonPausa.setDisabled(true);
@@ -672,6 +672,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
             }
         }else if(botonSkip.contiene(x, y)) {
             if (estadosJuego == EstadosJuego.INTRO)
+                sonidoDialogos.stop();
                 estadosJuego = EstadosJuego.JUGANDO;
         }
         return true;

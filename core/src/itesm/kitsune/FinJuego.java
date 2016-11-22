@@ -95,6 +95,11 @@ public class FinJuego implements Screen, InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if (misionKitsune.isMudo()){
+            mute();
+        }else{
+            unmute();
+        }
         gameover.play();
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
@@ -191,5 +196,11 @@ public class FinJuego implements Screen, InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+    private void mute(){
+        gameover.setVolume(0);
+    }
+    private void unmute(){
+        gameover.setVolume(1);
     }
 }

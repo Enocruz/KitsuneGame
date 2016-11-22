@@ -180,10 +180,11 @@ public class Menu implements Screen {
 
 		if (misionKitsune.isMudo()){
 			misionKitsune.getMusicaFondo().setVolume(0);
-			misionKitsune.getSonidoBotones().setVolume(0);
+			misionKitsune.getSonidoBotones().setVolume(0,0);
 		}else {
 			misionKitsune.getMusicaFondo().setVolume(1);
-			misionKitsune.getSonidoBotones().setVolume(1);
+			misionKitsune.getSonidoBotones().setVolume(0,1);
+
 		}
 	}
 

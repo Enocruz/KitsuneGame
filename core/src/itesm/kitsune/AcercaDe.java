@@ -25,7 +25,7 @@ public class AcercaDe implements Screen {
     private final MisionKitsune misionKitsune;
     private Stage escena;
     private Texture texturaFondo,textureEnock,textureEli,textureLes,textureSnell,textureDaph,popupEnock,
-            popupEli,popupSnell,popupDaph,popupLes,textureCerrar;
+            popupEli,popupSnell,popupDaph,popupLes,textureCerrar,texturaMateria;
     private AssetManager assetManager;
     private Table tablepopup,tabla;
     private final int ancho=1280,alto=800;
@@ -108,10 +108,13 @@ public class AcercaDe implements Screen {
         final Image btPopUpLeslie=new Image(popupLes);
         final Image btPopUpSnell=new Image(popupSnell);
         final Image btPopUpEli=new Image(popupEli);
+        final Image Materia = new Image(texturaMateria);
 
+        Materia.setPosition(ancho/2-Materia.getWidth()/2,alto-Materia.getHeight());
 
         //Agregando la tabla vacía a la escena
         escena.addActor(tablepopup);
+        escena.addActor(Materia);
 
         //Boton cerrar
         btCerrar.addListener(new ClickListener(){
@@ -184,13 +187,13 @@ public class AcercaDe implements Screen {
 
         //Boton Regresar
         btnRegresar.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                misionKitsune.getSonidoBotones().play();
-                //Regresar a la pantalla del Menu
-                misionKitsune.setScreen(new Menu(misionKitsune));
-                }
-            }
+                                    @Override
+                                    public void clicked(InputEvent event, float x, float y) {
+                                        misionKitsune.getSonidoBotones().play();
+                                        //Regresar a la pantalla del Menu
+                                        misionKitsune.setScreen(new Menu(misionKitsune));
+                                    }
+                                }
         );
 
     }
@@ -213,6 +216,8 @@ public class AcercaDe implements Screen {
         assetManager.load("leslieCard.png",Texture.class);
         //Boton cerrar pop up
         assetManager.load("cerrar.png",Texture.class);
+
+        assetManager.load("Materia.png",Texture.class);
         //Se bloquea hasta cargar los recursos
         assetManager.finishLoading();
         //Cuando termina, leemos las texturas
@@ -232,6 +237,7 @@ public class AcercaDe implements Screen {
         textureLes=assetManager.get("leslie.png");
         texturaFondo=assetManager.get("AcercaDe.png");
         textureCerrar=assetManager.get("cerrar.png");
+        texturaMateria = assetManager.get("Materia.png");
 
     }
 
