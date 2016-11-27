@@ -33,6 +33,7 @@ public class Disparo {
             estado = estadoD.AFUERA;
         }else estado = estadoD.ADENTRO;
     }
+    public Sprite getSprite(){return sprite;}
 
     public enum estadoD {
         ADENTRO,

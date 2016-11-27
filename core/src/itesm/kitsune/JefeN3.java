@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Timer;
  */
 
 public class JefeN3 {
-    public int vida = 100;
+    public int vida = 95;
     private TextureRegion[] mordida;
     public Animation animacion;
     private Sprite sprite;

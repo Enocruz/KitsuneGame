@@ -106,6 +106,11 @@ public class FinJuego implements Screen, InputProcessor {
         BtnMenu.render(batch);
         BtnReintentar.render(batch);
         batch.end();
+        if (misionKitsune.isMudo()){
+            mute();
+        }else{
+            unmute();
+        }
     }
 
     @Override

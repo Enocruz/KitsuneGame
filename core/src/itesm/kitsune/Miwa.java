@@ -96,14 +96,25 @@ public class Miwa {
                 sprite.setX(x);
                 break;
             case N3:
-                if (sprite.getX() <  NivelBusqueda.ANCHO-sprite.getWidth()){
-                    VELOCIDAD_X =4;
-                }else if (sprite.getX()+sprite.getWidth() >  NivelBusqueda.ANCHO){
-                    VELOCIDAD_X=-1;
-                }else VELOCIDAD_X=0;
-                sprite.setX(sprite.getX()+VELOCIDAD_X);
-                tiempo += Gdx.graphics.getDeltaTime();
-                sprite.setRegion(animacion.getKeyFrame(tiempo));
+                if (estadosSalto==EstadosSalto.EN_PISO) {
+                    if (sprite.getX() < NivelBusqueda.ANCHO - sprite.getWidth() * 3) {
+                        VELOCIDAD_X = 4;
+                    } else if (sprite.getX() + sprite.getWidth() > NivelBusqueda.ANCHO) {
+                        VELOCIDAD_X = -1;
+                    } else VELOCIDAD_X = 0;
+                    sprite.setX(sprite.getX() + VELOCIDAD_X);
+                    tiempo += Gdx.graphics.getDeltaTime();
+                    sprite.setRegion(animacion.getKeyFrame(tiempo));
+                }else{
+                    if (sprite.getX() < NivelBusqueda.ANCHO - sprite.getWidth()) {
+                        VELOCIDAD_X = 4;
+                    } else if (sprite.getX() + sprite.getWidth() > NivelBusqueda.ANCHO) {
+                        VELOCIDAD_X = -1;
+                    } else VELOCIDAD_X = 0;
+                    sprite.setX(sprite.getX() + VELOCIDAD_X);
+                    tiempo += Gdx.graphics.getDeltaTime();
+                    sprite.setRegion(animacion.getKeyFrame(tiempo));
+                }
                 break;
         }
     }

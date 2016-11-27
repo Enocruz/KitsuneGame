@@ -119,7 +119,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
         botonReanudar.setDisabled(true);
         botonSkip = new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO - texturaSkip.getWidth() * 1.5f, ALTO - texturaSkip.getHeight() * 1.5f);
-        botonSonido=new Boton(texturaBtnSonido[0].getTexture());
+        botonSonido=new Boton(texturaBtnSonido[0]);
         botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
         if (misionKitsune.isMudo()){
             botonSonido.setTexture(texturaBtnSonido[1]);

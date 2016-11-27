@@ -21,7 +21,7 @@ public class Boton implements Disableable{
                 sprite.getWidth(), sprite.getHeight());
     }
     public Boton(TextureRegion tr) {
-        sprite = new Sprite(tr.getTexture());
+        sprite = new Sprite(tr);
         rectColision = new Rectangle(sprite.getX(), sprite.getY(),
                 sprite.getWidth(), sprite.getHeight());
     }
@@ -74,5 +74,5 @@ public class Boton implements Disableable{
     }
     public float getHeight(){return sprite.getHeight();}
     public float getWidth(){return sprite.getWidth();}
-    public void setTexture (TextureRegion tr){sprite.setTexture(tr.getTexture());}
+    public void setTexture (TextureRegion tr){sprite.setRegion(tr);}
 }

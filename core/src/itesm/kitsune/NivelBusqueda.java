@@ -31,7 +31,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
     private TextureRegion[][] texbtnson;
 
     //Botones pantalla
-    private Boton botonIzq,botonDer,botonSaltar1,botonSaltar2,botonPausa,botonReanudar,botonMenuInicial,botonSkip,botonSonido;
+    private Boton botonIzq,botonDer,botonSaltar2,botonPausa,botonReanudar,botonMenuInicial,botonSkip,botonSonido;
     //AssetManager (Cargar texturas)
     private  AssetManager assetManager;
     // La cámara principal, la vista y la camara de botones
@@ -74,12 +74,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
         inicializarCamara();
         //Cargamos texturas
         cargarTexturas();
-        texturaSonido = new TextureRegion(textSonido);
-        texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
-        for (int i = 0; i<2;i++){
-            System.out.println("wytfrgvh");
-            texturaBtnSonido [i] = texbtnson[0][i];
-        }
         //Cargamos botones
         crearBotones();
         //Creamos mapa
@@ -103,27 +97,21 @@ public class NivelBusqueda implements Screen, InputProcessor {
     //Crear los botones del menú principal
     private void crearBotones(){
         botonIzq=new Boton(texturaIzq);
-        botonIzq.setPosicion(botonIzq.getX(),texturaIzq.getHeight()/2);
-        botonIzq.setAlfa(0.6f);
+        botonIzq.setPosicion(20,texturaIzq.getHeight()/2);
         botonDer=new Boton(texturaDer);
-        botonDer.setPosicion(ANCHO/1.1f,texturaDer.getHeight()/2);
-        botonDer.setAlfa(0.6f);
+        botonDer.setPosicion(40+texturaDer.getWidth(),texturaDer.getHeight()/2);
         botonPausa=new Boton(texturaPausa);
         botonPausa.setPosicion(ANCHO-texturaPausa.getWidth()-ANCHO/64,ALTO-texturaPausa.getHeight()-ANCHO/64);
         botonPausa.setAlfa(0.8f);
-        botonSaltar1=new Boton(texturaSaltar);
-        botonSaltar1.setPosicion(botonSaltar1.getX(),texturaSaltar.getHeight()*1.5f);
-        botonSaltar1.setAlfa(0.6f);
         botonSaltar2=new Boton(texturaSaltar);
-        botonSaltar2.setPosicion(ANCHO/1.1f,texturaSaltar.getHeight()*1.5f);
-        botonSaltar2.setAlfa(0.6f);
+        botonSaltar2.setPosicion(ANCHO-texturaSaltar.getWidth()*1.5f,texturaSaltar.getHeight()/2);
         botonReanudar=new Boton(texturaBotonReanudar);
         botonReanudar.setPosicion(ANCHO/2-texturaBotonReanudar.getWidth()/2,ALTO/2+texturaBotonReanudar.getHeight()/2);
         botonMenuInicial=new Boton(texturaBotonMenuInicial);
         botonMenuInicial.setPosicion(ANCHO/2-texturaBotonMenuInicial.getWidth()/2,ALTO/4+texturaBotonMenuInicial.getHeight()/2);
         botonSkip=new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO-texturaSkip.getWidth()*1.5f,ALTO-texturaSkip.getHeight()*1.5f);
-        botonSonido=new Boton(texturaBtnSonido[0].getTexture());
+        botonSonido=new Boton(texturaBtnSonido[0]);
         botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
         if (misionKitsune.isMudo()){
             botonSonido.setTexture(texturaBtnSonido[1]);
@@ -168,7 +156,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texturaSonido = new TextureRegion(textSonido);
         texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
         for (int i = 0; i<2;i++){
-            System.out.println("wytfrgvh");
             texturaBtnSonido [i] = texbtnson[0][i];
         }
         //Texturas Dialogos
@@ -278,11 +265,10 @@ public class NivelBusqueda implements Screen, InputProcessor {
                         botonSonido.setTexture(texturaBtnSonido[0]);
                     }
                     botonSonido.render(batch);
-                        //Desactiva los botones para que no puedan ser usados mientras está en pausa
+                    //Desactiva los botones para que no puedan ser usados mientras está en pausa
                     botonIzq.setDisabled(true);
                     botonDer.setDisabled(true);
                     botonPausa.setDisabled(true);
-                    botonSaltar1.setDisabled(true);
                     botonSaltar2.setDisabled(true);
                     botonReanudar.setDisabled(false);
                     botonMenuInicial.setDisabled(false);
@@ -292,7 +278,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     botonIzq.setDisabled(false);
                     botonDer.setDisabled(false);
                     botonPausa.setDisabled(false);
-                    botonSaltar1.setDisabled(false);
                     botonSaltar2.setDisabled(false);
                     botonReanudar.setDisabled(true);
                     botonMenuInicial.setDisabled(true);
@@ -309,7 +294,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 botonDer.render(batch);
                 botonIzq.render(batch);
                 batch.draw(texturaVida, texturaVida.getWidth() / 8, ALTO - texturaVida.getHeight() - 16);
-                botonSaltar1.render(batch);
                 botonSaltar2.render(batch);
                 botonPausa.render(batch);
                 texto.mostrarMensaje(batch, "" + miwa.getVidas(), 126, 722);
@@ -334,7 +318,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     miwa.setVelocidadX(13);
                 } else if (mapa.esPegajoso(celda)) {
                     if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
-                    miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
+                        miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                     miwa.setVelocidadX(3);
                 } else {
                     if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
@@ -412,7 +396,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 botonIzq.setDisabled(true);
                 botonDer.setDisabled(true);
                 botonPausa.setDisabled(true);
-                botonSaltar1.setDisabled(true);
                 botonSaltar2.setDisabled(true);
                 botonReanudar.setDisabled(true);
                 botonMenuInicial.setDisabled(true);
@@ -439,7 +422,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 botonIzq.setDisabled(true);
                 botonDer.setDisabled(true);
                 botonPausa.setDisabled(true);
-                botonSaltar1.setDisabled(true);
                 botonSaltar2.setDisabled(true);
                 botonReanudar.setDisabled(true);
                 botonMenuInicial.setDisabled(true);
@@ -557,24 +539,12 @@ public class NivelBusqueda implements Screen, InputProcessor {
         if(botonIzq.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
         }
-        else if(botonIzq.contiene(x,y)&&pointer==0&&botonSaltar2.contiene(x,y)&&pointer==1){
-            if (miwa.getEstadosSalto() != Miwa.EstadosSalto.BAJANDO) {
-                miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO) ;
-                miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
-            }
-        }
-        else if(botonDer.contiene(x,y)&&pointer==1&&botonSaltar2.contiene(x,y)&&pointer==0){
-            if (miwa.getEstadosSalto() != Miwa.EstadosSalto.BAJANDO) {
-                miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO) ;
-                miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
-            }
-        }
         else if(botonDer.contiene(x,y)){
             miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
         }
-        else if(botonSaltar1.contiene(x,y)||botonSaltar2.contiene(x,y)) {
+        else if(botonSaltar2.contiene(x,y)) {
             if (miwa.getEstadosSalto() != Miwa.EstadosSalto.BAJANDO)
-            miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO) ;
+                miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO) ;
         }
         return true;
     }
@@ -593,12 +563,12 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO )
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
         }
-         if(botonPausa.contiene(x,y)){
-             misionKitsune.getSonidoBotones().play();
+        if(botonPausa.contiene(x,y)){
+            misionKitsune.getSonidoBotones().play();
             this.estadosJuego = EstadosJuego.PAUSADO;
         }
         else if (botonReanudar.contiene(x,y)){
-             misionKitsune.getSonidoBotones().play();
+            misionKitsune.getSonidoBotones().play();
             estadosJuego= EstadosJuego.JUGANDO;
         }
         else if (botonMenuInicial.contiene(x,y)){
@@ -618,12 +588,12 @@ public class NivelBusqueda implements Screen, InputProcessor {
             SonidoPre.stop();
             estadosJuego=EstadosJuego.JUGANDO;
         }else if(botonSonido.contiene(x,y)){
-             if (misionKitsune.isMudo()){
-                 misionKitsune.setMudo(false);
-             }else{
-                 misionKitsune.setMudo(true);
-             }
-         }
+            if (misionKitsune.isMudo()){
+                misionKitsune.setMudo(false);
+            }else{
+                misionKitsune.setMudo(true);
+            }
+        }
         return true;
     }
 
@@ -641,6 +611,12 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO)
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
         }
+        else if(botonSaltar2.contiene(x,y)&&pointer==1){
+            if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO ||
+                    miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO)
+                miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+        }
+
         return false;
     }
 
