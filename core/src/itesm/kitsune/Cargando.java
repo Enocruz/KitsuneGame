@@ -76,6 +76,7 @@ public class Cargando implements Screen {
             super.assetManager.load("Menu_Inicial.png", Texture.class);
             super.assetManager.load("Reanudar.png", Texture.class);
             super.assetManager.load("Pantalla_Perder.png",Texture.class);
+            super.assetManager.load("sonido.png",Texture.class);
             //Se bloquea hasta cargar los recursos
             Gdx.app.log("cargarRecursos", "Terminando...");
         }
@@ -150,6 +151,7 @@ public class Cargando implements Screen {
             super.assetManager.load("SonidoGemas.mp3",Music.class);
             super.assetManager.load("blast.mp3",Music.class);
             super.assetManager.load("Alerta.png",Texture.class);
+            super.assetManager.load("sonido.png",Texture.class);
             super.assetManager.finishLoading();
             //Se bloquea hasta cargar los recursos
             Gdx.app.log("cargarRecursos", "Terminando...");
@@ -226,6 +228,7 @@ public class Cargando implements Screen {
             super.assetManager.load ("N3Gema.png",Texture.class);
             //final
             super.assetManager.load("Felicidades.png",Texture.class);
+            super.assetManager.load("sonido.png",Texture.class);
 
             super.assetManager.finishLoading();
         }

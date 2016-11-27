@@ -118,6 +118,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
         }else{
             botonSonido.setTexture(texturaBtnSonido[0]);
         }
+        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight()*1.3f);
+
     }
     private void inicializarCamara() {
         //Creamos la camara principal del nivel
@@ -154,7 +156,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         assetManager.finishLoading();
         textSonido=assetManager.get("sonido.png");
         texturaSonido = new TextureRegion(textSonido);
-        texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
+        texbtnson = texturaSonido.split(textSonido.getWidth()/2,textSonido.getHeight());
         for (int i = 0; i<2;i++){
             texturaBtnSonido [i] = texbtnson[0][i];
         }
@@ -319,7 +321,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 } else if (mapa.esPegajoso(celda)) {
                     if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
                         miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
-                    miwa.setVelocidadX(3);
+                        miwa.setVelocidadX(3);
                 } else {
                     if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
                         miwa.setEstadoSalto(Miwa.EstadosSalto.BAJANDO);

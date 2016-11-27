@@ -211,8 +211,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         crearBotones();
 
         texturaEstrellas.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        texturaFondoNA.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        texturaFondoNR.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         texturaFondoP.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         batch=new SpriteBatch();
@@ -242,6 +240,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
         //listener
         Gdx.input.setInputProcessor(this);
+        Gdx.input.setCatchBackKey(true);
 
         //vidas extra
         texto=new Texto("DominoFont.fnt");
@@ -311,9 +310,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
                 batch.setProjectionMatrix(camara.combined);
                 batch.begin();
-
-
-
                 batch.draw(texturaEstrellas, 0, 0,x, 0, ANCHO, ALTO);
                 batch.draw(texturaFondoP, 0,0,xp,0,ANCHO,ALTO,2,2,0,(int)xp,0,ANCHO,ALTO/2,false,false);
 
@@ -326,7 +322,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
                 if (p_apoyoa.size != 0) {
                     for (PlataformaN3 p : p_apoyoa) {
-                        p.render(batch, velNivel);
+                        p.render(batch,velNivel);
                         if (p.getRectangle().getX()<300){
                             p_apoyoa.removeIndex(p_apoyoa.indexOf(p,true));
                         }
@@ -460,7 +456,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     if (p_apoyoa.size != 0) {
                         for (PlataformaN3 p : p_apoyoa) {
                             if (miwa.getEstadosSalto() != Miwa.EstadosSalto.SUBIENDO) {
-                                if (p.getRectangle().contains(miwa.getX() + miwa.getSprite().getWidth() / 2 - miwa.getSprite().getWidth() / 4, miwa.getY())) {
+                                if (p.getRectangle().contains(miwa.getX() + miwa.getSprite().getWidth()/4, miwa.getY())) {
                                     miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                                     break;
                                 } else if (miwa.getEstadosSalto() != Miwa.EstadosSalto.BAJANDO) {
@@ -526,7 +522,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 if (gema.getRectangle().overlaps(jefe.getRectangle())){
                     gema.setEstadoGema(Gemas.EstadoGema.DESAPARECER);
                 }
-                if (miwa.getY()< -miwa.getSprite().getHeight()){
+                if (miwa.getY()<=-miwa.getSprite().getHeight()){
                     estadosJuego=EstadosJuego.MENOSVIDA;
                 }
                 if (jefe.getEstado() == JefeN3.Estado.MUERTO){
@@ -561,6 +557,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
                 break;
             case GANO:
+                misionKitsune.setNivel(4);
                 botonDisparar.setDisabled(true);
                 botonPausa.setDisabled(true);
                 botonSaltar.setDisabled(true);
@@ -578,9 +575,8 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 if (conDial < Dialogos.length) {
                     batch.setProjectionMatrix(camaraDialogos.combined);
                     batch.begin();
-
                     batch.draw(Dialogos[conDial], 0, 0);
-                    if(misionKitsune.getNivel()==3){
+                    if(misionKitsune.getNivel()>3){
                         botonSkip.render(batch);
                     }
                     batch.end();
@@ -656,18 +652,51 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.BACK){
-            misionKitsune.getMusicaFondo().play();
-            sonidoJuego.stop();
-            sonidoDialogos.stop();
-            sonidoDisparo.stop();
+        if(keycode==Input.Keys.BACK)
+            misionKitsune.setScreen(new Menu(misionKitsune));
+        if(keycode== Input.Keys.SPACE){
+            if (miwa.getEstadosSalto()== Miwa.EstadosSalto.EN_PISO) {
+                Timer.instance().start();
 
-            misionKitsune.setScreen(new MenuMapas(misionKitsune));
-        }return true;
+                miwa.setVelocidadX(velNivel);
+                miwa.setEstadoMovimiento(Miwa.Estados.DISPARANDO);
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        sonidoDisparo.play();
+                        disparo = new Disparo(texturaDisparo, (int) miwa.getSprite().getX(), (int) miwa.getY() + 63);
+                        disparos.add(disparo);
+                    }
+                }, 0, 1);
+            }
+        }
+        if(keycode==Input.Keys.DPAD_RIGHT){
+            miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+        }
+        if(keycode==Input.Keys.DPAD_LEFT){
+            miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
+        }
+        if(keycode==Input.Keys.DPAD_UP){
+            if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO && miwa.getEstadoMovimiento() != Miwa.Estados.DISPARANDO) {
+                miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
+            }
+        }
+
+            return false;
+
+
     }
 
     @Override
     public boolean keyUp(int keycode) {
+        if(keycode==Input.Keys.SPACE){
+                //miwa.getSprite().setRegion(texturaMiwa);
+                //miwa.setEstadoMovimiento(Miwa.Estados.N3);
+                sonidoDisparo.pause();
+                miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+                //miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+                Timer.instance().stop();
+        }
         return false;
     }
 
@@ -708,7 +737,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 }, 0, 1);
             }
         }
-
         else if (botonSaltar.contiene(x,y)) {
             if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO && miwa.getEstadoMovimiento() != Miwa.Estados.DISPARANDO) {
                 miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
@@ -761,8 +789,8 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
     }
 
     @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {return false;
-    }
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false; }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {

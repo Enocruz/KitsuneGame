@@ -303,7 +303,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         tiempoNivel = 1;
                         tiempoFinal++;
                     }
-                    if (tiempoFinal >=5 )//Cambiar el tiempo
+                    if (tiempoFinal >=90 )//Cambiar el tiempo
                         estadosJuego = EstadosPersecucion.ESPERAFIN;
 
                     if (estadosJuego == EstadosPersecucion.INVENCIBLE) {
@@ -450,8 +450,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 } else {
                     botonPausa.setDisabled(false);
                     //Modificar esta linea para
-                    estadosJuego= EstadosPersecucion.ESPERA;
-                    //estadosJuego = EstadosPersecucion.JUGANDO;
+                   // estadosJuego= EstadosPersecucion.ESPERA;
+                    estadosJuego = EstadosPersecucion.JUGANDO;
                     musicaIntro.stop();
                 }
 
