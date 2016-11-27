@@ -30,7 +30,7 @@ public class PlataformaN3 {
         colision.setPosition(x,y);
         switch (estado){
             case NUEVA:
-                tiempo = (float)(Math.random()*5);
+                tiempo = (float)(Math.random()*2);
                 estado = estadosP.DENTRO;
                 break;
             case DENTRO:

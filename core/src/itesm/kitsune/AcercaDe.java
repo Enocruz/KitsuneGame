@@ -25,7 +25,7 @@ public class AcercaDe implements Screen {
     private final MisionKitsune misionKitsune;
     private Stage escena;
     private Texture texturaFondo,textureEnock,textureEli,textureLes,textureSnell,textureDaph,popupEnock,
-            popupEli,popupSnell,popupDaph,popupLes,textureCerrar,texturaMateria;
+            popupEli,popupSnell,popupDaph,popupLes,textureCerrar,texturaMateria,texturaCampus;
     private AssetManager assetManager;
     private Table tablepopup,tabla;
     private final int ancho=1280,alto=800;
@@ -109,12 +109,15 @@ public class AcercaDe implements Screen {
         final Image btPopUpSnell=new Image(popupSnell);
         final Image btPopUpEli=new Image(popupEli);
         final Image Materia = new Image(texturaMateria);
+        final Image Campus=new Image(texturaCampus);
 
         Materia.setPosition(ancho/2-Materia.getWidth()/2,alto-Materia.getHeight()*2);
+        Campus.setPosition(ancho/2-Campus.getWidth()/2,+Campus.getHeight()/2);
 
         //Agregando la tabla vacía a la escena
         escena.addActor(tablepopup);
         escena.addActor(Materia);
+        escena.addActor(Campus);
 
         //Boton cerrar
         btCerrar.addListener(new ClickListener(){
@@ -200,6 +203,7 @@ public class AcercaDe implements Screen {
 
     private void cargarTexturas() {
         //Textura fondo
+        assetManager.load("Campus.png",Texture.class);
         assetManager.load("AcercaDe.png", Texture.class);
         //Texturas de Boton
         assetManager.load("enock.png",Texture.class);
@@ -238,6 +242,7 @@ public class AcercaDe implements Screen {
         texturaFondo=assetManager.get("AcercaDe.png");
         textureCerrar=assetManager.get("cerrar.png");
         texturaMateria = assetManager.get("Materia.png");
+        texturaCampus=assetManager.get("Campus.png");
 
     }
 

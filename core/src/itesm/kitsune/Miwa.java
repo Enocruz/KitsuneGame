@@ -45,6 +45,10 @@ public class Miwa {
         colision = new Rectangle(sprite.getX(),sprite.getY(),sprite.getX()+sprite.getWidth(),sprite.getY()+sprite.getHeight());
         enpiso=false;
     }
+    Miwa(Texture texture,Texture texturaDisparo){
+        this(texture);
+        this.texturaDisparo=texturaDisparo;
+    }
 
     public void render(SpriteBatch batch) {
         float x = sprite.getX();
@@ -92,12 +96,13 @@ public class Miwa {
                         sprite.flip(true, false);
                 break;
             case DISPARANDO:
+                sprite.setRegion(texturaDisparo);
                 x += VELOCIDAD_X;
                 sprite.setX(x);
                 break;
             case N3:
                 if (sprite.getX() <  NivelBusqueda.ANCHO-sprite.getWidth()){
-                    VELOCIDAD_X =4;
+                    VELOCIDAD_X =0f;
                 }else if (sprite.getX()+sprite.getWidth() >  NivelBusqueda.ANCHO){
                     VELOCIDAD_X=-1;
                 }else VELOCIDAD_X=0;

@@ -111,13 +111,13 @@ public class NivelBusqueda implements Screen, InputProcessor {
         botonMenuInicial.setPosicion(ANCHO/2-texturaBotonMenuInicial.getWidth()/2,ALTO/4+texturaBotonMenuInicial.getHeight()/2);
         botonSkip=new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO-texturaSkip.getWidth()*1.5f,ALTO-texturaSkip.getHeight()*1.5f);
-        botonSonido=new Boton(texturaBtnSonido[0].getTexture());
-        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
         if (misionKitsune.isMudo()){
-            botonSonido.setTexture(texturaBtnSonido[1]);
+            botonSonido=new Boton(texturaBtnSonido[1]);
         }else{
-            botonSonido.setTexture(texturaBtnSonido[0]);
+            botonSonido=new Boton(texturaBtnSonido[0]);
         }
+        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight()*1.3f);
+
     }
     private void inicializarCamara() {
         //Creamos la camara principal del nivel
@@ -150,11 +150,9 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texturaBotonMenuInicial = assetManager.get("Menu_Inicial.png");
         texturaSkip=assetManager.get("Skip.png");
         //Sonido
-        assetManager.load("sonido.png",Texture.class);
-        assetManager.finishLoading();
         textSonido=assetManager.get("sonido.png");
         texturaSonido = new TextureRegion(textSonido);
-        texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
+        texbtnson = texturaSonido.split(textSonido.getWidth()/2,textSonido.getHeight());
         for (int i = 0; i<2;i++){
             texturaBtnSonido [i] = texbtnson[0][i];
         }
@@ -259,6 +257,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     batch.draw(texturaMenuPausa, ANCHO / 2 - texturaMenuPausa.getWidth() / 2, ALTO / 2 - texturaMenuPausa.getHeight() / 2);
                     botonReanudar.render(batch);
                     botonMenuInicial.render(batch);
+                    System.out.println(misionKitsune.isMudo());
                     if (misionKitsune.isMudo()){
                         botonSonido.setTexture(texturaBtnSonido[1]);
                     }else{

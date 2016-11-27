@@ -1,6 +1,7 @@
 package itesm.kitsune;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -32,7 +33,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
     public static final int ANCHO = 1280, ALTO = 800;
 
     //Todas las texturas del nivel
-    private Texture texturaVida, texturaSaltar, texturaDisparar,texturaDisparo,texturaMiwaDisparando, texturaMiwa,texturaGema, texturaPausa,texturaBotonReanudar, texturaBotonMenuInicial, texturaMenuPausa,
+    private Texture texturaVida, texturaSaltar, texturaDisparar,texturaMiwaDisparando,texturaDisparo, texturaMiwa,texturaGema, texturaPausa,texturaBotonReanudar, texturaBotonMenuInicial, texturaMenuPausa,
             texturaPlataforma, texturaJefe,texturaEstrellas, texturaFondoNA, texturaFondoNR, texturaFondoP,texturaMarcoVida,texturaVidaJefe,texturagemita,texturaD1,texturaD2,texturaD3,
             texturaD4,texturaD5,texturaD6,texturaSkip,texturaFelicidades,textSonido;
     private Texture[] Dialogos;
@@ -75,7 +76,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
     private int  x=0,velXGema, xGema;
     private float xp=0,posx,posy;
     //Velocidad con la que avanza el nivel
-    private float velNivel = -2,tiempovida,tiempoGemas,tiempomasgemas;
+    private float velNivel = -4,tiempovida=2,tiempoGemas,tiempomasgemas;
 
     //plataformas
     float r;
@@ -93,6 +94,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
     //bara vida jefe
     private NinePatch barra;
+    private PlataformaN3 p_apoyo3;
 
 
     public Nivel3MisionKitsune(MisionKitsune misionKitsune) {
@@ -128,8 +130,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         texturaMenuPausa = assetManager.get ("Pantalla_Pausa.png");
         texturaBotonMenuInicial = assetManager.get ("Menu_Inicial.png");
         texturaBotonReanudar = assetManager.get("Reanudar.png");
-        assetManager.load("sonido.png",Texture.class);
-        assetManager.finishLoading();
+
         textSonido=assetManager.get("sonido.png");
         TextureRegion texturaSonido = new TextureRegion(textSonido);
         TextureRegion[][] texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
@@ -193,8 +194,12 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         botonMenuInicial.setPosicion(ANCHO/2-texturaBotonMenuInicial.getWidth()/2,ALTO/4+texturaBotonMenuInicial.getHeight()/2);
         botonSkip=new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO-texturaSkip.getWidth()*1.5f,ALTO-texturaSkip.getHeight()*1.5f);
-        botonSonido = new Boton(texturaBtnSonido[0].getTexture());
-        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
+        if (misionKitsune.isMudo()){
+            botonSonido=new Boton(texturaBtnSonido[1]);
+        }else{
+            botonSonido=new Boton(texturaBtnSonido[0]);
+        }
+        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight()*1.3f);
     }
 
     @Override
@@ -207,18 +212,19 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         texturaEstrellas.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         texturaFondoNA.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         texturaFondoNR.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        texturaFondoP.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
 
         batch=new SpriteBatch();
         //musica
         sonidoJuego.setLooping(true);
         sonidoJuego.setVolume(.5f);
         //miwa
-        miwa = new Miwa(texturaMiwa);
-        miwa.getSprite().setPosition(ANCHO/2,ALTO/2);
-        miwa.setEstadoMovimiento(Miwa.Estados.N3);
+        miwa = new Miwa(texturaMiwa,texturaMiwaDisparando);
+        miwa.getSprite().setPosition(ANCHO/2+100,ALTO/2);
+        //miwa.setEstadoMovimiento(Miwa.Estados.N3);
+        miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
         miwa.setEstadoSalto(Miwa.EstadosSalto.BAJANDO);
-        tiempovida=2;
+        miwa.setVelocidadX(-velNivel);
 
         //jefe
         jefe = new JefeN3(texturaJefe,-190);
@@ -235,6 +241,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
         //listener
         Gdx.input.setInputProcessor(this);
+        Gdx.input.setCatchBackKey(true);
 
         //vidas extra
         texto=new Texto("DominoFont.fnt");
@@ -247,22 +254,26 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         // Plataformas que aparecen inicialmente
         p_apoyo = new PlataformaN3(texturaPlataforma, miwa.getX(),291);
         p_apoyo2 = new PlataformaN3(texturaPlataforma, miwa.getX()+texturaPlataforma.getWidth()/1.5f*1.75f,291);
+        //p_apoyo3=new PlataformaN3(texturaPlataforma, miwa.getX()+texturaPlataforma.getWidth()/1.5f*5f,291);
         p_apoyo.setTiempo(0);
         p_apoyo2.setTiempo(0);
+        //p_apoyo3.setTiempo(0);
         p_apoyo.setEstado(PlataformaN3.estadosP.DENTRO);
         p_apoyo2.setEstado(PlataformaN3.estadosP.DENTRO);
+        //p_apoyo3.setEstado(PlataformaN3.estadosP.DENTRO);
         p_apoyoa.add(p_apoyo);
         p_apoyoa.add(p_apoyo2);
+        //p_apoyoa.add(p_apoyo3);
         //plataformas que se estarán repitiendo
         for (int i = 0; i<9; i++) {
             if (i<=2){
                 plataforma = new PlataformaN3(texturaPlataforma, ANCHO+texturaPlataforma.getWidth(),181);
                 plataformas.add(plataforma);
             }else if (i<=5){
-                plataforma = new PlataformaN3(texturaPlataforma, ANCHO + texturaPlataforma.getWidth()*2, 291);
+                plataforma = new PlataformaN3(texturaPlataforma, ANCHO + texturaPlataforma.getWidth(), 291);
                 plataformas.add(plataforma);
             }else{
-                plataforma = new PlataformaN3(texturaPlataforma, ANCHO + texturaPlataforma.getWidth()*4, 401);
+                plataforma = new PlataformaN3(texturaPlataforma, ANCHO + texturaPlataforma.getWidth(), 401);
                 plataformas.add(plataforma);
             }
         }
@@ -291,6 +302,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
             case MENOSVIDA:
             case MASGEMA:
             case PERDIO:
+
                 sonidoJuego.play();
                 //gemas
                 if (contadorGemas <= 0)
@@ -305,7 +317,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 batch.begin();
                 //PROBLEMAS CON VOLTEAR LA TEXTURA (NebulosaAzul y roja)
                 batch.draw(texturaEstrellas, 0, 0,x, 0, ANCHO, ALTO);
-                batch.draw(texturaFondoP, 0,0,xp,0,ANCHO,ALTO,2,2,0,(int)xp,0,ANCHO,ALTO/2,false,false);
+                batch.draw(texturaFondoP, 0,0);
 
                 x += 4;
                 xp += .1;
@@ -316,12 +328,14 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
                 if (p_apoyoa.size != 0) {
                     for (PlataformaN3 p : p_apoyoa) {
-                        p.render(batch, velNivel);
+                        p.render(batch,velNivel);
                         if (p.getRectangle().getX()<300){
                             p_apoyoa.removeIndex(p_apoyoa.indexOf(p,true));
                         }
                     }
                 }
+                if(miwa.getEstadoMovimiento()!= Miwa.Estados.DISPARANDO)
+                    miwa.setVelocidadX(-velNivel);
                 plataforma.render(batch,velNivel);
                 rec = plataforma.getRectangle();
                 for (PlataformaN3 p: plataformas){
@@ -345,8 +359,8 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
                 jefe.render(batch);
                 miwa.render(batch);
-                barra.draw(batch,0,0,texturaVidaJefe.getWidth(),texturaVidaJefe.getHeight()*jefe.vida/100);
-                batch.draw(texturaMarcoVida,0,0);
+                barra.draw(batch,ANCHO/2-texturaVidaJefe.getWidth()/2,0,720*jefe.vida/100,texturaVidaJefe.getHeight());
+                batch.draw(texturaMarcoVida,ANCHO/2-texturaMarcoVida.getWidth()/2+1,0);
                 gema.render(batch,xGema);
                 batch.end();
 
@@ -377,7 +391,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     botonReanudar.setDisabled(false);
                     botonSonido.setDisabled(false);
                 }else if (estadosJuego==EstadosJuego.MENOSVIDA){
-                    gema.setEstadoGema(Gemas.EstadoGema.DESAPARECER);
                     posx=ANCHO/2;
                     posy = 410;
                     if (plataforma.estado== PlataformaN3.estadosP.DENTRO && !jefe.getRectangle().contains(plataforma.getX(),plataforma.getY())&&plataforma.getX()<ANCHO){
@@ -412,12 +425,14 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     if (tiempovida <= 0) {
                         miwa.setVidas(miwa.getVidas()-1);
                         miwa.setEstadoSalto(Miwa.EstadosSalto.BAJANDO);
-                        miwa.setEstadoMovimiento(Miwa.Estados.N3);
+                        miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+                       // miwa.setEstadoMovimiento(Miwa.Estados.N3);
                         estadosJuego = EstadosJuego.JUGANDO;
-                        velNivel=-2;
+                        velNivel=-4;
                         tiempovida = 2;
                         miwa.getSprite().setAlpha(1);
                     }
+
                 }
                 else if (estadosJuego == EstadosJuego.MASGEMA){
                     tiempomasgemas -= Gdx.graphics.getDeltaTime();
@@ -449,7 +464,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     if (p_apoyoa.size != 0) {
                         for (PlataformaN3 p : p_apoyoa) {
                             if (miwa.getEstadosSalto() != Miwa.EstadosSalto.SUBIENDO) {
-                                if (p.getRectangle().contains(miwa.getX() + miwa.getSprite().getWidth() / 2 - miwa.getSprite().getWidth() / 4, miwa.getY())) {
+                                if (p.getRectangle().contains(miwa.getX() + miwa.getSprite().getWidth()/4, miwa.getY())) {
                                     miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                                     break;
                                 } else if (miwa.getEstadosSalto() != Miwa.EstadosSalto.BAJANDO) {
@@ -515,7 +530,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 if (gema.getRectangle().overlaps(jefe.getRectangle())){
                     gema.setEstadoGema(Gemas.EstadoGema.DESAPARECER);
                 }
-                if (miwa.getY()< -miwa.getSprite().getHeight()){
+                if (miwa.getY()<=-miwa.getSprite().getHeight()){
                     estadosJuego=EstadosJuego.MENOSVIDA;
                 }
                 if (jefe.getEstado() == JefeN3.Estado.MUERTO){
@@ -533,6 +548,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
                 break;
             case GANO:
+                misionKitsune.setNivel(4);
                 sonidoJuego.stop();
                 batch.begin();
                 batch.draw(texturaFelicidades,0,0);
@@ -620,11 +636,52 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+        if(keycode==Input.Keys.BACK)
+            misionKitsune.setScreen(new Menu(misionKitsune));
+        if(keycode== Input.Keys.SPACE){
+            if (miwa.getEstadosSalto()== Miwa.EstadosSalto.EN_PISO) {
+                Timer.instance().start();
+
+                miwa.setVelocidadX(velNivel);
+                miwa.setEstadoMovimiento(Miwa.Estados.DISPARANDO);
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        sonidoDisparo.play();
+                        disparo = new Disparo(texturaDisparo, (int) miwa.getSprite().getX(), (int) miwa.getY() + 63);
+                        disparos.add(disparo);
+                    }
+                }, 0, 1);
+            }
+        }
+        if(keycode==Input.Keys.DPAD_RIGHT){
+            miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+        }
+        if(keycode==Input.Keys.DPAD_LEFT){
+            miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
+        }
+        if(keycode==Input.Keys.DPAD_UP){
+            if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO && miwa.getEstadoMovimiento() != Miwa.Estados.DISPARANDO) {
+                miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
+            }
+        }
+
+            return false;
+
+
     }
+
 
     @Override
     public boolean keyUp(int keycode) {
+        if(keycode==Input.Keys.SPACE){
+                //miwa.getSprite().setRegion(texturaMiwa);
+                //miwa.setEstadoMovimiento(Miwa.Estados.N3);
+                sonidoDisparo.pause();
+                miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+                //miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+                Timer.instance().stop();
+        }
         return false;
     }
 
@@ -653,7 +710,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
             if (miwa.getEstadosSalto()== Miwa.EstadosSalto.EN_PISO) {
                 Timer.instance().start();
                 miwa.getSprite().setRegion(texturaMiwaDisparando);
-                miwa.setVelocidadX(velNivel);
+                //miwa.setVelocidadX(velNivel);
                 miwa.setEstadoMovimiento(Miwa.Estados.DISPARANDO);
                 Timer.schedule(new Timer.Task() {
                     @Override
@@ -684,9 +741,10 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
         if(botonDisparar.contiene(x,y)){
-            miwa.getSprite().setRegion(texturaMiwa);
-            miwa.setEstadoMovimiento(Miwa.Estados.N3);
-            miwa.setVelocidadX(0);
+            //miwa.getSprite().setRegion(texturaMiwa);
+            miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+            //miwa.setEstadoMovimiento(Miwa.Estados.N3);
+            //miwa.setVelocidadX(0);
             sonidoDisparo.pause();
             Timer.instance().stop();
         }

@@ -1,6 +1,7 @@
 package itesm.kitsune;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -36,6 +37,7 @@ public class FinJuego implements Screen, InputProcessor {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
+        Gdx.input.setCatchBackKey(true);
         batch=new SpriteBatch();
         assetManager=new AssetManager();
         cargarCamara();
@@ -135,6 +137,8 @@ public class FinJuego implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        if(keycode==Input.Keys.BACK)
+            misionKitsune.setScreen(new Menu(misionKitsune));
         return false;
     }
 

@@ -2,6 +2,7 @@ package itesm.kitsune;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -40,6 +41,7 @@ public class Menu implements Screen {
 
 	@Override
 	public void show() {
+		Gdx.input.setCatchBackKey(true);
 		misionKitsune.getMusicaFondo().play();
 
 		assetManager=new AssetManager();
@@ -78,7 +80,7 @@ public class Menu implements Screen {
 		//sonido
 		if (misionKitsune.isMudo()){
 			ImageButton btnSonido=new ImageButton(texturaBtnSonido[1],texturaBtnSonido[1],texturaBtnSonido[0]);
-			btnSonido.setPosition(0,alto-btnSonido.getHeight());
+			btnSonido.setPosition(textSonido.getWidth()/2,alto-textSonido.getHeight()*1.5f);
 			escena.addActor(btnSonido);
 			btnSonido.addListener(new ClickListener(){
 				@Override
@@ -129,7 +131,6 @@ public class Menu implements Screen {
 		btnAcercade.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-
 				misionKitsune.getSonidoBotones().play();
 				misionKitsune.setScreen(new AcercaDe(misionKitsune));
 
@@ -171,6 +172,8 @@ public class Menu implements Screen {
 		Gdx.gl.glClearColor(0,0,0,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//Dependencia de la camara
+		if(Gdx.input.isKeyPressed(Input.Keys.BACK))
+			Gdx.app.exit();
 		tiempo+=Gdx.graphics.getDeltaTime();
 		escena.setViewport(vista);
 		escena.draw();

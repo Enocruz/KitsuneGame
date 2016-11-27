@@ -119,13 +119,12 @@ public class NivelPersecucion implements Screen,InputProcessor {
         botonReanudar.setDisabled(true);
         botonSkip = new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO - texturaSkip.getWidth() * 1.5f, ALTO - texturaSkip.getHeight() * 1.5f);
-        botonSonido=new Boton(texturaBtnSonido[0].getTexture());
-        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
         if (misionKitsune.isMudo()){
-            botonSonido.setTexture(texturaBtnSonido[1]);
+            botonSonido=new Boton(texturaBtnSonido[1]);
         }else{
-            botonSonido.setTexture(texturaBtnSonido[0]);
+            botonSonido=new Boton(texturaBtnSonido[0]);
         }
+        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight()*1.3f);
     }
 
     private void cargarTexturas() {
@@ -164,8 +163,6 @@ public class NivelPersecucion implements Screen,InputProcessor {
         sonidoGemas=assetManager.get("SonidoGemas.mp3");
         sonidoRoca=assetManager.get("blast.mp3");
         sonidoRoca.setVolume(0.6f);
-        assetManager.load("sonido.png",Texture.class);
-        assetManager.finishLoading();
         textSonido =assetManager.get("sonido.png");
         textSonido=assetManager.get("sonido.png");
         texturaFin=assetManager.get("Alerta.png");
@@ -303,7 +300,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         tiempoNivel = 1;
                         tiempoFinal++;
                     }
-                    if (tiempoFinal >=5 )//Cambiar el tiempo
+                    if (tiempoFinal >=90 )//Cambiar el tiempo
                         estadosJuego = EstadosPersecucion.ESPERAFIN;
 
                     if (estadosJuego == EstadosPersecucion.INVENCIBLE) {
@@ -450,8 +447,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 } else {
                     botonPausa.setDisabled(false);
                     //Modificar esta linea para
-                    estadosJuego= EstadosPersecucion.ESPERA;
-                    //estadosJuego = EstadosPersecucion.JUGANDO;
+                   // estadosJuego= EstadosPersecucion.ESPERA;
+                    estadosJuego = EstadosPersecucion.JUGANDO;
                     musicaIntro.stop();
                 }
 
