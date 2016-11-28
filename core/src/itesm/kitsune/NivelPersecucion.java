@@ -120,7 +120,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
         botonSkip = new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO - texturaSkip.getWidth() * 1.5f, ALTO - texturaSkip.getHeight() * 1.5f);
         botonSonido=new Boton(texturaBtnSonido[0]);
-        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
+        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight()*1.5f);
         if (misionKitsune.isMudo()){
             botonSonido.setTexture(texturaBtnSonido[1]);
         }else{
@@ -164,10 +164,9 @@ public class NivelPersecucion implements Screen,InputProcessor {
         sonidoGemas=assetManager.get("SonidoGemas.mp3");
         sonidoRoca=assetManager.get("blast.mp3");
         sonidoRoca.setVolume(0.6f);
-        assetManager.load("sonido.png",Texture.class);
-        assetManager.finishLoading();
-        textSonido =assetManager.get("sonido.png");
-        textSonido=assetManager.get("sonido.png");
+
+        textSonido =assetManager.get("N2Sonido.png");
+
         texturaFin=assetManager.get("Alerta.png");
         texturaSonido = new TextureRegion(textSonido);
         texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
