@@ -33,7 +33,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
             texturaPausa, texNebAzul, texNebRoja, texturaMenuInicial, texturaReanudar,
             texturaPiedra, texturaPiedrita, texturaVida, texturaBarra, texturaMiniNave, texturaGemaVida, texturaGema,
             texPreNiv, texPreNiv2, texPreNiv3, texPreNiv4, texNiv, texNiv2, texNiv3, texNiv4, texNiv5, texturaSkip,textSonido,
-            texturaFin;
+            texturaFin,texturaInfo,textInFoNiv;
     private TextureRegion texturaSonido;
     private TextureRegion[] texturaBtnSonido;
     private TextureRegion[][] texbtnson;
@@ -43,7 +43,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
     private Array<Piedra> piedras, piedritas;
     private float accelX,velyNave,yNaveEnemiga,velPiedra=7,velMiniPiedra=3;
     public static EstadosPersecucion estadosJuego;
-    private Boton botonPausa, botonMenu, botonReanudar, botonSkip,botonSonido;
+    private Boton botonPausa, botonMenu, botonReanudar, botonSkip,botonSonido,botonInfo;
     private Random rnd;
     private GemaVida gemaVida;
     private Gemas gemas;
@@ -119,6 +119,9 @@ public class NivelPersecucion implements Screen,InputProcessor {
         botonReanudar.setDisabled(true);
         botonSkip = new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO - texturaSkip.getWidth() * 1.5f, ALTO - texturaSkip.getHeight() * 1.5f);
+        botonInfo=new Boton(texturaInfo);
+        botonInfo.setPosicion(ANCHO/2+texturaInfo.getWidth()*.75f,ALTO-botonInfo.getHeight()*1.5f);
+        botonInfo.setDisabled(true);
         botonSonido=new Boton(texturaBtnSonido[0]);
         botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight()*1.5f);
         if (misionKitsune.isMudo()){
@@ -166,7 +169,11 @@ public class NivelPersecucion implements Screen,InputProcessor {
         sonidoRoca.setVolume(0.6f);
 
         textSonido =assetManager.get("N2Sonido.png");
-
+        assetManager.load("N2Info.png",Texture.class);
+        assetManager.load("InstruccionesN2.jpg",Texture.class);
+        assetManager.finishLoading();
+        texturaInfo=assetManager.get("N2Info.png");
+        textInFoNiv=assetManager.get("InstruccionesN2.jpg");
         texturaFin=assetManager.get("Alerta.png");
         texturaSonido = new TextureRegion(textSonido);
         texbtnson = texturaSonido.split(texturaSonido.getRegionWidth()/2,textSonido.getHeight());
@@ -261,6 +268,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
             case PAUSADO:
             case INVENCIBLE:
             case INVENCIBLEG:
+            case INFO:
                 musicaFondo.play();
                 naveMiwa.setAlfa(1);
                 if (contadorGemas <= 0)
@@ -282,7 +290,9 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     botonReanudar.setDisabled(false);
                     botonPausa.setDisabled(true);
                     botonSonido.setDisabled(false);
+                    botonInfo.setDisabled(false);
                     batch.begin();
+                    botonInfo.render(batch);
                     botonMenu.render(batch);
                     botonReanudar.render(batch);
                     if (misionKitsune.isMudo()){
@@ -292,7 +302,13 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     }
                     botonSonido.render(batch);
                     batch.end();
-                } else {
+                }else if (estadosJuego==EstadosPersecucion.INFO){
+                    batch.begin();
+                    batch.draw(texturaInfo,0,0);
+                    batch.draw(textInFoNiv,0,0);
+                    batch.end();
+                }
+                else {
                     naveSonido.play();
                     moverGema();
                     moverNave();
@@ -351,6 +367,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     botonReanudar.setDisabled(true);
                     botonSonido.setDisabled(true);
                     botonPausa.setDisabled(false);
+                    botonInfo.setDisabled(true);
                     batch.setProjectionMatrix(camaraHUD.combined);
                     batch.begin();
                     gemaVida.render(batch);
@@ -424,7 +441,9 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         }
                     }
                 }
+
                 break;
+
             case GANO:
                 naveSonido.stop();
                 musicaFondo.stop();
@@ -545,6 +564,11 @@ public class NivelPersecucion implements Screen,InputProcessor {
         Vector3 v=new Vector3(screenX,screenY,0);
         camaraDialogos.unproject(v);
         float x=v.x,y=v.y;
+        if (estadosJuego==EstadosPersecucion.INFO){
+            if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
+                estadosJuego=EstadosPersecucion.PAUSADO;
+            }
+        }
         if(estadosJuego== EstadosPersecucion.INTRO)
             if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
                 conPre++;
@@ -555,6 +579,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 conDial++;
                 misionKitsune.getSonidoBotones().play();
             }
+        camaraHUD.unproject(v);
+
         if(botonSkip.contiene(x, y)) {
             if (estadosJuego == EstadosPersecucion.INTRO)
                 estadosJuego = EstadosPersecucion.ESPERA;
@@ -566,9 +592,6 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 misionKitsune.getMusicaFondo().play();
             }
         }
-
-
-
 
         return true;
     }
@@ -593,6 +616,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
             misionKitsune.getSonidoBotones().play();
             misionKitsune.setScreen(new Menu(misionKitsune));
         }else if(botonSonido.contiene(x,y)){
+
             if (misionKitsune.isMudo()) {
                 botonSonido.setTexture(texturaBtnSonido[0]);
                 misionKitsune.setMudo(false);
@@ -600,6 +624,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 botonSonido.setTexture(texturaBtnSonido[1]);
                 misionKitsune.setMudo(true);
             }
+        }else if (botonInfo.contiene(x,y)){
+            estadosJuego=EstadosPersecucion.INFO;
         }
         return true;
     }
@@ -643,7 +669,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
         INVENCIBLE,
         INVENCIBLEG,
         ESPERA,
-        ESPERAFIN
+        ESPERAFIN,
+        INFO
     }
 
 }

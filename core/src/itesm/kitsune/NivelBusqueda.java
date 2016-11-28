@@ -24,14 +24,15 @@ public class NivelBusqueda implements Screen, InputProcessor {
     //Texturas Pantalla
     private Texture texturaVida,texturaDer,texturaIzq,texturaSaltar,texturaPausa,
             texturaMiwa, texturaGema,texturaBotonReanudar, texturaBotonMenuInicial,texturaMenuPausa, Dial1,Dial2,
-            Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8,texturaSkip,textSonido;
+            Predial1,Predial2,Predial3,Predial4,Predial5,Predial6,Predial7,Predial8,texturaSkip,textSonido,texturaInfo,
+            textInFoNiv;
     private Texture[] Dialogos,Predialogos;
     private TextureRegion texturaSonido;
     private TextureRegion[] texturaBtnSonido;
     private TextureRegion[][] texbtnson;
 
     //Botones pantalla
-    private Boton botonIzq,botonDer,botonSaltar2,botonPausa,botonReanudar,botonMenuInicial,botonSkip,botonSonido;
+    private Boton botonIzq,botonDer,botonSaltar2,botonPausa,botonReanudar,botonMenuInicial,botonSkip,botonSonido,botonInfo;
     //AssetManager (Cargar texturas)
     private  AssetManager assetManager;
     // La cámara principal, la vista y la camara de botones
@@ -111,6 +112,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
         botonMenuInicial.setPosicion(ANCHO/2-texturaBotonMenuInicial.getWidth()/2,ALTO/4+texturaBotonMenuInicial.getHeight()/2);
         botonSkip=new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO-texturaSkip.getWidth()*1.5f,ALTO-texturaSkip.getHeight()*1.5f);
+        botonInfo=new Boton(texturaInfo);
+        botonInfo.setPosicion(ANCHO/2+texturaInfo.getWidth()*.75f,ALTO-botonInfo.getHeight()*1.35f);
         botonSonido=new Boton(texturaBtnSonido[0]);
         botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
         if (misionKitsune.isMudo()){
@@ -153,8 +156,14 @@ public class NivelBusqueda implements Screen, InputProcessor {
         texturaSkip=assetManager.get("Skip.png");
         //Sonido
         assetManager.load("sonido.png",Texture.class);
+        assetManager.load("info.png",Texture.class);
+        assetManager.load("InstruccionesN1.jpg",Texture.class);
+
         assetManager.finishLoading();
         textSonido=assetManager.get("sonido.png");
+        texturaInfo= assetManager.get("info.png");
+        textInFoNiv= assetManager.get("InstruccionesN1.jpg");
+
         texturaSonido = new TextureRegion(textSonido);
         texbtnson = texturaSonido.split(textSonido.getWidth()/2,textSonido.getHeight());
         for (int i = 0; i<2;i++){
@@ -228,14 +237,17 @@ public class NivelBusqueda implements Screen, InputProcessor {
             case JUGANDO:
             case INVENCIBLE:
             case PAUSADO:
-                if(contadorGemas<=0)
-                    contadorGemas=0;
+            case INFO:
+
+                if (contadorGemas <= 0)
+                    contadorGemas = 0;
                 SonidoJuego.play();
+
                 if (estadosJuego == EstadosJuego.INVENCIBLE) {
                     tiempoInvencible -= Gdx.graphics.getDeltaTime();
-                    if(tiempoInvencible%0.5<0.25)
+                    if (tiempoInvencible % 0.5 < 0.25)
                         miwa.getSprite().setAlpha(0.7f);
-                    else if(tiempoInvencible%0.5>=0.25)
+                    else if (tiempoInvencible % 0.5 >= 0.25)
                         miwa.getSprite().setAlpha(0.9f);
                     if (tiempoInvencible <= 0) {
                         estadosJuego = EstadosJuego.JUGANDO;
@@ -257,13 +269,15 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 //Dependencia de la camara con todos los botones
                 batch.setProjectionMatrix(camaraHUD.combined);
                 batch.begin();
+
                 if (estadosJuego == EstadosJuego.PAUSADO) {
+                    botonInfo.render(batch);
                     batch.draw(texturaMenuPausa, ANCHO / 2 - texturaMenuPausa.getWidth() / 2, ALTO / 2 - texturaMenuPausa.getHeight() / 2);
                     botonReanudar.render(batch);
                     botonMenuInicial.render(batch);
-                    if (misionKitsune.isMudo()){
+                    if (misionKitsune.isMudo()) {
                         botonSonido.setTexture(texturaBtnSonido[1]);
-                    }else{
+                    } else {
                         botonSonido.setTexture(texturaBtnSonido[0]);
                     }
                     botonSonido.render(batch);
@@ -275,8 +289,9 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     botonReanudar.setDisabled(false);
                     botonMenuInicial.setDisabled(false);
                     botonSonido.setDisabled(false);
+                    botonInfo.setDisabled(false);
                 }
-                else{
+                else {
                     botonIzq.setDisabled(false);
                     botonDer.setDisabled(false);
                     botonPausa.setDisabled(false);
@@ -284,12 +299,14 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     botonReanudar.setDisabled(true);
                     botonMenuInicial.setDisabled(true);
                     botonSonido.setDisabled(true);
+                    botonInfo.setDisabled(true);
 
                 }
+
                 if (miwa.getVidas() <= 0) {
                     SonidoJuego.stop();
                     estadosJuego = EstadosJuego.PERDIO;
-                    misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("fondoNivel1.png"),1));
+                    misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("fondoNivel1.png"), 1));
                 }
 
                 gemaVida.render(batch);
@@ -302,6 +319,9 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 batch.end();
                 batch.setProjectionMatrix(camara.combined);
                 batch.begin();
+                if (estadosJuego==EstadosJuego.INFO){
+                    batch.draw(textInFoNiv,0,0);
+                }
                 if (estadosJuego == EstadosJuego.JUGANDO || estadosJuego == EstadosJuego.INVENCIBLE) {
                     miwa.render(batch);
                 }
@@ -312,18 +332,19 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 TiledMapTileLayer.Cell celda = capa.getCell(celdaX, celdaY);
                 if (mapa.esPiso(celda)) {
                     miwa.setVelocidadX(7);
-                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
+                    if (miwa.getEstadosSalto() != Miwa.EstadosSalto.SUBIENDO)
                         miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                 } else if (mapa.esHielo(celda)) {
-                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
+                    if (miwa.getEstadosSalto() != Miwa.EstadosSalto.SUBIENDO)
                         miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
                     miwa.setVelocidadX(13);
                 } else if (mapa.esPegajoso(celda)) {
-                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
+                    if (miwa.getEstadosSalto() != Miwa.EstadosSalto.SUBIENDO)
                         miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
-                        miwa.setVelocidadX(3);
-                } else {
-                    if(miwa.getEstadosSalto()!= Miwa.EstadosSalto.SUBIENDO)
+                    miwa.setVelocidadX(3);
+                }
+                else {
+                    if (miwa.getEstadosSalto() != Miwa.EstadosSalto.SUBIENDO)
                         miwa.setEstadoSalto(Miwa.EstadosSalto.BAJANDO);
                     miwa.setVelocidadX(6);
 
@@ -351,17 +372,16 @@ public class NivelBusqueda implements Screen, InputProcessor {
                         estadosJuego = EstadosJuego.INVENCIBLE;
                         miwa.setVidas(miwa.getVidas() - 1);
                         SonidoPicos.play();
-                    }
-                    else  if (mapa.esMiniPico(celdaMini)) {
+                    } else if (mapa.esMiniPico(celdaMini)) {
                         estadosJuego = EstadosJuego.INVENCIBLE;
                         contadorGemas -= 1;
                         gemaVida.setGemas(contadorGemas);
                     }
                     if (contadorGemas >= 3) {
                         tiempoGemas -= Gdx.graphics.getDeltaTime();
-                        if(tiempoGemas%0.4>0.2)
+                        if (tiempoGemas % 0.4 > 0.2)
                             gemaVida.getSprite().setAlpha(0.5f);
-                        if(tiempoGemas%0.4<=0.2)
+                        if (tiempoGemas % 0.4 <= 0.2)
                             gemaVida.getSprite().setAlpha(1);
                         if (tiempoGemas <= 0) {
                             gemaVida.getSprite().setAlpha(1);
@@ -385,15 +405,14 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     batch.setProjectionMatrix(camara.combined);
                     batch.begin();
                     batch.draw(Predialogos[conPre], 0, 0);
-                    if(misionKitsune.getNivel()!=1){
+                    if (misionKitsune.getNivel() != 1) {
                         botonSkip.render(batch);
                     }
                     batch.end();
                     SonidoPre.play();
-                }
-                else{
+                } else {
                     SonidoPre.stop();
-                    estadosJuego=EstadosJuego.JUGANDO;
+                    estadosJuego = EstadosJuego.JUGANDO;
                 }
                 botonIzq.setDisabled(true);
                 botonDer.setDisabled(true);
@@ -401,22 +420,23 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 botonSaltar2.setDisabled(true);
                 botonReanudar.setDisabled(true);
                 botonMenuInicial.setDisabled(true);
+                botonInfo.setDisabled(true);
+
                 break;
             case GANO:
-                camara.setToOrtho(false,ANCHO,ALTO);
+                camara.setToOrtho(false, ANCHO, ALTO);
                 if (conDial < Dialogos.length) {
                     SonidoDial.play();
                     batch.setProjectionMatrix(camara.combined);
                     batch.begin();
                     batch.draw(Dialogos[conDial], 0, 0);
-                    if(misionKitsune.getNivel()!=1){
+                    if (misionKitsune.getNivel() != 1) {
                         botonSkip.render(batch);
                     }
                     batch.end();
-                }
-                else{
+                } else {
                     SonidoDial.stop();
-                    if(misionKitsune.getNivel()==1)
+                    if (misionKitsune.getNivel() == 1)
                         misionKitsune.setNivel(2);
                     misionKitsune.setScreen(new MenuMapas(misionKitsune));
                     misionKitsune.getMusicaFondo().play();
@@ -427,9 +447,10 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 botonSaltar2.setDisabled(true);
                 botonReanudar.setDisabled(true);
                 botonMenuInicial.setDisabled(true);
-                botonSonido.setDisabled(true);
+                botonInfo.setDisabled(true);
 
                 break;
+
         }
 
 
@@ -531,7 +552,11 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 conPre++;
                 misionKitsune.getSonidoBotones().play();
             }
-
+        if(estadosJuego== EstadosJuego.INTRO) {
+            if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
+                conDial++;
+            }
+        }
         if(estadosJuego==EstadosJuego.GANO)
             if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
                 conDial++;
@@ -555,6 +580,11 @@ public class NivelBusqueda implements Screen, InputProcessor {
         Vector3 v=new Vector3(screenX,screenY,0);
         camaraHUD.unproject(v);
         float x=v.x,y=v.y;
+        if (estadosJuego==EstadosJuego.INFO){
+            if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
+                estadosJuego=EstadosJuego.PAUSADO;
+            }
+        }
         if(botonIzq.contiene(x,y)){
             if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO||
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO )
@@ -595,7 +625,10 @@ public class NivelBusqueda implements Screen, InputProcessor {
             }else{
                 misionKitsune.setMudo(true);
             }
+        }else if(botonInfo.contiene(x,y)){
+            estadosJuego= EstadosJuego.INFO;
         }
+
         return true;
     }
 
@@ -652,6 +685,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
         JUGANDO,
         PAUSADO,
         PERDIO,
-        INVENCIBLE
+        INVENCIBLE,
+        INFO
     }
 }
