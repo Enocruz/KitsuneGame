@@ -41,7 +41,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
     private int y = 0, yNave, xGema, velXGema, nivel,xNave,velxNave;
     private Piedra piedra, piedrita;
     private Array<Piedra> piedras, piedritas;
-    private float accelX,velyNave,yNaveEnemiga;
+    private float accelX,velyNave,yNaveEnemiga,velPiedra=7,velMiniPiedra=3;
     public static EstadosPersecucion estadosJuego;
     private Boton botonPausa, botonMenu, botonReanudar, botonSkip,botonSonido;
     private Random rnd;
@@ -304,6 +304,14 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     }
                     if (tiempoFinal >=90 )//Cambiar el tiempo
                         estadosJuego = EstadosPersecucion.ESPERAFIN;
+                    else if(tiempoFinal>=50&&tiempoFinal<=70){
+                        velPiedra=12;
+                        velMiniPiedra=5;
+                    }
+                    else if(tiempoFinal>70&&tiempoFinal<90){
+                        velPiedra=17;
+                        velMiniPiedra=7;
+                    }
 
                     if (estadosJuego == EstadosPersecucion.INVENCIBLE) {
                         tiempoInvencible -= Gdx.graphics.getDeltaTime();
@@ -355,9 +363,9 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     texto.mostrarMensaje(batch, "" + naveMiwa.getVidas(), 126, 752);
                     batch.draw(texturaMiniNave, ANCHO - texturaBarra.getWidth() * 3 - texturaMiniNave.getWidth() / 4, yNave);
                     for (Piedra x : piedras)
-                        x.render(batch, 7);
+                        x.render(batch, velPiedra);
                     for (Piedra x : piedritas)
-                        x.render(batch, 3);
+                        x.render(batch, velMiniPiedra);
                     batch.end();
                     accelX = Gdx.input.getAccelerometerX();
                     if (accelX < -0.5f) {
@@ -616,12 +624,14 @@ public class NivelPersecucion implements Screen,InputProcessor {
         naveSonido.setVolume(0);
         musicaFondo.setVolume(0);
         musicaIntro.setVolume(0);
+        sonidoRoca.setVolume(0);
     }
     private void unmute(){
         sonidoGemas.setVolume(1);
         naveSonido.setVolume(1);
         musicaFondo.setVolume(0.3f);
         musicaIntro.setVolume(1);
+        sonidoRoca.setVolume(1);
     }
 
     public enum EstadosPersecucion{

@@ -14,7 +14,7 @@ public class Piedra {
     private Sprite sprite;
     private EstadosPiedra estadosPiedra;
     private Rectangle rectColision;
-    private float yinicial;
+    private float yinicial,vel;
     private float tiempoOculto;
 
     Piedra(Texture textura){
@@ -28,11 +28,12 @@ public class Piedra {
         sprite.setPosition(x,y);
         yinicial=sprite.getY();
     }
-    public void render(SpriteBatch batch, int vel) {
+    public void render(SpriteBatch batch, float vel) {
+        this.vel=vel;
         sprite.draw(batch);
         actualizar(vel);
     }
-    private void actualizar(int vel){
+    private void actualizar(float vel){
         float x=sprite.getX();
         float y=sprite.getY();
         rectColision.setPosition(x,y);
@@ -78,6 +79,9 @@ public class Piedra {
 
     public Object getEstadosPiedra() {
         return estadosPiedra;
+    }
+    public void setVelY(float y){
+        this.vel=y;
     }
 
     public enum EstadosPiedra{
