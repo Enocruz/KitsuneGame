@@ -129,7 +129,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
         }else{
             botonSonido.setTexture(texturaBtnSonido[0]);
         }
-    }
+    }//...
 
     private void cargarTexturas() {
         batch = new SpriteBatch();
