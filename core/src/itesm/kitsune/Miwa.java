@@ -97,19 +97,21 @@ public class Miwa {
                 break;
             case N3:
                 if (estadosSalto==EstadosSalto.EN_PISO) {
-                    if (sprite.getX() < NivelBusqueda.ANCHO - sprite.getWidth() * 3&&estadosSalto==EstadosSalto.EN_PISO) {
+                    if (sprite.getX() < NivelBusqueda.ANCHO - sprite.getWidth() * 2&&estadosSalto==EstadosSalto.EN_PISO) {
                         VELOCIDAD_X = 4;
-                    } else if (sprite.getX() + sprite.getWidth() > NivelBusqueda.ANCHO) {
-                        VELOCIDAD_X = -1;
+                    } else if (sprite.getX() + sprite.getWidth() >= NivelBusqueda.ANCHO) {
+                        sprite.setX(NivelBusqueda.ANCHO-sprite.getWidth()*2);
+                        VELOCIDAD_X = 4;
                     } else VELOCIDAD_X = 0;
                     sprite.setX(sprite.getX() + VELOCIDAD_X);
                     tiempo += Gdx.graphics.getDeltaTime();
                     sprite.setRegion(animacion.getKeyFrame(tiempo));
                 }else{
-                    if (sprite.getX() < NivelBusqueda.ANCHO - sprite.getWidth()) {
+                    if (sprite.getX() < NivelBusqueda.ANCHO - sprite.getWidth()*2) {
                         VELOCIDAD_X = 4;
-                    } else if (sprite.getX() + sprite.getWidth() > NivelBusqueda.ANCHO) {
-                        VELOCIDAD_X = -1;
+                    } else if (sprite.getX() + sprite.getWidth() >= NivelBusqueda.ANCHO) {
+                        sprite.setX(NivelBusqueda.ANCHO-sprite.getWidth()*3);
+                        VELOCIDAD_X = 4;
                     } else VELOCIDAD_X = 0;
                     sprite.setX(sprite.getX() + VELOCIDAD_X);
                     tiempo += Gdx.graphics.getDeltaTime();

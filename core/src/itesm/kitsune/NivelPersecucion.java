@@ -309,7 +309,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         velMiniPiedra=5;
                     }
                     else if(tiempoFinal>70&&tiempoFinal<90){
-                        velPiedra=17;
+                        velPiedra=15;
                         velMiniPiedra=7;
                     }
 
