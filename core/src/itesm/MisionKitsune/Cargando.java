@@ -1,4 +1,4 @@
-package itesm.kitsune;
+package itesm.MisionKitsune;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -167,7 +167,7 @@ public class Cargando implements Screen {
 
             if (super.assetManager.update()) {
                 // Terminó la carga, cambiar de pantalla
-                super.misionKitsune.setScreen(new NivelPersecucion(super.misionKitsune,NivelPersecucion.EstadosPersecucion.INTRO,2));
+                super.misionKitsune.setScreen(new NivelPersecucion(super.misionKitsune, NivelPersecucion.EstadosPersecucion.INTRO,2));
             } else {
                 // Aún no termina la carga de assets, leer el avance
                 float avance = super.assetManager.getProgress()*100;

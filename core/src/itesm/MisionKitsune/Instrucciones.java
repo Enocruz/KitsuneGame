@@ -1,4 +1,4 @@
-package itesm.kitsune;
+package itesm.MisionKitsune;
 
 /**
  * Created by b-and on 06/09/2016.

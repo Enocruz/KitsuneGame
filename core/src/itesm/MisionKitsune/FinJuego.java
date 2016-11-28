@@ -1,4 +1,4 @@
-package itesm.kitsune;
+package itesm.MisionKitsune;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -29,7 +29,7 @@ public class FinJuego implements Screen, InputProcessor {
     private final int ancho=1280,alto=800;
     private SpriteBatch batch;
     private int nivel;
-    public FinJuego(MisionKitsune misionKitsune,Texture texturaFondo,int nivel){
+    public FinJuego(MisionKitsune misionKitsune, Texture texturaFondo, int nivel){
         this.nivel=nivel;
         this.misionKitsune=misionKitsune;
         this.texturaFondo=texturaFondo;

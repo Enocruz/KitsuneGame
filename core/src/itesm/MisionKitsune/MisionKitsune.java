@@ -1,7 +1,6 @@
-package itesm.kitsune;
+package itesm.MisionKitsune;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
@@ -18,7 +17,6 @@ public class MisionKitsune extends Game{
     private int nivel=1;
     private final AssetManager assetManager = new AssetManager();
     private boolean mudo;
-    //jijiji
     @Override
     public void create() {
         assetManager.setLoader(TiledMap.class,

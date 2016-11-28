@@ -1,4 +1,4 @@
-package itesm.kitsune;
+package itesm.MisionKitsune;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -28,7 +28,7 @@ public class AcercaDe implements Screen {
             popupEli,popupSnell,popupDaph,popupLes,textureCerrar,texturaMateria,texturaCampus,textureMusica;
     private AssetManager assetManager;
     private Table tablepopup,tabla;
-    private final int ancho=1280,alto=800;
+    private final int ancho=1280, alto=800;
 
     //Camara
     private OrthographicCamera camara;

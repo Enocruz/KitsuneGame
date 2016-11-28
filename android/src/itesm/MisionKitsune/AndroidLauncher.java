@@ -1,4 +1,4 @@
-package itesm.kitsune;
+package itesm.MisionKitsune;
 
 import android.os.Bundle;
 import android.view.WindowManager;
