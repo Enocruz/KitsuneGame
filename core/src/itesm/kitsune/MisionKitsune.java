@@ -15,7 +15,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 public class MisionKitsune extends Game{
     private Music musicaFondo;
     private Sound sonidoBotones;
-    private int nivel=4;
+    private int nivel=1;
     private final AssetManager assetManager = new AssetManager();
     private boolean mudo;
     //jijiji
