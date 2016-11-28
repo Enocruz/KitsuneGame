@@ -97,7 +97,7 @@ public class Miwa {
                 break;
             case N3:
                 if (estadosSalto==EstadosSalto.EN_PISO) {
-                    if (sprite.getX() < NivelBusqueda.ANCHO - sprite.getWidth() * 3) {
+                    if (sprite.getX() < NivelBusqueda.ANCHO - sprite.getWidth() * 3&&estadosSalto==EstadosSalto.EN_PISO) {
                         VELOCIDAD_X = 4;
                     } else if (sprite.getX() + sprite.getWidth() > NivelBusqueda.ANCHO) {
                         VELOCIDAD_X = -1;
@@ -113,7 +113,6 @@ public class Miwa {
                     } else VELOCIDAD_X = 0;
                     sprite.setX(sprite.getX() + VELOCIDAD_X);
                     tiempo += Gdx.graphics.getDeltaTime();
-                    sprite.setRegion(animacion.getKeyFrame(tiempo));
                 }
                 break;
         }
