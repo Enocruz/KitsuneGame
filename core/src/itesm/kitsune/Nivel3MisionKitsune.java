@@ -195,7 +195,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         botonSkip=new Boton(texturaSkip);
         botonSkip.setPosicion(ANCHO-texturaSkip.getWidth()*1.5f,ALTO-texturaSkip.getHeight()*1.5f);
         botonSonido = new Boton(texturaBtnSonido[0]);
-        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight());
+        botonSonido.setPosicion(ANCHO/2-botonSonido.getWidth()/2,ALTO-botonSonido.getHeight()*1.5f);
         if (misionKitsune.isMudo()) {
             botonSonido.setTexture(texturaBtnSonido[1]);
         }else{
@@ -657,7 +657,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         if(keycode== Input.Keys.SPACE){
             if (miwa.getEstadosSalto()== Miwa.EstadosSalto.EN_PISO) {
                 Timer.instance().start();
-
+                miwa.getSprite().setRegion(texturaMiwaDisparando);
                 miwa.setVelocidadX(velNivel);
                 miwa.setEstadoMovimiento(Miwa.Estados.DISPARANDO);
                 Timer.schedule(new Timer.Task() {
@@ -670,12 +670,8 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 }, 0, 1);
             }
         }
-        if(keycode==Input.Keys.DPAD_RIGHT){
-            miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
-        }
-        if(keycode==Input.Keys.DPAD_LEFT){
-            miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
-        }
+
+
         if(keycode==Input.Keys.DPAD_UP){
             if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO && miwa.getEstadoMovimiento() != Miwa.Estados.DISPARANDO) {
                 miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
@@ -690,10 +686,10 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
         if(keycode==Input.Keys.SPACE){
-                //miwa.getSprite().setRegion(texturaMiwa);
+                miwa.getSprite().setRegion(texturaMiwa);
                 //miwa.setEstadoMovimiento(Miwa.Estados.N3);
                 sonidoDisparo.pause();
-                miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
+                miwa.setEstadoMovimiento(Miwa.Estados.N3);
                 //miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
                 Timer.instance().stop();
         }
@@ -790,6 +786,39 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        Vector3 v=new Vector3(screenX,screenY,0);
+        camaraHUD.unproject(v);
+        float x=v.x,y=v.y;
+        if(botonDisparar.contiene(x,y)){
+            miwa.getSprite().setRegion(texturaMiwa);
+            miwa.setEstadoMovimiento(Miwa.Estados.N3);
+            miwa.setVelocidadX(0);
+            sonidoDisparo.pause();
+            Timer.instance().stop();
+        }
+
+        if(botonPausa.contiene(x,y)){
+            velNivel = 0;
+            miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
+            miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
+            this.estadosJuego = EstadosJuego.PAUSADO;
+        }else if(botonReanudar.contiene(x,y)){
+            velNivel = -2;
+            miwa.setEstadoSalto(Miwa.EstadosSalto.BAJANDO);
+            estadosJuego=EstadosJuego.JUGANDO;
+        }else if(botonMenuInicial.contiene(x,y)){
+            sonidoJuego.stop();
+            misionKitsune.getMusicaFondo().play();
+            misionKitsune.setScreen(new Menu(misionKitsune));
+        }else if(botonSonido.contiene(x,y)){
+            if (misionKitsune.isMudo()) {
+                botonSonido.setTexture(texturaBtnSonido[0]);
+                misionKitsune.setMudo(false);
+            }else{
+                botonSonido.setTexture(texturaBtnSonido[1]);
+                misionKitsune.setMudo(true);
+            }
+        }
         return false; }
 
     @Override
