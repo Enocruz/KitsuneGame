@@ -304,8 +304,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     batch.end();
                 }else if (estadosJuego==EstadosPersecucion.INFO){
                     batch.begin();
-                    batch.draw(texturaInfo,0,0);
-                    batch.draw(textInFoNiv,0,0);
+                    batch.draw(textInFoNiv,0,0,ANCHO,ALTO);
                     batch.end();
                 }
                 else {
