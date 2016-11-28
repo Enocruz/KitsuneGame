@@ -325,7 +325,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         velMiniPiedra=5;
                     }
                     else if(tiempoFinal>70&&tiempoFinal<90){
-                        velPiedra=17;
+                        velPiedra=15;
                         velMiniPiedra=7;
                     }
 
@@ -476,8 +476,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 } else {
                     botonPausa.setDisabled(false);
                     //Modificar esta linea para
-                   // estadosJuego= EstadosPersecucion.ESPERA;
-                    estadosJuego = EstadosPersecucion.JUGANDO;
+                   estadosJuego= EstadosPersecucion.ESPERA;
+                    //estadosJuego = EstadosPersecucion.JUGANDO;
                     musicaIntro.stop();
                 }
 

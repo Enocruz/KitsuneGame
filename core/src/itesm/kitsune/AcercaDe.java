@@ -25,7 +25,7 @@ public class AcercaDe implements Screen {
     private final MisionKitsune misionKitsune;
     private Stage escena;
     private Texture texturaFondo,textureEnock,textureEli,textureLes,textureSnell,textureDaph,popupEnock,
-            popupEli,popupSnell,popupDaph,popupLes,textureCerrar,texturaMateria,texturaCampus;
+            popupEli,popupSnell,popupDaph,popupLes,textureCerrar,texturaMateria,texturaCampus,textureMusica;
     private AssetManager assetManager;
     private Table tablepopup,tabla;
     private final int ancho=1280,alto=800;
@@ -74,12 +74,12 @@ public class AcercaDe implements Screen {
         //Boton Brandon
         TextureRegionDrawable trEnock=new TextureRegionDrawable(new TextureRegion(textureEnock));
         ImageButton btEnock=new ImageButton(trEnock);
-        btEnock.setPosition(ancho/2.8f-btEnock.getWidth()/2,0.12f*alto);
+        btEnock.setPosition(ancho/3.8f-btEnock.getWidth()/2,0.12f*alto);
         escena.addActor(btEnock);
         //Boton Leslie
         TextureRegionDrawable trLes=new TextureRegionDrawable(new TextureRegion(textureLes));
         ImageButton btLes=new ImageButton(trLes);
-        btLes.setPosition(ancho/1.6f-btLes.getWidth()/2,0.12f*alto);
+        btLes.setPosition(ancho/2f-btLes.getWidth()/2,0.12f*alto);
         escena.addActor(btLes);
         //Boton Daphne
         TextureRegionDrawable trDaph=new TextureRegionDrawable(new TextureRegion(textureDaph));
@@ -110,14 +110,17 @@ public class AcercaDe implements Screen {
         final Image btPopUpEli=new Image(popupEli);
         final Image Materia = new Image(texturaMateria);
         final Image Campus=new Image(texturaCampus);
+        final Image Musica=new Image(textureMusica);
 
         Materia.setPosition(ancho/2-Materia.getWidth()/2,alto-Materia.getHeight()*2);
-        Campus.setPosition(ancho/2-Campus.getWidth()/2,+Campus.getHeight()/2);
+        Campus.setPosition(ancho/2-Campus.getWidth()/2,Campus.getHeight()/2);
+        Musica.setPosition(ancho/1.4f-Musica.getWidth()/3.2f,0.15f*alto);
 
         //Agregando la tabla vacía a la escena
         escena.addActor(tablepopup);
         escena.addActor(Materia);
         escena.addActor(Campus);
+        escena.addActor(Musica);
 
         //Boton cerrar
         btCerrar.addListener(new ClickListener(){
@@ -202,6 +205,7 @@ public class AcercaDe implements Screen {
     }
 
     private void cargarTexturas() {
+        assetManager.load("MusicaInfo.png",Texture.class);
         //Textura fondo
         assetManager.load("Campus.png",Texture.class);
         assetManager.load("AcercaDe.png", Texture.class);
@@ -243,7 +247,7 @@ public class AcercaDe implements Screen {
         textureCerrar=assetManager.get("cerrar.png");
         texturaMateria = assetManager.get("Materia.png");
         texturaCampus=assetManager.get("Campus.png");
-
+        textureMusica=assetManager.get("MusicaInfo.png");
     }
 
     @Override

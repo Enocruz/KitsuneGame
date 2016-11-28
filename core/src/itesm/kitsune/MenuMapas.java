@@ -3,6 +3,7 @@ package itesm.kitsune;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -19,12 +21,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MenuMapas implements Screen , InputProcessor{
     private MisionKitsune misionKitsune;
-    private Texture texturaFondo,texturaNivel1,texturaNivel2,texturaNivel3,texturaCerrar;
+    private Texture texturaFondo,texturaNivel1,texturaNivel2,texturaNivel3,texturaCerrar,textHistoria;
     private final int ancho=1280,alto=800;
     private OrthographicCamera camara;
     private Viewport vista;
     private AssetManager assetManager;
-    private Boton boton1,boton2,boton3,botonCerrar;
+    private Boton boton1,boton2,boton3,botonCerrar,btnHistoria;
     private SpriteBatch batch;
 
     public MenuMapas(MisionKitsune misionKitsune) {
@@ -58,6 +60,8 @@ public class MenuMapas implements Screen , InputProcessor{
         boton2.setDisabled(true);
         botonCerrar=new Boton(texturaCerrar);
         botonCerrar.setPosicion(ancho/1.2f-texturaCerrar.getWidth()/2,alto/1.3f);
+        btnHistoria=new Boton(textHistoria);
+        btnHistoria.setPosicion(ancho/2-textHistoria.getWidth()/2,textHistoria.getHeight());
     }
 
     private void cargarCamara() {
@@ -78,6 +82,7 @@ public class MenuMapas implements Screen , InputProcessor{
         assetManager.load("Nivel_2.png",Texture.class);
         assetManager.load("Nivel_3.png",Texture.class);
         assetManager.load("cerrar.png",Texture.class);
+        assetManager.load("BtnHistoria.png",Texture.class);
         //Se bloquea hasta cargar los recursos
         assetManager.finishLoading();
         //Cuando termina, leemos las texturas
@@ -86,6 +91,7 @@ public class MenuMapas implements Screen , InputProcessor{
         texturaNivel2=assetManager.get("Nivel_2.png");
         texturaNivel3=assetManager.get("Nivel_3.png");
         texturaCerrar=assetManager.get("cerrar.png");
+        textHistoria=assetManager.get("BtnHistoria.png");
     }
 
     @Override
@@ -110,6 +116,7 @@ public class MenuMapas implements Screen , InputProcessor{
         boton2.render(batch);
         boton3.render(batch);
         botonCerrar.render(batch);
+        btnHistoria.render(batch);
         batch.end();
     }
 
@@ -184,6 +191,12 @@ public class MenuMapas implements Screen , InputProcessor{
             misionKitsune.getSonidoBotones().play();
             dispose();
             misionKitsune.setScreen(new Menu(misionKitsune));
+        }
+        if(btnHistoria.contiene(x,y)){
+            /*HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+            Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url("http://www.google.de").build();
+            Gdx.net.sendHttpRequest(httpRequest, httpResponseListener);*/
+            Gdx.net.openURI("https://www.youtube.com/watch?v=gCB73YLPkmo&feature=youtu.be");
         }
         return true;
     }
