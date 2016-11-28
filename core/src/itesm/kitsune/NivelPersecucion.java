@@ -457,8 +457,8 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 } else {
                     botonPausa.setDisabled(false);
                     //Modificar esta linea para
-                   // estadosJuego= EstadosPersecucion.ESPERA;
-                    estadosJuego = EstadosPersecucion.JUGANDO;
+                   estadosJuego= EstadosPersecucion.ESPERA;
+                    //estadosJuego = EstadosPersecucion.JUGANDO;
                     musicaIntro.stop();
                 }
 
