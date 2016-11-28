@@ -232,13 +232,11 @@ public class NivelBusqueda implements Screen, InputProcessor {
 
 
     private void consultarEstado() {
-
         switch (estadosJuego) {
             case JUGANDO:
             case INVENCIBLE:
             case PAUSADO:
             case INFO:
-
                 if (contadorGemas <= 0)
                     contadorGemas = 0;
                 SonidoJuego.play();
@@ -563,15 +561,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
             miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
         }
 
-        if(botonIzq.contiene(x,y)&&botonSaltar2.contiene(x,y)){
-            miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
-            miwa.setEstadoMovimiento(Miwa.Estados.IZQUIERDA);
-        }
-        if(botonDer.contiene(x,y)&&botonSaltar2.contiene(x,y)){
-            miwa.setEstadoMovimiento(Miwa.Estados.DERECHA);
-            miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO);
-        }
-        else if(botonSaltar2.contiene(x,y)) {
+        if(botonSaltar2.contiene(x,y)) {
             if (miwa.getEstadosSalto() != Miwa.EstadosSalto.BAJANDO)
                 miwa.setEstadoSalto(Miwa.EstadosSalto.SUBIENDO) ;
         }
@@ -588,13 +578,10 @@ public class NivelBusqueda implements Screen, InputProcessor {
             }
         }
         if(botonIzq.contiene(x,y)){
-            if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO||
-                    miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO )
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
         }
         else if(botonDer.contiene(x,y)){
-            if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO||
-                    miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO )
+
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
         }
         if(botonPausa.contiene(x,y)){
@@ -614,8 +601,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
         else if(botonSkip.contiene(x,y)&&estadosJuego==EstadosJuego.GANO){
             SonidoDial.stop();
             misionKitsune.getMusicaFondo().play();
-            if(misionKitsune.getNivel()==1)
-                misionKitsune.setNivel(2);
             misionKitsune.setScreen(new MenuMapas(misionKitsune));
         }
         else if(botonSkip.contiene(x,y)&&estadosJuego==EstadosJuego.INTRO){
@@ -630,9 +615,8 @@ public class NivelBusqueda implements Screen, InputProcessor {
         }else if(botonInfo.contiene(x,y)){
             estadosJuego= EstadosJuego.INFO;
         }
-        else if (botonIzq.contiene(x, y)||botonDer.contiene(x, y)&&botonSaltar2.contiene(x,y)) {
-            if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO ||
-                    miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO)
+        if (botonIzq.contiene(x, y)||botonDer.contiene(x, y)&&botonSaltar2.contiene(x,y)) {
+            if (miwa.getEstadosSalto() == Miwa.EstadosSalto.EN_PISO ||miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO)
                 miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
         }
         return true;
@@ -655,7 +639,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
                     miwa.getEstadosSalto() == Miwa.EstadosSalto.BAJANDO)
             miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
         }
-
         return false;
     }
 
