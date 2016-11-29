@@ -302,6 +302,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
             case MASGEMA:
             case PERDIO:
             case INFO:
+            case GANO:
                 sonidoJuego.play();
                 //gemas
                 if (contadorGemas <= 0)
@@ -558,15 +559,8 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     sonidoDisparo.stop();
                     barra.setLeftWidth(0);
                     disparo.getSprite().setAlpha(0);
-                    tiempogano -= Gdx.graphics.getDeltaTime();
-                    if(tiempogano%0.5<0.25){
-                        jefe.getSprite().setAlpha(0.7f);}
-                    else if(tiempogano%0.5>=0.25)
-                        jefe.getSprite().setAlpha(0.9f);
-                    if (tiempogano <= 0) {
-                        estadosJuego = EstadosJuego.GANO;
-                        sonidoDisparo.stop();
-                    }
+                    estadosJuego=EstadosJuego.GANO;
+
                 }
                 if(miwa.getRectangle().overlaps(jefe.getRectangle())) {
                     miwa.setEstadoMovimiento(Miwa.Estados.QUIETO);
@@ -577,20 +571,33 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     misionKitsune.setScreen(new FinJuego(misionKitsune, new Texture("FondoEstrellas.png"), 3));
 
                 }
+                /*****/
+                if(estadosJuego==EstadosJuego.GANO){
+                    botonDisparar.setDisabled(true);
+                    botonPausa.setDisabled(true);
+                    botonSaltar.setDisabled(true);
+                    botonReanudar.setDisabled(true);
+                    botonMenuInicial.setDisabled(true);
+                    botonSonido.setDisabled(true);
+                    botonInfo.setDisabled(true);
+                    sonidoJuego.stop();
+                    sonidoDisparo.stop();
+                    tiempogano -= Gdx.graphics.getDeltaTime();
+                    jefe.getSprite().setX(jefe.getX()-7);
+                    if(tiempogano%0.5<0.25){
+                        jefe.getSprite().setAlpha(0.7f);}
+                    else if(tiempogano%0.5>=0.25)
+                        jefe.getSprite().setAlpha(0.9f);
+                    if (tiempogano <= 0) {
+                        System.out.println(estadosJuego);
+                        estadosJuego=EstadosJuego.GANOFIN;
+
+                    }
+                }
 
                 break;
-            case GANO:
+            case GANOFIN:
                 misionKitsune.setNivel(4);
-                botonDisparar.setDisabled(true);
-                botonPausa.setDisabled(true);
-                botonSaltar.setDisabled(true);
-                botonReanudar.setDisabled(true);
-                botonMenuInicial.setDisabled(true);
-                botonSonido.setDisabled(true);
-                botonInfo.setDisabled(true);
-
-                sonidoJuego.stop();
-                sonidoDisparo.stop();
                 batch.begin();
                 batch.draw(texturaFelicidades,0,0);
                 batch.end();
@@ -738,7 +745,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 estadosJuego=EstadosJuego.PAUSADO;
             }
         }
-        if (estadosJuego==EstadosJuego.GANO) {
+        if (estadosJuego==EstadosJuego.GANOFIN) {
             if (x > 0 && x < ANCHO && y > 0 && y < ALTO) {
                 misionKitsune.setScreen(new Menu(misionKitsune));
             }
@@ -896,6 +903,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         INTRO,
         MENOSVIDA,
         MASGEMA,
+        GANOFIN,
         INFO
     }
 }

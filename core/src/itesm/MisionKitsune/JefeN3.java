@@ -73,9 +73,11 @@ public class JefeN3 {
 
                 break;
             case MUERTO:
+                tarea.cancel();
                 break;
             case ATACADO:
-                vida -= 1;
+                if(vida>=0)
+                    vida -= 1;
                 estado = Estado.VIVO;
                 break;
         }if (vida<=0){
