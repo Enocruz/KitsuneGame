@@ -759,18 +759,20 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
         camaraHUD.unproject(v);
         if(botonDisparar.contiene(x,y)&&estadosJuego== EstadosJuego.JUGANDO){
             if (miwa.getEstadosSalto()== Miwa.EstadosSalto.EN_PISO&& estadosJuego==EstadosJuego.JUGANDO) {
-                Timer.instance().start();
-                miwa.getSprite().setRegion(texturaMiwaDisparando);
-                miwa.setVelocidadX(velNivel);
-                miwa.setEstadoMovimiento(Miwa.Estados.DISPARANDO);
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        sonidoDisparo.play();
-                        disparo = new Disparo(texturaDisparo, (int) miwa.getSprite().getX(), (int) miwa.getY() + 63);
-                        disparos.add(disparo);
-                    }
-                }, 0, 1);
+                if(miwa.getEstadoMovimiento()!= Miwa.Estados.DISPARANDO) {
+                    Timer.instance().start();
+                    miwa.getSprite().setRegion(texturaMiwaDisparando);
+                    miwa.setVelocidadX(velNivel);
+                    miwa.setEstadoMovimiento(Miwa.Estados.DISPARANDO);
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            sonidoDisparo.play();
+                            disparo = new Disparo(texturaDisparo, (int) miwa.getSprite().getX(), (int) miwa.getY() + 63);
+                            disparos.add(disparo);
+                        }
+                    }, 0, 1);
+                }
             }
         }
         else if (botonSaltar.contiene(x,y)) {
@@ -824,7 +826,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 misionKitsune.setMudo(true);
             }
         }
-
         return true;
     }
 
@@ -840,7 +841,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
             sonidoDisparo.pause();
             Timer.instance().stop();
         }
-
         if(botonPausa.contiene(x,y)){
             velNivel = 0;
             miwa.setEstadoSalto(Miwa.EstadosSalto.EN_PISO);
