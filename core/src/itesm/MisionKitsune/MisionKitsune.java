@@ -1,10 +1,13 @@
 package itesm.MisionKitsune;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
@@ -14,11 +17,22 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 public class MisionKitsune extends Game{
     private Music musicaFondo;
     private Sound sonidoBotones;
-    private int nivel=1;
+    private int nivel;
     private final AssetManager assetManager = new AssetManager();
     private boolean mudo;
     @Override
     public void create() {
+        try{
+            if(Gdx.files.local("nivel.txt").exists()){
+                FileHandle file = Gdx.files.local("nivel.txt");
+                nivel=Integer.parseInt(file.readString());
+            }
+            else
+                nivel=1;
+        }
+        catch(Exception e){
+
+        }
         assetManager.setLoader(TiledMap.class,
                 new TmxMapLoader(new InternalFileHandleResolver()));
         cargarMusica();
@@ -46,6 +60,13 @@ public class MisionKitsune extends Game{
     }
 
     public void setNivel(int nivel) {
+        try {
+            FileHandle file = Gdx.files.local("nivel.txt");
+            file.writeString(""+nivel, false);
+        }
+        catch(Exception e){
+
+        }
         this.nivel = nivel;
     }
     public boolean isMudo(){return mudo;}

@@ -174,6 +174,7 @@ public class Menu implements Screen {
 		//Dependencia de la camara
 		if(Gdx.input.isKeyPressed(Input.Keys.BACK))
 			Gdx.app.exit();
+		System.out.println(misionKitsune.getNivel());
 		tiempo+=Gdx.graphics.getDeltaTime();
 		escena.setViewport(vista);
 		escena.draw();

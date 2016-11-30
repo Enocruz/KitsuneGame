@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -573,6 +574,7 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 }
                 /*****/
                 if(estadosJuego==EstadosJuego.GANO){
+                    misionKitsune.setNivel(4);
                     botonDisparar.setDisabled(true);
                     botonPausa.setDisabled(true);
                     botonSaltar.setDisabled(true);
@@ -591,13 +593,11 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                     if (tiempogano <= 0) {
                         System.out.println(estadosJuego);
                         estadosJuego=EstadosJuego.GANOFIN;
-
                     }
                 }
 
                 break;
             case GANOFIN:
-                misionKitsune.setNivel(4);
                 batch.begin();
                 batch.draw(texturaFelicidades,0,0);
                 batch.end();
@@ -628,7 +628,6 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
                 break;
         }
     }
-
     @Override
     public void resize(int width, int height) {
         vista.update(width,height);
@@ -686,8 +685,9 @@ public class Nivel3MisionKitsune implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode==Input.Keys.BACK)
+        if(keycode==Input.Keys.BACK) {
             misionKitsune.setScreen(new Menu(misionKitsune));
+        }
         if(keycode== Input.Keys.SPACE){
             if (miwa.getEstadosSalto()== Miwa.EstadosSalto.EN_PISO) {
                 Timer.instance().start();

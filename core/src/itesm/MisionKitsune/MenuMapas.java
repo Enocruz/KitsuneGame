@@ -55,7 +55,7 @@ public class MenuMapas implements Screen , InputProcessor{
         boton3=new Boton(texturaNivel3);
         boton3.setPosicion(ancho/1.3f-texturaNivel3.getWidth()/2, alto/2.9f);
         boton3.setAlfa(0.2f);
-        boton2.setDisabled(true);
+        boton3.setDisabled(true);
         botonCerrar=new Boton(texturaCerrar);
         botonCerrar.setPosicion(ancho/1.2f-texturaCerrar.getWidth()/2,alto/1.3f);
         btnHistoria=new Boton(textHistoria);

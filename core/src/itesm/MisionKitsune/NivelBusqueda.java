@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -315,6 +316,7 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 batch.setProjectionMatrix(camara.combined);
                 batch.begin();
                 if (estadosJuego==EstadosJuego.INFO){
+                    batch.setProjectionMatrix(camaraHUD.combined);
                     batch.draw(textInFoNiv,0,0);
                 }
                 if (estadosJuego == EstadosJuego.JUGANDO || estadosJuego == EstadosJuego.INVENCIBLE) {
@@ -433,8 +435,9 @@ public class NivelBusqueda implements Screen, InputProcessor {
                 }
                 else{
                     SonidoDial.stop();
-                    if(misionKitsune.getNivel()==1)
+                    if(misionKitsune.getNivel()==1) {
                         misionKitsune.setNivel(2);
+                    }
                     misionKitsune.setScreen(new MenuMapas(misionKitsune));
                     misionKitsune.getMusicaFondo().play();
                 }
@@ -471,7 +474,6 @@ public class NivelBusqueda implements Screen, InputProcessor {
     public void hide() {
 
     }
-
     @Override
     public void dispose() {
         texturaVida.dispose();
@@ -511,8 +513,9 @@ public class NivelBusqueda implements Screen, InputProcessor {
             SonidoPre.stop();
             SonidoDial.stop();
             if(estadosJuego==EstadosJuego.GANO){
-                if(misionKitsune.getNivel()==1)
+                if(misionKitsune.getNivel()==1) {
                     misionKitsune.setNivel(2);
+                }
             }
 
             misionKitsune.setScreen(new MenuMapas(misionKitsune));

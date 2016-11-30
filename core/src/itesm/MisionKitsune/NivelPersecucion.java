@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -317,7 +318,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         tiempoNivel = 1;
                         tiempoFinal++;
                     }
-                    if (tiempoFinal >=90 )//Cambiar el tiempo
+                    if (tiempoFinal >=5 )//Cambiar el tiempo
                         estadosJuego = EstadosPersecucion.ESPERAFIN;
                     else if(tiempoFinal>=50&&tiempoFinal<=70){
                         velPiedra=12;
@@ -440,9 +441,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         }
                     }
                 }
-
                 break;
-
             case GANO:
                 naveSonido.stop();
                 musicaFondo.stop();
@@ -457,8 +456,9 @@ public class NivelPersecucion implements Screen,InputProcessor {
                     batch.end();
                 } else {
                     musicaIntro.stop();
-                    if(misionKitsune.getNivel()==2)
+                    if(misionKitsune.getNivel()==2) {
                         misionKitsune.setNivel(3);
+                    }
                     misionKitsune.setScreen(new MenuMapas(misionKitsune));
                     misionKitsune.getMusicaFondo().play();
                 }
@@ -505,7 +505,6 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 break;
         }
     }
-
     private void moverGema(){
         if(xGema>=ANCHO-texturaGema.getWidth())
         velXGema=-5;
@@ -540,9 +539,11 @@ public class NivelPersecucion implements Screen,InputProcessor {
             musicaIntro.stop();
             musicaFondo.stop();
             naveSonido.stop();
-            if(estadosJuego==EstadosPersecucion.GANO)
-                if (misionKitsune.getNivel() == 2)
+            if(estadosJuego==EstadosPersecucion.GANO) {
+                if (misionKitsune.getNivel() == 2) {
                     misionKitsune.setNivel(3);
+                }
+            }
 
             misionKitsune.setScreen(new MenuMapas(misionKitsune));
         }return false;
@@ -585,8 +586,6 @@ public class NivelPersecucion implements Screen,InputProcessor {
                 estadosJuego = EstadosPersecucion.ESPERA;
             else if(estadosJuego==EstadosPersecucion.GANO){
                 musicaIntro.stop();
-                if (misionKitsune.getNivel() == 2)
-                    misionKitsune.setNivel(3);
                 misionKitsune.setScreen(new MenuMapas(misionKitsune));
                 misionKitsune.getMusicaFondo().play();
             }
