@@ -318,7 +318,7 @@ public class NivelPersecucion implements Screen,InputProcessor {
                         tiempoNivel = 1;
                         tiempoFinal++;
                     }
-                    if (tiempoFinal >=5 )//Cambiar el tiempo
+                    if (tiempoFinal >=90 )//Cambiar el tiempo
                         estadosJuego = EstadosPersecucion.ESPERAFIN;
                     else if(tiempoFinal>=50&&tiempoFinal<=70){
                         velPiedra=12;
